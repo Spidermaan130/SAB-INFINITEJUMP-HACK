@@ -1,7 +1,7 @@
--- [[ 💎 GHALOULIX9'S ULTIMATE HUB - PRO EDITION 💎 ]] --
+-- [[ 💎 GHALOULIX9'S ULTIMATE HUB - FIXED PRO EDITION 💎 ]] --
 local KEY = "GHALOULIX9"
 local TITLE_TEXT = "💎 GHALOULIX9'S HUB 💎"
-local IMG_ID = "rbxassetid://108600585930067" -- Your Channel Image ID
+local IMG_ID = "rbxassetid://108600585930067" -- Your Ninja Icon
 local CLICK_SFX = "rbxassetid://6895079853"
 
 local lp = game:GetService("Players").LocalPlayer
@@ -9,39 +9,31 @@ local UIS = game:GetService("UserInputService")
 local TS = game:GetService("TweenService")
 local cg = lp:WaitForChild("PlayerGui")
 
-pcall(function() if cg:FindFirstChild("GH_HUB_PRO") then cg.GH_HUB_PRO:Destroy() end end)
+-- Cleanup old GUIs
+pcall(function() 
+    if cg:FindFirstChild("GH_HUB_PRO") then cg.GH_HUB_PRO:Destroy() end 
+end)
 
 local SG = Instance.new("ScreenGui", cg)
 SG.Name = "GH_HUB_PRO"
 SG.ResetOnSpawn = false
 SG.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
--- [[ STYLING & ANIMATION HELPERS ]] --
+-- [[ STYLING ]] --
 local theme = {
-    bg = Color3.fromRGB(25, 25, 30),
-    accent1 = Color3.fromRGB(0, 200, 255), -- Cyan
-    accent2 = Color3.fromRGB(200, 0, 255), -- Purple
-    text = Color3.fromRGB(240, 240, 240),
-    btnOff = Color3.fromRGB(40, 40, 45),
-    btnOn = Color3.fromRGB(50, 200, 100),
+    bg = Color3.fromRGB(20, 20, 25),
+    accent1 = Color3.fromRGB(0, 180, 255), -- Cyan
+    accent2 = Color3.fromRGB(180, 0, 255), -- Purple
+    text = Color3.fromRGB(255, 255, 255),
+    btnOff = Color3.fromRGB(35, 35, 40),
+    btnOn = Color3.fromRGB(0, 200, 100),
     btnExit = Color3.fromRGB(200, 50, 50)
 }
 
-local function createGradient(parent)
-    local gradient = Instance.new("UIGradient", parent)
-    gradient.Color = ColorSequence.new{
-        ColorSequenceKeypoint.new(0, theme.accent1),
-        ColorSequenceKeypoint.new(1, theme.accent2)
-    }
-    gradient.Rotation = 45
-    return gradient
-end
-
-local function anim(obj, props, time, style, dir)
-    local info = TweenInfo.new(time or 0.3, style or Enum.EasingStyle.Quart, dir or Enum.EasingDirection.Out)
-    local tween = TS:Create(obj, info, props)
-    tween:Play()
-    return tween
+-- [[ ANIMATION HANDLER ]] --
+local function anim(obj, props, time)
+    local info = TweenInfo.new(time or 0.4, Enum.EasingStyle.Quart, Enum.EasingDirection.Out)
+    TS:Create(obj, info, props):Play()
 end
 
 local function playClick()
@@ -50,6 +42,72 @@ local function playClick()
     s.Ended:Connect(function() s:Destroy() end)
 end
 
+local function createGradient(parent)
+    local g = Instance.new("UIGradient", parent)
+    g.Color = ColorSequence.new{
+        ColorSequenceKeypoint.new(0, theme.accent1),
+        ColorSequenceKeypoint.new(1, theme.accent2)
+    }
+    g.Rotation = 45
+    return g
+end
+
+-- [[ NOTIFICATION ]] --
+local function notify(text)
+    local n = Instance.new("Frame", SG)
+    n.Size = UDim2.new(0, 300, 0, 50)
+    n.Position = UDim2.new(0.5, -150, 0, -100) -- Start above screen
+    n.BackgroundColor3 = theme.bg
+    n.BorderSizePixel = 0
+    Instance.new("UICorner", n).CornerRadius = UDim.new(0, 10)
+    
+    local s = Instance.new("UIStroke", n)
+    s.Color = theme.accent1; s.Thickness = 2
+    
+    local l = Instance.new("TextLabel", n)
+    l.Size = UDim2.new(1,0,1,0); l.BackgroundTransparency = 1
+    l.Text = text; l.TextColor3 = theme.text
+    l.Font = Enum.Font.GothamBold; l.TextSize = 14
+    
+    -- Slide In
+    anim(n, {Position = UDim2.new(0.5, -150, 0, 20)}, 0.5)
+    
+    -- Slide Out later
+    task.delay(3, function()
+        anim(n, {Position = UDim2.new(0.5, -150, 0, -100)}, 0.5)
+        task.wait(0.5)
+        n:Destroy()
+    end)
+end
+
+-- [[ MAIN HUB SETUP ]] --
+local Main = Instance.new("Frame", SG)
+Main.Size = UDim2.new(0, 0, 0, 0) -- Start tiny
+Main.Position = UDim2.new(0.5, 0, 0.5, 0)
+Main.BackgroundColor3 = theme.bg
+Main.Visible = false
+Main.ClipsDescendants = true
+Instance.new("UICorner", Main).CornerRadius = UDim.new(0, 15)
+local MainStroke = Instance.new("UIStroke", Main); MainStroke.Thickness = 3; createGradient(MainStroke)
+
+local Header = Instance.new("TextLabel", Main)
+Header.Size = UDim2.new(1, 0, 0, 50)
+Header.Text = TITLE_TEXT; Header.TextColor3 = theme.text
+Header.Font = Enum.Font.GothamBlack; Header.TextSize = 18; Header.BackgroundTransparency = 1
+
+-- [[ TOGGLE BUTTON (HIDDEN AT START) ]] --
+local ToggleBtn = Instance.new("ImageButton", SG)
+ToggleBtn.Size = UDim2.new(0, 60, 0, 60)
+ToggleBtn.Position = UDim2.new(0, 20, 0.5, -30)
+ToggleBtn.Image = IMG_ID
+ToggleBtn.BackgroundColor3 = theme.bg
+ToggleBtn.BackgroundTransparency = 1 -- Transparent
+ToggleBtn.ImageTransparency = 1 -- Transparent
+ToggleBtn.Visible = false -- Hidden physically
+Instance.new("UICorner", ToggleBtn).CornerRadius = UDim.new(1, 0)
+local ToggleStroke = Instance.new("UIStroke", ToggleBtn); ToggleStroke.Thickness = 2; ToggleStroke.Transparency = 1; createGradient(ToggleStroke)
+
+-- [[ DRAGGABLE LOGIC ]] --
 local function makeDraggable(gui)
     local dragging, dragStart, startPos
     gui.InputBegan:Connect(function(input)
@@ -67,147 +125,74 @@ local function makeDraggable(gui)
         if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then dragging = false end
     end)
 end
-
--- [[ NOTIFICATION SYSTEM ]] --
-local function notify(text, isSuccess)
-    local n = Instance.new("Frame", SG)
-    n.Size = UDim2.new(0, 300, 0, 50)
-    n.Position = UDim2.new(0.5, -150, 0, -60)
-    n.BackgroundColor3 = theme.bg
-    n.BackgroundTransparency = 0.1
-    Instance.new("UICorner", n).CornerRadius = UDim.new(0, 10)
-    
-    local stroke = Instance.new("UIStroke", n)
-    stroke.Thickness = 2
-    stroke.Color = isSuccess and theme.btnOn or theme.btnExit
-    
-    local l = Instance.new("TextLabel", n)
-    l.Size = UDim2.new(1, 0, 1, 0); l.BackgroundTransparency = 1
-    l.Text = text; l.TextColor3 = theme.text
-    l.Font = Enum.Font.GothamBold; l.TextSize = 14
-
-    anim(n, {Position = UDim2.new(0.5, -150, 0, 20)}, 0.5, Enum.EasingStyle.Back)
-    task.delay(3, function()
-        anim(n, {Position = UDim2.new(0.5, -150, 0, -60)}, 0.5, Enum.EasingStyle.Back.In)
-        task.wait(0.5); n:Destroy()
-    end)
-end
-
--- [[ MAIN HUB GUI ]] --
-local Main = Instance.new("Frame", SG)
-Main.Size = UDim2.new(0, 320, 0, 300)
-Main.Position = UDim2.new(0.5, -160, 0.5, -150)
-Main.BackgroundColor3 = theme.bg
-Main.Visible = false -- Hidden initially
-Main.ClipsDescendants = true
-Instance.new("UICorner", Main).CornerRadius = UDim.new(0, 15)
+makeDraggable(ToggleBtn)
 makeDraggable(Main)
 
-local MainStroke = Instance.new("UIStroke", Main)
-MainStroke.Thickness = 3
-createGradient(MainStroke)
-
-local Header = Instance.new("TextLabel", Main)
-Header.Size = UDim2.new(1, 0, 0, 50)
-Header.Text = TITLE_TEXT
-Header.TextColor3 = theme.text
-Header.Font = Enum.Font.GothamBlack
-Header.TextSize = 18
-Header.BackgroundTransparency = 1
-
--- [[ TOGGLE BUTTON (HIDDEN INITIALLY) ]] --
-local ToggleBtn = Instance.new("ImageButton", SG)
-ToggleBtn.Size = UDim2.new(0, 60, 0, 60)
-ToggleBtn.Position = UDim2.new(0, 20, 0.5, -30)
-ToggleBtn.Image = IMG_ID
-ToggleBtn.BackgroundColor3 = theme.bg
-ToggleBtn.ImageTransparency = 1 -- Hidden
-ToggleBtn.BackgroundTransparency = 1 -- Hidden
-Instance.new("UICorner", ToggleBtn).CornerRadius = UDim.new(1, 0)
-local ToggleStroke = Instance.new("UIStroke", ToggleBtn)
-ToggleStroke.Thickness = 2
-ToggleStroke.Transparency = 1 -- Hidden
-createGradient(ToggleStroke)
-makeDraggable(ToggleBtn)
-
--- [[ KEY SYSTEM GUI ]] --
+-- [[ KEY SYSTEM ]] --
 local KeyFrame = Instance.new("Frame", SG)
 KeyFrame.Size = UDim2.new(0, 320, 0, 180)
 KeyFrame.Position = UDim2.new(0.5, -160, 0.5, -90)
 KeyFrame.BackgroundColor3 = theme.bg
 Instance.new("UICorner", KeyFrame).CornerRadius = UDim.new(0, 15)
-local KeyStroke = Instance.new("UIStroke", KeyFrame)
-KeyStroke.Thickness = 3
-createGradient(KeyStroke)
+local KeyStroke = Instance.new("UIStroke", KeyFrame); KeyStroke.Thickness = 3; createGradient(KeyStroke)
 
 local KeyTitle = Instance.new("TextLabel", KeyFrame)
-KeyTitle.Size = UDim2.new(1, 0, 0, 40)
-KeyTitle.Position = UDim2.new(0, 0, 0, 10)
-KeyTitle.Text = "SECURITY GATEWAY"
-KeyTitle.TextColor3 = theme.text
-KeyTitle.Font = Enum.Font.GothamBold
-KeyTitle.TextSize = 16
-KeyTitle.BackgroundTransparency = 1
+KeyTitle.Size = UDim2.new(1, 0, 0, 40); KeyTitle.Position = UDim2.new(0,0,0,10)
+KeyTitle.Text = "SECURITY GATEWAY"; KeyTitle.TextColor3 = theme.text
+KeyTitle.Font = Enum.Font.GothamBold; KeyTitle.TextSize = 16; KeyTitle.BackgroundTransparency = 1
 
 local KInput = Instance.new("TextBox", KeyFrame)
-KInput.Size = UDim2.new(0, 240, 0, 45)
-KInput.Position = UDim2.new(0.5, -120, 0.35, 10)
-KInput.PlaceholderText = "Enter Access Key..."
-KInput.Text = ""
-KInput.BackgroundColor3 = theme.btnOff
-KInput.TextColor3 = theme.text
-KInput.PlaceholderColor3 = Color3.fromRGB(150, 150, 150)
-KInput.Font = Enum.Font.Gotham
-KInput.TextSize = 14
+KInput.Size = UDim2.new(0, 240, 0, 45); KInput.Position = UDim2.new(0.5, -120, 0.35, 10)
+KInput.PlaceholderText = "Enter Key..."; KInput.Text = ""; KInput.BackgroundColor3 = theme.btnOff
+KInput.TextColor3 = theme.text; KInput.Font = Enum.Font.Gotham; KInput.TextSize = 14
 Instance.new("UICorner", KInput).CornerRadius = UDim.new(0, 10)
 
 local KBtn = Instance.new("TextButton", KeyFrame)
-KBtn.Size = UDim2.new(0, 140, 0, 40)
-KBtn.Position = UDim2.new(0.5, -70, 0.7, 10)
-KBtn.Text = "AUTHENTICATE"
-KBtn.BackgroundColor3 = theme.accent1
-KBtn.TextColor3 = theme.bg
-KBtn.Font = Enum.Font.GothamBold
-KBtn.TextSize = 14
+KBtn.Size = UDim2.new(0, 140, 0, 40); KBtn.Position = UDim2.new(0.5, -70, 0.7, 10)
+KBtn.Text = "AUTHENTICATE"; KBtn.BackgroundColor3 = theme.accent1; KBtn.TextColor3 = theme.text
+KBtn.Font = Enum.Font.GothamBold; KBtn.TextSize = 14
 Instance.new("UICorner", KBtn).CornerRadius = UDim.new(0, 10)
-local KBtnGradient = createGradient(KBtn)
+createGradient(KBtn)
 
--- [[ TRANSITION LOGIC ]] --
-local function showMainHub()
-    Main.Visible = true
-    Main.Size = UDim2.new(0, 0, 0, 0)
-    Main.Position = UDim2.new(0.5, 0, 0.5, 0)
-    anim(Main, {Size = UDim2.new(0, 320, 0, 300), Position = UDim2.new(0.5, -160, 0.5, -150)}, 0.5, Enum.EasingStyle.Back)
-    
-    -- FADE IN TOGGLE BUTTON
+-- [[ LOGIC: KEY SUCCESS & TOGGLE ]] --
+local function revealHub()
+    -- 1. Reveal Toggle Button
+    ToggleBtn.Visible = true
     anim(ToggleBtn, {ImageTransparency = 0, BackgroundTransparency = 0}, 0.5)
     anim(ToggleStroke, {Transparency = 0}, 0.5)
+    
+    -- 2. Setup Main Menu opening logic
+    local function toggleMenu()
+        Main.Visible = not Main.Visible
+        if Main.Visible then
+            -- Open Animation
+            Main.Size = UDim2.new(0, 0, 0, 0)
+            Main.Position = ToggleBtn.Position
+            anim(Main, {Size = UDim2.new(0, 320, 0, 300), Position = UDim2.new(0.5, -160, 0.5, -150)}, 0.4)
+        end
+    end
+    ToggleBtn.MouseButton1Click:Connect(toggleMenu)
+    -- Auto open first time
+    toggleMenu()
 end
 
 KBtn.MouseButton1Click:Connect(function()
     playClick()
     if KInput.Text == KEY then
         local userName = lp.DisplayName or lp.Name
-        notify("Welcome, " .. userName .. ". Access Granted.", true)
-        anim(KeyFrame, {Size = UDim2.new(0,0,0,0), Position = UDim2.new(0.5,0,0.5,0), BackgroundTransparency = 1}, 0.4, Enum.EasingStyle.Back.In)
-        task.wait(0.4)
-        KeyFrame:Destroy()
-        showMainHub()
+        notify("Access Granted. Welcome, " .. userName)
+        
+        -- ANIMATION FIX: Slide Down off screen instead of shrinking
+        anim(KeyFrame, {Position = UDim2.new(0.5, -160, 1.5, 0)}, 0.5) 
+        
+        task.wait(0.5) -- Wait for slide to finish
+        KeyFrame:Destroy() -- Delete Key System
+        revealHub() -- Show the toggle
     else
-        notify("Invalid Key. Access Denied.", false)
+        notify("Access Denied.")
         anim(KInput, {BackgroundColor3 = theme.btnExit}, 0.2)
         task.wait(0.2)
         anim(KInput, {BackgroundColor3 = theme.btnOff}, 0.2)
-    end
-end)
-
-ToggleBtn.MouseButton1Click:Connect(function()
-    playClick()
-    Main.Visible = not Main.Visible
-    if Main.Visible then
-        Main.Size = UDim2.new(0, 0, 0, 0)
-        Main.Position = ToggleBtn.Position
-        anim(Main, {Size = UDim2.new(0, 320, 0, 300), Position = UDim2.new(0.5, -160, 0.5, -150)}, 0.4, Enum.EasingStyle.Back)
     end
 end)
 
@@ -221,23 +206,21 @@ local function createBtn(name, callback, isExit)
     btn.Text = isExit and name or name .. " [OFF]"
     btn.BackgroundColor3 = isExit and theme.btnExit or theme.btnOff
     btn.TextColor3 = theme.text
-    btn.Font = Enum.Font.GothamBold
-    btn.TextSize = 14
+    btn.Font = Enum.Font.GothamBold; btn.TextSize = 14
     Instance.new("UICorner", btn).CornerRadius = UDim.new(0, 10)
     
     local state = false
     btn.MouseButton1Click:Connect(function()
         playClick()
         if isExit then
-            anim(Main, {Size = UDim2.new(0,0,0,0), Position = ToggleBtn.Position}, 0.4, Enum.EasingStyle.Back.In)
-            anim(ToggleBtn, {ImageTransparency = 1, BackgroundTransparency = 1}, 0.4)
-            anim(ToggleStroke, {Transparency = 1}, 0.4)
-            task.wait(0.4)
+            anim(Main, {Size = UDim2.new(0,0,0,0), Position = ToggleBtn.Position}, 0.3)
+            anim(ToggleBtn, {ImageTransparency = 1, BackgroundTransparency = 1}, 0.3)
+            task.wait(0.3)
             SG:Destroy()
         else
             state = not state
             btn.Text = name .. (state and " [ON]" or " [OFF]")
-            anim(btn, {BackgroundColor3 = state and theme.btnOn or theme.btnOff}, 0.3)
+            anim(btn, {BackgroundColor3 = state and theme.btnOn or theme.btnOff}, 0.2)
             callback(state)
         end
     end)
@@ -245,32 +228,35 @@ end
 
 local jOn, sOn = false, false
 
--- [[ STABLE INFINITE JUMP LOGIC ]] --
--- This method is used by many professional hubs for stability.
-UIS.JumpRequest:Connect(function()
-    if jOn and lp.Character and lp.Character:FindFirstChildOfClass("Humanoid") then
-        local hum = lp.Character:FindFirstChildOfClass("Humanoid")
-        if hum.State ~= Enum.HumanoidStateType.Jumping and hum.State ~= Enum.HumanoidStateType.Freefall then
-             hum:ChangeState(Enum.HumanoidStateType.Jumping)
+-- [[ FIX: SAFE INFINITE JUMP ]] --
+UIS.InputBegan:Connect(function(input, gameProcessed)
+    if gameProcessed then return end
+    if input.UserInputType == Enum.UserInputType.Jump or (input.KeyCode == Enum.KeyCode.Space) then
+        if jOn and lp.Character and lp.Character:FindFirstChild("Humanoid") then
+            -- Force jump state without velocity glitches
+            lp.Character.Humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
         end
     end
 end)
 
--- [[ AUTO-STEAL LOGIC ]] --
+-- [[ AUTO STEAL ]] --
 task.spawn(function()
-    while task.wait(0.2) do
+    while task.wait(0.1) do
         if sOn and lp.Character and lp.Character:FindFirstChild("HumanoidRootPart") then
             for _, v in pairs(workspace:GetDescendants()) do
-                if v:IsA("TouchTransmitter") and v.Parent and (v.Parent.Position - lp.Character.HumanoidRootPart.Position).Magnitude <= 60 then
-                    firetouchinterest(lp.Character.HumanoidRootPart, v.Parent, 0)
-                    firetouchinterest(lp.Character.HumanoidRootPart, v.Parent, 1)
+                if v:IsA("TouchTransmitter") and v.Parent then
+                   local dist = (v.Parent.Position - lp.Character.HumanoidRootPart.Position).Magnitude
+                   if dist <= 50 then
+                        firetouchinterest(lp.Character.HumanoidRootPart, v.Parent, 0)
+                        firetouchinterest(lp.Character.HumanoidRootPart, v.Parent, 1)
+                   end
                 end
             end
         end
     end
 end)
 
--- [[ CREATE BUTTONS ]] --
-createBtn("♾️ Infinite Jump", function(s) jOn = s end)
-createBtn("🧤 Auto-Steal", function(s) sOn = s end)
-createBtn("❌ EXIT HUB", nil, true)
+-- [[ ADD BUTTONS ]] --
+createBtn("Infinite Jump", function(s) jOn = s end)
+createBtn("Auto Steal", function(s) sOn = s end)
+createBtn("EXIT HUB", nil, true)
