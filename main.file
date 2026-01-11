@@ -1,25 +1,59 @@
---==[ 💎 GHALOULIX9'S ULTIMATE HUB 💎 ]==--
+-- [[ 💎 GHALOULIX9'S ULTIMATE HUB 💎 ]] --
 local KEY = "GHALOULIX9"
+local TITLE_TEXT = "💎 GHALOULIX9'S ULTIMATE HUB 💎"
 local IMG_ID = "rbxassetid://108600585930067"
+local CLICK_SFX = "rbxassetid://6895079853"
 
 local lp = game:GetService("Players").LocalPlayer
 local UIS = game:GetService("UserInputService")
 local TS = game:GetService("TweenService")
-local cg = game:GetService("CoreGui")
+local cg = lp:WaitForChild("PlayerGui") 
 
-pcall(function() cg.GH_HUB:Destroy() end)
+pcall(function() if cg:FindFirstChild("GH_HUB") then cg.GH_HUB:Destroy() end end)
+
 local SG = Instance.new("ScreenGui", cg)
 SG.Name = "GH_HUB"
 SG.ResetOnSpawn = false
 
--- [[ SMOOTH DRAGGING LOGIC ]] --
+-- [[ HELPERS ]] --
+local function anim(obj, time, props)
+    local t = TS:Create(obj, TweenInfo.new(time, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), props)
+    t:Play() return t
+end
+
+local function playClick()
+    local s = Instance.new("Sound", SG)
+    s.SoundId = CLICK_SFX; s.Volume = 1; s:Play()
+    s.Ended:Connect(function() s:Destroy() end)
+end
+
+-- [[ NOTIFICATION SYSTEM ]] --
+local function notify(text)
+    local n = Instance.new("Frame", SG)
+    n.Size = UDim2.new(0, 280, 0, 50)
+    n.Position = UDim2.new(1, 10, 0.1, 0)
+    n.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+    Instance.new("UICorner", n)
+    Instance.new("UIStroke", n).Color = Color3.fromRGB(0, 150, 255)
+    
+    local l = Instance.new("TextLabel", n)
+    l.Size = UDim2.new(1, 0, 1, 0); l.BackgroundTransparency = 1
+    l.Text = text; l.TextColor3 = Color3.new(1, 1, 1)
+    l.Font = Enum.Font.GothamBold; l.TextSize = 13
+
+    anim(n, 0.5, {Position = UDim2.new(1, -290, 0.1, 0)})
+    task.delay(3, function()
+        anim(n, 0.5, {Position = UDim2.new(1, 10, 0.1, 0)})
+        task.wait(0.5); n:Destroy()
+    end)
+end
+
+-- [[ DRAG SYSTEM ]] --
 local function makeDraggable(gui)
-    local dragging, dragInput, dragStart, startPos
+    local dragging, dragStart, startPos
     gui.InputBegan:Connect(function(input)
         if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
-            dragging = true
-            dragStart = input.Position
-            startPos = gui.Position
+            dragging = true; dragStart = input.Position; startPos = gui.Position
         end
     end)
     UIS.InputChanged:Connect(function(input)
@@ -29,134 +63,120 @@ local function makeDraggable(gui)
         end
     end)
     UIS.InputEnded:Connect(function(input)
-        if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
-            dragging = false
-        end
+        if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then dragging = false end
     end)
 end
 
--- [[ CREATE TOGGLE CIRCLE ]] --
+-- [[ TOGGLE CIRCLE ]] --
 local ToggleBtn = Instance.new("ImageButton", SG)
-ToggleBtn.Size = UDim2.new(0, 60, 0, 60)
-ToggleBtn.Position = UDim2.new(0, 10, 0.5, -30)
-ToggleBtn.Image = IMG_ID
-ToggleBtn.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
-ToggleBtn.BorderSizePixel = 0
-local TCorner = Instance.new("UICorner", ToggleBtn)
-TCorner.CornerRadius = UDim.new(1, 0)
-local TStroke = Instance.new("UIStroke", ToggleBtn)
-TStroke.Color = Color3.fromRGB(0, 0, 255)
-TStroke.Thickness = 3
+ToggleBtn.Size = UDim2.new(0, 65, 0, 65); ToggleBtn.Position = UDim2.new(0, 15, 0.45, 0)
+ToggleBtn.Image = IMG_ID; ToggleBtn.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+Instance.new("UICorner", ToggleBtn).CornerRadius = UDim.new(1, 0)
+Instance.new("UIStroke", ToggleBtn).Color = Color3.fromRGB(0, 0, 255)
 makeDraggable(ToggleBtn)
 
--- [[ MAIN UI WINDOW ]] --
+-- [[ MAIN WINDOW ]] --
 local Main = Instance.new("Frame", SG)
-Main.Size = UDim2.new(0, 300, 0, 250)
-Main.Position = UDim2.new(0.5, -150, 0.5, -125)
-Main.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
-Main.BorderSizePixel = 0
-Main.Visible = false -- Start hidden
-local MCorner = Instance.new("UICorner", Main)
-MCorner.CornerRadius = UDim.new(0, 15)
-local MStroke = Instance.new("UIStroke", Main)
-MStroke.Color = Color3.fromRGB(255, 0, 0)
-MStroke.Thickness = 2
+Main.Size = UDim2.new(0, 280, 0, 280) -- Made slightly taller for Exit button
+Main.Position = UDim2.new(0.5, -140, 0.6, -140)
+Main.BackgroundColor3 = Color3.fromRGB(15, 15, 15); Main.BackgroundTransparency = 1; Main.Visible = false
+Instance.new("UICorner", Main).CornerRadius = UDim.new(0, 15)
+local MStroke = Instance.new("UIStroke", Main); MStroke.Color = Color3.fromRGB(255, 0, 0); MStroke.Transparency = 1
 makeDraggable(Main)
 
--- Header
-local Title = Instance.new("TextLabel", Main)
-Title.Size = UDim2.new(1, 0, 0, 40)
-Title.Text = "GHALOULIX9 HUB"
-Title.TextColor3 = Color3.fromRGB(0, 120, 255)
-Title.Font = Enum.Font.GothamBold
-Title.TextSize = 20
-Title.BackgroundTransparency = 1
+local Header = Instance.new("TextLabel", Main)
+Header.Size = UDim2.new(1, 0, 0, 50); Header.Text = TITLE_TEXT
+Header.TextColor3 = Color3.new(1, 1, 1); Header.TextTransparency = 1; Header.Font = Enum.Font.GothamBold; Header.TextSize = 14; Header.BackgroundTransparency = 1
 
--- Toggle Visibility Logic
-ToggleBtn.MouseButton1Click:Connect(function()
-    Main.Visible = not Main.Visible
-end)
+-- [[ KEY SYSTEM ]] --
+local KFrame = Instance.new("Frame", SG)
+KFrame.Size = UDim2.new(0, 300, 0, 160); KFrame.Position = UDim2.new(0.5, -150, 0.5, -80)
+KFrame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+Instance.new("UICorner", KFrame); Instance.new("UIStroke", KFrame).Color = Color3.fromRGB(0, 150, 255)
 
--- [[ KEY SYSTEM (Fast) ]] --
-local KeyFrame = Instance.new("Frame", Main)
-KeyFrame.Size = UDim2.new(1, 0, 1, 0)
-KeyFrame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
-KeyFrame.ZIndex = 5
-Instance.new("UICorner", KeyFrame).CornerRadius = UDim.new(0, 15)
-
-local KInput = Instance.new("TextBox", KeyFrame)
-KInput.Size = UDim2.new(0, 200, 0, 40)
-KInput.Position = UDim2.new(0.5, -100, 0.4, 0)
-KInput.PlaceholderText = "Enter Key..."
-KInput.Text = ""
-KInput.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
-KInput.TextColor3 = Color3.new(1,1,1)
+local KInput = Instance.new("TextBox", KFrame)
+KInput.Size = UDim2.new(0, 220, 0, 40); KInput.Position = UDim2.new(0.5, -110, 0.35, 0)
+KInput.PlaceholderText = "ENTER KEY..."; KInput.Text = ""; KInput.BackgroundColor3 = Color3.fromRGB(40, 40, 40); KInput.TextColor3 = Color3.new(1,1,1)
 Instance.new("UICorner", KInput)
 
-local KBtn = Instance.new("TextButton", KeyFrame)
-KBtn.Size = UDim2.new(0, 100, 0, 40)
-KBtn.Position = UDim2.new(0.5, -50, 0.65, 0)
-KBtn.Text = "Check"
-KBtn.BackgroundColor3 = Color3.fromRGB(0, 100, 255)
-KBtn.TextColor3 = Color3.new(1,1,1)
-Instance.new("UICorner", KBtn)
+local KBtn = Instance.new("TextButton", KFrame)
+KBtn.Size = UDim2.new(0, 120, 0, 40); KBtn.Position = UDim2.new(0.5, -60, 0.75, 0)
+KBtn.Text = "LOGIN"; KBtn.BackgroundColor3 = Color3.fromRGB(255, 0, 0); KBtn.TextColor3 = Color3.new(1,1,1); KBtn.Font = Enum.Font.GothamBold; Instance.new("UICorner", KBtn)
+
+local function openMain()
+    Main.Visible = true; playClick()
+    anim(Main, 0.6, {BackgroundTransparency = 0.2, Position = UDim2.new(0.5, -140, 0.5, -140)})
+    anim(MStroke, 0.6, {Transparency = 0}); anim(Header, 0.6, {TextTransparency = 0})
+end
 
 KBtn.MouseButton1Click:Connect(function()
     if KInput.Text == KEY then
-        KeyFrame:Visible = false
-        TS:Create(KeyFrame, TweenInfo.new(0.5), {BackgroundTransparency = 1}):Play()
-        task.wait(0.5)
-        KeyFrame:Destroy()
+        playClick()
+        local userName = lp.DisplayName or lp.Name
+        notify("Access Granted! Welcome " .. userName)
+        anim(KFrame, 0.4, {BackgroundTransparency = 1})
+        KInput:Destroy(); KBtn:Destroy(); task.wait(0.4); KFrame:Destroy()
+        openMain()
+    else
+        notify("Wrong Key! Try Again.")
     end
 end)
 
--- [[ FUNCTION BUTTONS ]] --
-local function createButton(name, pos, callback)
-    local btn = Instance.new("TextButton", Main)
-    btn.Size = UDim2.new(0, 240, 0, 45)
-    btn.Position = pos
-    btn.Text = name .. ": OFF"
-    btn.BackgroundColor3 = Color3.fromRGB(40, 0, 0)
-    btn.TextColor3 = Color3.fromRGB(0, 150, 255)
-    btn.Font = Enum.Font.GothamBold
-    Instance.new("UICorner", btn)
+ToggleBtn.MouseButton1Click:Connect(function()
+    if not SG:FindFirstChild("KFrame") then 
+        if Main.Visible then 
+            playClick(); anim(Main, 0.5, {BackgroundTransparency = 1, Position = UDim2.new(0.5, -140, 0.6, -140)}); anim(MStroke, 0.5, {Transparency = 1}); anim(Header, 0.5, {TextTransparency = 1})
+            task.wait(0.5); Main.Visible = false
+        else openMain() end
+    end
+end)
+
+-- [[ BUTTON CREATOR ]] --
+local function addHack(name, pos, color, callback)
+    local b = Instance.new("TextButton", Main)
+    b.Size = UDim2.new(0, 220, 0, 45); b.Position = pos; b.Text = name .. (name == "EXIT" and "" or ": OFF")
+    b.BackgroundColor3 = color; b.TextColor3 = Color3.new(1,1,1); b.Font = Enum.Font.GothamBold
+    b.BackgroundTransparency = 1; b.TextTransparency = 1; Instance.new("UICorner", b)
     
-    local active = false
-    btn.MouseButton1Click:Connect(function()
-        active = not active
-        btn.Text = name .. ": " .. (active and "ON" or "OFF")
-        btn.BackgroundColor3 = active and Color3.fromRGB(0, 100, 0) or Color3.fromRGB(40, 0, 0)
-        callback(active)
+    local state = false
+    b.MouseButton1Click:Connect(function()
+        playClick()
+        if name == "EXIT" then
+            SG:Destroy()
+        else
+            state = not state
+            b.Text = name .. ": " .. (state and "ON" or "OFF")
+            anim(b, 0.3, {BackgroundColor3 = state and Color3.fromRGB(0, 130, 0) or color})
+            callback(state)
+        end
+    end)
+    
+    Main:GetPropertyChangedSignal("Visible"):Connect(function()
+        if Main.Visible then task.wait(0.2); anim(b, 0.5, {BackgroundTransparency = 0, TextTransparency = 0})
+        else b.BackgroundTransparency = 1; b.TextTransparency = 1 end
     end)
 end
 
+local jOn, sOn = false, false
+addHack("Ultra Jump", UDim2.new(0.5, -110, 0.25, 0), Color3.fromRGB(40, 0, 0), function(v) jOn = v end)
+addHack("Auto-Steal", UDim2.new(0.5, -110, 0.5, 0), Color3.fromRGB(40, 0, 0), function(v) sOn = v end)
+addHack("EXIT", UDim2.new(0.5, -110, 0.75, 0), Color3.fromRGB(100, 0, 0), nil)
+
 -- JUMP LOGIC
-local jumpEnabled = false
-createButton("Safe Jump", UDim2.new(0.5, -120, 0.3, 0), function(val)
-    jumpEnabled = val
-end)
-
--- AUTO-STEAL LOGIC
-local stealEnabled = false
-createButton("Auto-Steal", UDim2.new(0.5, -120, 0.6, 0), function(val)
-    stealEnabled = val
-end)
-
--- Background Loops
 UIS.JumpRequest:Connect(function()
-    if jumpEnabled and lp.Character and lp.Character:FindFirstChild("HumanoidRootPart") then
-        local hrp = lp.Character.HumanoidRootPart
-        hrp.Velocity = Vector3.new(hrp.Velocity.X, 50, hrp.Velocity.Z)
+    if jOn and lp.Character and lp.Character:FindFirstChild("HumanoidRootPart") then
+        lp.Character.HumanoidRootPart.Velocity = Vector3.new(lp.Character.HumanoidRootPart.Velocity.X, 50, lp.Character.HumanoidRootPart.Velocity.Z)
+        lp.Character.Humanoid:ChangeState(3)
     end
 end)
 
+-- STEAL LOGIC
 task.spawn(function()
-    while task.wait(0.3) do
-        if stealEnabled and lp.Character and lp.Character:FindFirstChild("HumanoidRootPart") then
+    while task.wait(0.5) do
+        if sOn and lp.Character and lp.Character:FindFirstChild("HumanoidRootPart") then
             for _, v in pairs(workspace:GetDescendants()) do
                 if v:IsA("TouchTransmitter") and v.Parent and (v.Parent.Position - lp.Character.HumanoidRootPart.Position).Magnitude <= 50 then
-                    firetouchinterest(lp.Character.HumanoidRootPart, v.Parent, 0)
-                    firetouchinterest(lp.Character.HumanoidRootPart, v.Parent, 1)
+                    firetouchinterest(lp.Character.HumanoidRootPart, v.Parent, 0); firetouchinterest(lp.Character.HumanoidRootPart, v.Parent, 1)
                 end
             end
         end
