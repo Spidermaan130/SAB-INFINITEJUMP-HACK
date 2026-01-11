@@ -1,6 +1,7 @@
--- [[ ⚡ GHALOULIX9'S ULTIMATE ELITE HUB - BRAINROT EDITION ⚡ ]] --
--- 🧠 Fixes: Rubberbanding, Item Weight, and "Removed for Cheating" 🧠
--- 🛡️ Includes: Server-Deceiver & Network Priority 🛡️
+-- [[ ⚡ GHALOULIX9'S ULTIMATE ELITE HUB - NO KEY EDITION ⚡ ]] --
+-- 🧠 Fixes: Rubberbanding, Item Weight, and "Removed for Cheating"
+-- 🛡️ GOD MODE: Infinite Health Integrated
+-- 🔧 Optimized for Delta Mobile | Physics-Sync Technology
 
 repeat task.wait() until game:IsLoaded()
 
@@ -12,16 +13,15 @@ local p = Players.LocalPlayer
 local playerGui = p:WaitForChild("PlayerGui")
 
 -- Cleanup
-local old = playerGui:FindFirstChild("Ghaloulix9_Final_Bypass")
+local old = playerGui:FindFirstChild("Ghaloulix9_Final_Instant")
 if old then old:Destroy() end
 
 local SG = Instance.new("ScreenGui", playerGui)
-SG.Name = "Ghaloulix9_Final_Bypass"
+SG.Name = "Ghaloulix9_Final_Instant"
 SG.ResetOnSpawn = false
 
 local COLORS = {
     DARK = Color3.fromRGB(15, 15, 25),
-    MEDIUM = Color3.fromRGB(25, 25, 40),
     ACCENT = Color3.fromRGB(100, 220, 255),
     SUCCESS = Color3.fromRGB(100, 255, 150),
     ERROR = Color3.fromRGB(255, 100, 100)
@@ -40,58 +40,29 @@ local function addGrad(parent, thick)
     return gradient
 end
 
--- Key System UI
-local keyScreen = Instance.new("Frame", SG)
-keyScreen.Size = UDim2.new(1, 0, 1, 0)
-keyScreen.BackgroundColor3 = Color3.fromRGB(10, 10, 15)
-
-local keyContainer = Instance.new("Frame", keyScreen)
-keyContainer.Size = UDim2.new(0, 350, 0, 250)
-keyContainer.Position = UDim2.new(0.5, 0, 0.5, 0)
-keyContainer.AnchorPoint = Vector2.new(0.5, 0.5)
-keyContainer.BackgroundColor3 = COLORS.DARK
-Instance.new("UICorner", keyContainer)
-local kg = addGrad(keyContainer, 3)
-
-local keyInput = Instance.new("TextBox", keyContainer)
-keyInput.Size = UDim2.new(0, 250, 0, 50)
-keyInput.Position = UDim2.new(0.5, -125, 0.4, 0)
-keyInput.PlaceholderText = "Key: GHALOULIX9"
-keyInput.Text = ""
-keyInput.TextColor3 = Color3.new(1,1,1)
-keyInput.BackgroundColor3 = COLORS.MEDIUM
-Instance.new("UICorner", keyInput)
-
-local submit = Instance.new("TextButton", keyContainer)
-submit.Size = UDim2.new(0, 140, 0, 50)
-submit.Position = UDim2.new(0.5, -70, 0.7, 0)
-submit.Text = "UNLOCK"
-submit.BackgroundColor3 = COLORS.ACCENT
-Instance.new("UICorner", submit)
-
--- Main Hub UI
+-- Main Toggle Button (Appears immediately)
 local toggleBtn = Instance.new("ImageButton", SG)
-toggleBtn.Size = UDim2.new(0, 75, 0, 75)
-toggleBtn.Position = UDim2.new(1, -100, 0.5, 0)
+toggleBtn.Size = UDim2.new(0, 65, 0, 65)
+toggleBtn.Position = UDim2.new(1, -80, 0.5, 0)
 toggleBtn.Image = "rbxassetid://108600585930067"
 toggleBtn.BackgroundTransparency = 1
-toggleBtn.Visible = false
 Instance.new("UICorner", toggleBtn).CornerRadius = UDim.new(1, 0)
-local tg = addGrad(toggleBtn, 4)
+local tg = addGrad(toggleBtn, 3)
 
+-- Main Hub UI
 local mainHub = Instance.new("Frame", SG)
-mainHub.Size = UDim2.new(0, 350, 0, 200)
+mainHub.Size = UDim2.new(0, 300, 0, 180)
 mainHub.Position = UDim2.new(0.5, 0, 0.5, 0)
 mainHub.AnchorPoint = Vector2.new(0.5, 0.5)
 mainHub.BackgroundColor3 = COLORS.DARK
-mainHub.Visible = false
+mainHub.Visible = true
 Instance.new("UICorner", mainHub)
 local hg = addGrad(mainHub, 4)
 
 local jumpBtn = Instance.new("TextButton", mainHub)
-jumpBtn.Size = UDim2.new(0, 280, 0, 70)
-jumpBtn.Position = UDim2.new(0.5, -140, 0.4, 0)
-jumpBtn.Text = "BRAINROT JUMP: OFF"
+jumpBtn.Size = UDim2.new(0, 240, 0, 60)
+jumpBtn.Position = UDim2.new(0.5, -120, 0.4, 0)
+jumpBtn.Text = "GOD JUMP: OFF"
 jumpBtn.BackgroundColor3 = COLORS.ERROR
 jumpBtn.TextColor3 = Color3.new(1,1,1)
 jumpBtn.Font = Enum.Font.GothamBold
@@ -101,7 +72,7 @@ Instance.new("UICorner", jumpBtn)
 local active = false
 local JUMP_POWER = 34 
 
--- 🛡️ SERVER-DECEIVER LOOP 🛡️
+-- 🛡️ HEARTBEAT LOOP (Health & Anti-Cheat) 🛡️
 RunService.Heartbeat:Connect(function()
     if active then
         local char = p.Character
@@ -109,14 +80,15 @@ RunService.Heartbeat:Connect(function()
         local hrp = char and char:FindFirstChild("HumanoidRootPart")
         
         if hum and hrp then
-            -- 1. Anti-Death & State Lock
+            -- INFINITE HEALTH (God Mode)
+            hum.MaxHealth = 99999999
+            hum.Health = 99999999
             hum:SetStateEnabled(Enum.HumanoidStateType.Dead, false)
-            if hum.Health <= 0 then hum.Health = 100 end
             
-            -- 2. Network Priority (Stops Rubberbanding)
+            -- NETWORK OWNERSHIP (Stops Rubberband)
             p.SimulationRadius = math.huge
             
-            -- 3. Fake Physics State (Tricks Anti-Cheat)
+            -- FAKE PHYSICS STATE
             if hum:GetState() == Enum.HumanoidStateType.NoPhysics then
                 hum:ChangeState(Enum.HumanoidStateType.FallingDown)
             end
@@ -127,16 +99,17 @@ end)
 -- 🛡️ MASSLESS ITEM SYSTEM 🛡️
 p.CharacterChildAdded:Connect(function(child)
     if active and child:IsA("Tool") then
-        task.wait(0.1) -- Wait for item to load
+        task.wait(0.1)
         for _, part in pairs(child:GetDescendants()) do
             if part:IsA("BasePart") then
+                part.Massless = true 
                 part.CanCollide = false
-                part.Massless = true -- Makes Brainrot weightless
             end
         end
     end
 end)
 
+-- JUMP HANDLER
 UIS.JumpRequest:Connect(function()
     if active then
         local char = p.Character
@@ -150,37 +123,38 @@ UIS.JumpRequest:Connect(function()
             
             task.wait(0.15) 
             
-            -- Smooth Decay to look "Human" to the server
+            -- Natural Decay (To fool server-side logs)
             for i = 1, 4 do
                 bv.Velocity = bv.Velocity * 0.4
                 task.wait(0.03)
             end
-            
             bv:Destroy()
         end
     end
 end)
 
--- [[ BUTTON ACTIONS ]] --
-submit.MouseButton1Click:Connect(function()
-    if keyInput.Text == "GHALOULIX9" then
-        keyScreen:Destroy()
-        toggleBtn.Visible = true
-    end
-end)
-
+-- [[ UI ACTIONS ]] --
 toggleBtn.MouseButton1Click:Connect(function() mainHub.Visible = not mainHub.Visible end)
 
 jumpBtn.MouseButton1Click:Connect(function()
     active = not active
-    jumpBtn.Text = "BRAINROT JUMP: " .. (active and "ON" or "OFF")
+    jumpBtn.Text = "GOD JUMP: " .. (active and "ON" or "OFF")
     jumpBtn.BackgroundColor3 = active and COLORS.SUCCESS or COLORS.ERROR
+    
+    -- Reset Health to 100 when turned off
+    if not active then
+        local hum = p.Character and p.Character:FindFirstChildOfClass("Humanoid")
+        if hum then 
+            hum:SetStateEnabled(Enum.HumanoidStateType.Dead, true)
+            hum.MaxHealth = 100
+            hum.Health = 100 
+        end
+    end
 end)
 
--- RGB Spin
+-- RGB Spin Animation
 RunService.RenderStepped:Connect(function()
     local r = tick() * 60
-    if kg then kg.Rotation = r end
     if tg then tg.Rotation = r end
     if hg then hg.Rotation = r end
 end)
