@@ -1,26 +1,20 @@
--- [[ 💎 GHALOULIX9'S HUB - PRO STABLE EDITION 💎 ]] --
+-- [[ 💎 GHALOULIX9'S HUB - DELTA STABLE 💎 ]] --
 local KEY = "GHALOULIX9"
-local TITLE_TEXT = "💎 GHALOULIX9'S HUB 💎"
-local IMG_ID = "rbxassetid://108600585930067"
-local CLICK_SFX = "rbxassetid://6895079853"
+local TITLE = "💎 GHALOULIX9'S HUB 💎"
+local ICON = "rbxassetid://108600585930067"
 
 local lp = game:GetService("Players").LocalPlayer
 local UIS = game:GetService("UserInputService")
-local TS = game:GetService("TweenService")
 local cg = lp:WaitForChild("PlayerGui")
 
--- Clean up old stuck GUIs from your screen
-pcall(function() 
-    for _, v in pairs(cg:GetChildren()) do 
-        if v.Name == "GH_HUB_PRO" then v:Destroy() end 
-    end 
-end)
+-- Force Cleanup
+if cg:FindFirstChild("GH_HUB_DELTA") then cg.GH_HUB_DELTA:Destroy() end
 
 local SG = Instance.new("ScreenGui", cg)
-SG.Name = "GH_HUB_PRO"
+SG.Name = "GH_HUB_DELTA"
 SG.ResetOnSpawn = false
 
--- [[ STABLE INFINITE JUMP LOGIC ]] --
+-- [[ SAFE INFINITE JUMP LOGIC ]] --
 local infJump = false
 UIS.JumpRequest:Connect(function()
     if infJump then
@@ -29,112 +23,80 @@ UIS.JumpRequest:Connect(function()
         local hrp = char and char:FindFirstChild("HumanoidRootPart")
         
         if hum and hrp then
-            -- THE FIX: We reset the vertical velocity before jumping 
-            -- This prevents the "Speed Kill" anti-cheat from triggering
+            -- Reset Y velocity to 0 FIRST to stop anti-cheat detection
             hrp.Velocity = Vector3.new(hrp.Velocity.X, 0, hrp.Velocity.Z)
             
-            -- Change state to Jumping to bypass fall damage checks
+            -- Force Jump State
             hum:ChangeState(Enum.HumanoidStateType.Jumping)
             
-            -- Small upward force (Stable Delta Method)
+            -- Apply a slight upward boost
+            task.wait()
             hrp.Velocity = Vector3.new(hrp.Velocity.X, 50, hrp.Velocity.Z)
         end
     end
 end)
 
--- [[ UI HELPERS ]] --
-local function anim(obj, props)
-    TS:Create(obj, TweenInfo.new(0.4, Enum.EasingStyle.Quart), props):Play()
-end
-
-local function playClick()
-    local s = Instance.new("Sound", SG); s.SoundId = CLICK_SFX; s.Volume = 0.5; s:Play()
-    s.Ended:Connect(function() s:Destroy() end)
-end
-
 -- [[ KEY SYSTEM ]] --
 local KeyFrame = Instance.new("Frame", SG)
-KeyFrame.Size = UDim2.new(0, 320, 0, 180); KeyFrame.Position = UDim2.new(0.5, -160, 0.5, -90)
+KeyFrame.Size = UDim2.new(0, 300, 0, 160)
+KeyFrame.Position = UDim2.new(0.5, -150, 0.5, -80)
 KeyFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 25)
 Instance.new("UICorner", KeyFrame)
-local KStroke = Instance.new("UIStroke", KeyFrame); KStroke.Color = Color3.fromRGB(0, 180, 255); KStroke.Thickness = 2
+Instance.new("UIStroke", KeyFrame).Color = Color3.fromRGB(0, 150, 255)
 
 local KInput = Instance.new("TextBox", KeyFrame)
-KInput.Size = UDim2.new(0, 240, 0, 40); KInput.Position = UDim2.new(0.5, -120, 0.4, 0)
-KInput.PlaceholderText = "Enter Key..."; KInput.Text = ""; KInput.BackgroundColor3 = Color3.fromRGB(30,30,35); KInput.TextColor3 = Color3.new(1,1,1)
+KInput.Size = UDim2.new(0, 220, 0, 40); KInput.Position = UDim2.new(0.5, -110, 0.35, 0)
+KInput.PlaceholderText = "Key: GHALOULIX9"; KInput.Text = ""; KInput.BackgroundColor3 = Color3.fromRGB(30,30,35); KInput.TextColor3 = Color3.new(1,1,1)
 Instance.new("UICorner", KInput)
 
 local KBtn = Instance.new("TextButton", KeyFrame)
-KBtn.Size = UDim2.new(0, 140, 0, 40); KBtn.Position = UDim2.new(0.5, -70, 0.75, 0)
-KBtn.Text = "AUTHENTICATE"; KBtn.BackgroundColor3 = Color3.fromRGB(0, 180, 255); KBtn.Font = Enum.Font.GothamBold
+KBtn.Size = UDim2.new(0, 120, 0, 40); KBtn.Position = UDim2.new(0.5, -60, 0.75, 0)
+KBtn.Text = "LOGIN"; KBtn.BackgroundColor3 = Color3.fromRGB(0, 150, 255); KBtn.Font = Enum.Font.GothamBold
 Instance.new("UICorner", KBtn)
 
--- [[ MAIN HUB (HIDDEN) ]] --
+-- [[ MAIN MENU ]] --
 local Main = Instance.new("Frame", SG)
-Main.Size = UDim2.new(0, 300, 0, 260); Main.Position = UDim2.new(0.5, -150, 0.5, -130)
-Main.BackgroundColor3 = Color3.fromRGB(15, 15, 20); Main.Visible = false
+Main.Size = UDim2.new(0, 280, 0, 220); Main.Position = UDim2.new(0.5, -140, 0.5, -110)
+Main.BackgroundColor3 = Color3.fromRGB(15, 15, 15); Main.Visible = false
 Instance.new("UICorner", Main)
 Instance.new("UIStroke", Main).Color = Color3.fromRGB(180, 0, 255)
 
-local Title = Instance.new("TextLabel", Main)
-Title.Size = UDim2.new(1,0,0,50); Title.Text = TITLE_TEXT; Title.TextColor3 = Color3.new(1,1,1); Title.Font = Enum.Font.GothamBold; Title.BackgroundTransparency = 1
-
--- [[ TOGGLE BUTTON (FADES IN) ]] --
 local Toggle = Instance.new("ImageButton", SG)
-Toggle.Size = UDim2.new(0, 60, 0, 60); Toggle.Position = UDim2.new(0, 20, 0.5, -30)
-Toggle.Image = IMG_ID; Toggle.BackgroundColor3 = Color3.fromRGB(20,20,25); Toggle.Visible = false
-Toggle.ImageTransparency = 1; Toggle.BackgroundTransparency = 1
+Toggle.Size = UDim2.new(0, 55, 0, 55); Toggle.Position = UDim2.new(0, 15, 0.45, 0)
+Toggle.Image = ICON; Toggle.Visible = false
 Instance.new("UICorner", Toggle).CornerRadius = UDim.new(1,0)
 
--- [[ LOGIN LOGIC ]] --
+-- [[ LOGIC ]] --
 KBtn.MouseButton1Click:Connect(function()
     if KInput.Text == KEY then
-        playClick()
-        local name = lp.DisplayName or lp.Name
-        
-        -- Animation Fix: Slide out and Reveal
-        anim(KeyFrame, {Position = UDim2.new(0.5, -160, 1.2, 0)})
-        task.wait(0.4)
-        KeyFrame:Destroy()
-        
-        -- Show Toggle
+        KeyFrame:Destroy() -- Removes key screen instantly
         Toggle.Visible = true
-        anim(Toggle, {ImageTransparency = 0, BackgroundTransparency = 0})
-        
-        -- Auto-open Main
         Main.Visible = true
-        print("Welcome " .. name .. "! Script is active.")
     else
-        KInput.Text = "ACCESS DENIED"
+        KInput.Text = "INVALID KEY"
         task.wait(1)
         KInput.Text = ""
     end
 end)
 
-Toggle.MouseButton1Click:Connect(function()
-    playClick()
-    Main.Visible = not Main.Visible
-end)
+Toggle.MouseButton1Click:Connect(function() Main.Visible = not Main.Visible end)
 
--- [[ BUTTON CREATOR ]] --
 local function addBtn(text, pos, callback, exit)
     local b = Instance.new("TextButton", Main)
-    b.Size = UDim2.new(0, 240, 0, 50); b.Position = pos
-    b.Text = text .. (exit and "" or ": OFF"); b.BackgroundColor3 = exit and Color3.fromRGB(150,0,0) or Color3.fromRGB(35,35,40)
-    b.TextColor3 = Color3.new(1,1,1); b.Font = Enum.Font.GothamBold
+    b.Size = UDim2.new(0, 220, 0, 45); b.Position = pos
+    b.Text = text .. (exit and "" or ": OFF"); b.BackgroundColor3 = Color3.fromRGB(30,30,35); b.TextColor3 = Color3.new(1,1,1)
     Instance.new("UICorner", b)
     
     local state = false
     b.MouseButton1Click:Connect(function()
-        playClick()
         if exit then SG:Destroy() return end
         state = not state
         b.Text = text .. ": " .. (state and "ON" or "OFF")
-        b.BackgroundColor3 = state and Color3.fromRGB(0, 180, 100) or Color3.fromRGB(35,35,40)
+        b.BackgroundColor3 = state and Color3.fromRGB(0, 180, 100) or Color3.fromRGB(30,30,35)
         callback(state)
     end)
 end
 
-addBtn("Infinite Jump", UDim2.new(0.5, -120, 0.25, 0), function(v) infJump = v end)
-addBtn("Auto-Steal", UDim2.new(0.5, -120, 0.5, 0), function(v) -- logic here if needed -- end)
-addBtn("EXIT HUB", UDim2.new(0.5, -120, 0.75, 0), nil, true)
+addBtn("Infinite Jump", UDim2.new(0.5, -110, 0.2, 0), function(v) infJump = v end)
+addBtn("Auto-Steal", UDim2.new(0.5, -110, 0.45, 0), function(v) -- Auto-steal logic -- end)
+addBtn("EXIT HUB", UDim2.new(0.5, -110, 0.7, 0), nil, true)
