@@ -1,102 +1,77 @@
--- [[ 💎 GHALOULIX9'S HUB - DELTA STABLE 💎 ]] --
+-- [[ 💎 GHALOULIX9'S HUB - GHOST PLATFORM 💎 ]] --
 local KEY = "GHALOULIX9"
-local TITLE = "💎 GHALOULIX9'S HUB 💎"
-local ICON = "rbxassetid://108600585930067"
 
 local lp = game:GetService("Players").LocalPlayer
 local UIS = game:GetService("UserInputService")
-local cg = lp:WaitForChild("PlayerGui")
+local runService = game:GetService("RunService")
 
--- Force Cleanup
-if cg:FindFirstChild("GH_HUB_DELTA") then cg.GH_HUB_DELTA:Destroy() end
-
-local SG = Instance.new("ScreenGui", cg)
+-- Create the UI inside PlayerGui
+local SG = Instance.new("ScreenGui", lp:WaitForChild("PlayerGui"))
 SG.Name = "GH_HUB_DELTA"
 SG.ResetOnSpawn = false
 
--- [[ SAFE INFINITE JUMP LOGIC ]] --
-local infJump = false
-UIS.JumpRequest:Connect(function()
-    if infJump then
-        local char = lp.Character
-        local hum = char and char:FindFirstChildOfClass("Humanoid")
-        local hrp = char and char:FindFirstChild("HumanoidRootPart")
+-- [[ GHOST PLATFORM LOGIC ]] --
+local jumpEnabled = false
+local platform = Instance.new("Part")
+platform.Size = Vector3.new(4, 0.5, 4)
+platform.Transparency = 1 -- Change to 0.5 if you want to see it
+platform.Anchored = true
+platform.CanCollide = false -- Off by default
+platform.Parent = workspace
+
+runService.RenderStepped:Connect(function()
+    local char = lp.Character
+    local hrp = char and char:FindFirstChild("HumanoidRootPart")
+    
+    if jumpEnabled and hrp then
+        -- Move the platform just below your feet
+        platform.CFrame = hrp.CFrame * CFrame.new(0, -3.2, 0)
         
-        if hum and hrp then
-            -- Reset Y velocity to 0 FIRST to stop anti-cheat detection
-            hrp.Velocity = Vector3.new(hrp.Velocity.X, 0, hrp.Velocity.Z)
-            
-            -- Force Jump State
-            hum:ChangeState(Enum.HumanoidStateType.Jumping)
-            
-            -- Apply a slight upward boost
-            task.wait()
-            hrp.Velocity = Vector3.new(hrp.Velocity.X, 50, hrp.Velocity.Z)
+        -- Only make it solid when you are falling/jumping
+        if UIS:IsKeyDown(Enum.KeyCode.Space) or UIS:IsNavigationKeyPressed(Enum.EnumItem) then
+            platform.CanCollide = true
+        else
+            platform.CanCollide = false
         end
+    else
+        platform.CanCollide = false
     end
 end)
 
--- [[ KEY SYSTEM ]] --
-local KeyFrame = Instance.new("Frame", SG)
-KeyFrame.Size = UDim2.new(0, 300, 0, 160)
-KeyFrame.Position = UDim2.new(0.5, -150, 0.5, -80)
-KeyFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 25)
-Instance.new("UICorner", KeyFrame)
-Instance.new("UIStroke", KeyFrame).Color = Color3.fromRGB(0, 150, 255)
-
-local KInput = Instance.new("TextBox", KeyFrame)
-KInput.Size = UDim2.new(0, 220, 0, 40); KInput.Position = UDim2.new(0.5, -110, 0.35, 0)
-KInput.PlaceholderText = "Key: GHALOULIX9"; KInput.Text = ""; KInput.BackgroundColor3 = Color3.fromRGB(30,30,35); KInput.TextColor3 = Color3.new(1,1,1)
-Instance.new("UICorner", KInput)
-
-local KBtn = Instance.new("TextButton", KeyFrame)
-KBtn.Size = UDim2.new(0, 120, 0, 40); KBtn.Position = UDim2.new(0.5, -60, 0.75, 0)
-KBtn.Text = "LOGIN"; KBtn.BackgroundColor3 = Color3.fromRGB(0, 150, 255); KBtn.Font = Enum.Font.GothamBold
-Instance.new("UICorner", KBtn)
-
--- [[ MAIN MENU ]] --
+-- [[ MINIMALIST MENU ]] --
 local Main = Instance.new("Frame", SG)
-Main.Size = UDim2.new(0, 280, 0, 220); Main.Position = UDim2.new(0.5, -140, 0.5, -110)
-Main.BackgroundColor3 = Color3.fromRGB(15, 15, 15); Main.Visible = false
-Instance.new("UICorner", Main)
-Instance.new("UIStroke", Main).Color = Color3.fromRGB(180, 0, 255)
+Main.Size = UDim2.new(0, 240, 0, 150)
+Main.Position = UDim2.new(0.5, -120, 0.5, -75)
+Main.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+Main.Visible = false
 
-local Toggle = Instance.new("ImageButton", SG)
-Toggle.Size = UDim2.new(0, 55, 0, 55); Toggle.Position = UDim2.new(0, 15, 0.45, 0)
-Toggle.Image = ICON; Toggle.Visible = false
-Instance.new("UICorner", Toggle).CornerRadius = UDim.new(1,0)
+local KeyBox = Instance.new("Frame", SG)
+KeyBox.Size = UDim2.new(0, 240, 0, 150)
+KeyBox.Position = UDim2.new(0.5, -120, 0.5, -75)
+KeyBox.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 
--- [[ LOGIC ]] --
+local KInput = Instance.new("TextBox", KeyBox)
+KInput.Size = UDim2.new(0, 180, 0, 40); KInput.Position = UDim2.new(0.5, -90, 0.2, 0)
+KInput.PlaceholderText = "Key..."
+
+local KBtn = Instance.new("TextButton", KeyBox)
+KBtn.Size = UDim2.new(0, 100, 0, 40); KBtn.Position = UDim2.new(0.5, -50, 0.6, 0)
+KBtn.Text = "LOGIN"
+
+local JumpBtn = Instance.new("TextButton", Main)
+JumpBtn.Size = UDim2.new(0, 200, 0, 50); JumpBtn.Position = UDim2.new(0.5, -100, 0.3, 0)
+JumpBtn.Text = "PLATFORM JUMP: OFF"
+
+-- [[ BUTTON LOGIC ]] --
 KBtn.MouseButton1Click:Connect(function()
     if KInput.Text == KEY then
-        KeyFrame:Destroy() -- Removes key screen instantly
-        Toggle.Visible = true
+        KeyBox:Destroy()
         Main.Visible = true
-    else
-        KInput.Text = "INVALID KEY"
-        task.wait(1)
-        KInput.Text = ""
     end
 end)
 
-Toggle.MouseButton1Click:Connect(function() Main.Visible = not Main.Visible end)
-
-local function addBtn(text, pos, callback, exit)
-    local b = Instance.new("TextButton", Main)
-    b.Size = UDim2.new(0, 220, 0, 45); b.Position = pos
-    b.Text = text .. (exit and "" or ": OFF"); b.BackgroundColor3 = Color3.fromRGB(30,30,35); b.TextColor3 = Color3.new(1,1,1)
-    Instance.new("UICorner", b)
-    
-    local state = false
-    b.MouseButton1Click:Connect(function()
-        if exit then SG:Destroy() return end
-        state = not state
-        b.Text = text .. ": " .. (state and "ON" or "OFF")
-        b.BackgroundColor3 = state and Color3.fromRGB(0, 180, 100) or Color3.fromRGB(30,30,35)
-        callback(state)
-    end)
-end
-
-addBtn("Infinite Jump", UDim2.new(0.5, -110, 0.2, 0), function(v) infJump = v end)
-addBtn("Auto-Steal", UDim2.new(0.5, -110, 0.45, 0), function(v) -- Auto-steal logic -- end)
-addBtn("EXIT HUB", UDim2.new(0.5, -110, 0.7, 0), nil, true)
+JumpBtn.MouseButton1Click:Connect(function()
+    jumpEnabled = not jumpEnabled
+    JumpBtn.Text = "PLATFORM JUMP: " .. (jumpEnabled and "ON" or "OFF")
+    JumpBtn.BackgroundColor3 = jumpEnabled and Color3.fromRGB(0, 150, 0) or Color3.fromRGB(50, 50, 50)
+end)
