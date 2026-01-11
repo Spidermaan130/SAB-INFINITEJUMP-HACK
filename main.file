@@ -1,23 +1,22 @@
--- [[ ⚡ GHALOULIX9'S ULTIMATE ELITE HUB - SMOOTH BYPASS ⚡ ]] --
--- Fixes: Character Slipping, Teleport Speed, and Fall Damage Death
--- Optimized for Delta Mobile
+-- [[ ⚡ GHALOULIX9'S ULTIMATE ELITE HUB - GHOST BYPASS ⚡ ]] --
+-- 🛡️ ANTI-CHEAT BYPASS | PHYSICS JUMP | ANTI-DEATH | GLASS UI 🛡️
+-- 🔧 Optimized for Delta Mobile | No-Slip & No-Kill Edition 🔧
 
 repeat task.wait() until game:IsLoaded()
 
 local Players = game:GetService("Players")
 local UIS = game:GetService("UserInputService")
 local RunService = game:GetService("RunService")
-local TS = game:GetService("TweenService")
 
 local p = Players.LocalPlayer
 local playerGui = p:WaitForChild("PlayerGui")
 
--- Cleanup older versions
-local old = playerGui:FindFirstChild("Ghaloulix9_SmoothFinal")
+-- Cleanup
+local old = playerGui:FindFirstChild("Ghaloulix9_GhostFinal")
 if old then old:Destroy() end
 
 local SG = Instance.new("ScreenGui", playerGui)
-SG.Name = "Ghaloulix9_SmoothFinal"
+SG.Name = "Ghaloulix9_GhostFinal"
 SG.ResetOnSpawn = false
 
 local COLORS = {
@@ -28,7 +27,7 @@ local COLORS = {
     ERROR = Color3.fromRGB(255, 100, 100)
 }
 
--- Gradient Helper for RGB Borders
+-- RGB Gradient Helper
 local function addGrad(parent, thick)
     local stroke = Instance.new("UIStroke", parent)
     stroke.Thickness = thick
@@ -52,12 +51,13 @@ keyContainer.Position = UDim2.new(0.5, 0, 0.5, 0)
 keyContainer.AnchorPoint = Vector2.new(0.5, 0.5)
 keyContainer.BackgroundColor3 = COLORS.DARK
 Instance.new("UICorner", keyContainer)
-local keyGrad = addGrad(keyContainer, 3)
+local kg = addGrad(keyContainer, 3)
 
 local keyInput = Instance.new("TextBox", keyContainer)
 keyInput.Size = UDim2.new(0, 250, 0, 50)
 keyInput.Position = UDim2.new(0.5, -125, 0.4, 0)
 keyInput.PlaceholderText = "Key: GHALOULIX9"
+keyInput.Text = ""
 keyInput.TextColor3 = Color3.new(1,1,1)
 keyInput.BackgroundColor3 = COLORS.MEDIUM
 Instance.new("UICorner", keyInput)
@@ -69,7 +69,7 @@ submit.Text = "UNLOCK HUB"
 submit.BackgroundColor3 = COLORS.ACCENT
 Instance.new("UICorner", submit)
 
--- [[ UI - HUB & TOGGLE ]] --
+-- [[ UI - MAIN HUB ]] --
 local toggleBtn = Instance.new("ImageButton", SG)
 toggleBtn.Size = UDim2.new(0, 75, 0, 75)
 toggleBtn.Position = UDim2.new(1, -100, 0.5, 0)
@@ -77,7 +77,7 @@ toggleBtn.Image = "rbxassetid://108600585930067"
 toggleBtn.BackgroundTransparency = 1
 toggleBtn.Visible = false
 Instance.new("UICorner", toggleBtn).CornerRadius = UDim.new(1, 0)
-local toggleGrad = addGrad(toggleBtn, 4)
+local tg = addGrad(toggleBtn, 4)
 
 local mainHub = Instance.new("Frame", SG)
 mainHub.Size = UDim2.new(0, 350, 0, 400)
@@ -86,23 +86,22 @@ mainHub.AnchorPoint = Vector2.new(0.5, 0.5)
 mainHub.BackgroundColor3 = COLORS.DARK
 mainHub.Visible = false
 Instance.new("UICorner", mainHub)
-local hubGrad = addGrad(mainHub, 4)
+local hg = addGrad(mainHub, 4)
 
 local jumpBtn = Instance.new("TextButton", mainHub)
 jumpBtn.Size = UDim2.new(0, 280, 0, 70)
 jumpBtn.Position = UDim2.new(0.5, -140, 0.4, 0)
-jumpBtn.Text = "SMOOTH JUMP: OFF"
+jumpBtn.Text = "GHOST JUMP: OFF"
 jumpBtn.BackgroundColor3 = COLORS.ERROR
 jumpBtn.TextColor3 = Color3.new(1,1,1)
 jumpBtn.Font = Enum.Font.GothamBold
 Instance.new("UICorner", jumpBtn)
 
--- [[ 🚀 THE SMOOTH BYPASS LOGIC 🚀 ]] --
+-- [[ 🚀 PHYSICS-BASED BYPASS LOGIC 🚀 ]] --
 local active = false
-local JUMP_HEIGHT = 8 -- Total height of jump
-local STEPS = 5 -- Mini-teleports per jump to prevent sliding
+local JUMP_POWER = 35 -- Adjusted power for natural feel
 
--- 1. Constant Anti-Death State Lock
+-- Safety Loop: Prevents "Hard Kills" from detection
 RunService.Stepped:Connect(function()
     if active then
         local char = p.Character
@@ -110,12 +109,11 @@ RunService.Stepped:Connect(function()
         if hum then
             hum:SetStateEnabled(Enum.HumanoidStateType.Dead, false)
             if hum.Health <= 0 then hum.Health = 100 end
-            hum.PlatformStand = false -- Prevents falling over while sliding
+            hum.PlatformStand = false 
         end
     end
 end)
 
--- 2. Smooth Step Jump (Bypass)
 UIS.JumpRequest:Connect(function()
     if active then
         local char = p.Character
@@ -123,30 +121,27 @@ UIS.JumpRequest:Connect(function()
         local hum = char and char:FindFirstChildOfClass("Humanoid")
         
         if hrp and hum and hum.Health > 0 then
-            -- Kill ice-skating momentum
-            hrp.Velocity = Vector3.new(hrp.Velocity.X, 0, hrp.Velocity.Z)
+            -- Create a physics-friendly lift
+            local attachment = Instance.new("Attachment", hrp)
+            local force = Instance.new("LinearVelocity", hrp)
+            force.Attachment0 = attachment
+            force.MaxForce = 50000 -- Strong enough to lift, but looks like physics
+            force.VelocityConstraintMode = Enum.VelocityConstraintMode.Vector
             
-            -- Ascend in mini-teleports to keep movement control
-            for i = 1, STEPS do
-                hrp.CFrame = hrp.CFrame * CFrame.new(0, JUMP_HEIGHT/STEPS, 0)
-                RunService.Heartbeat:Wait() 
-            end
+            -- Natural upward movement (Bypasses CFrame speed detection)
+            force.VectorVelocity = Vector3.new(0, JUMP_POWER, 0)
             
-            -- Physics Refresh
+            -- Tiny duration for a smooth hop
+            task.wait(0.12)
+            force:Destroy()
+            attachment:Destroy()
+            
             hum:ChangeState(Enum.HumanoidStateType.Jumping)
-            
-            -- SAB Anti-Fall Damage Refresh
-            task.spawn(function()
-                task.wait(0.05)
-                hum:ChangeState(Enum.HumanoidStateType.Landing)
-                task.wait(0.02)
-                hum:ChangeState(Enum.HumanoidStateType.Jumping)
-            end)
         end
     end
 end)
 
--- [[ UI BUTTON ACTIONS ]] --
+-- [[ BUTTON ACTIONS ]] --
 submit.MouseButton1Click:Connect(function()
     if keyInput.Text == "GHALOULIX9" then
         keyScreen:Destroy()
@@ -154,35 +149,24 @@ submit.MouseButton1Click:Connect(function()
     end
 end)
 
-toggleBtn.MouseButton1Click:Connect(function()
-    mainHub.Visible = not mainHub.Visible
-end)
+toggleBtn.MouseButton1Click:Connect(function() mainHub.Visible = not mainHub.Visible end)
 
 jumpBtn.MouseButton1Click:Connect(function()
     active = not active
-    jumpBtn.Text = "SMOOTH JUMP: " .. (active and "ON" or "OFF")
+    jumpBtn.Text = "GHOST JUMP: " .. (active and "ON" or "OFF")
     jumpBtn.BackgroundColor3 = active and COLORS.SUCCESS or COLORS.ERROR
 end)
 
--- RGB Spin Animation
+-- RGB Rotation Animation
 RunService.RenderStepped:Connect(function()
     local r = tick() * 60
-    if keyGrad then keyGrad.Rotation = r end
-    if hubGrad then hubGrad.Rotation = r end
-    if toggleGrad then toggleGrad.Rotation = r end
+    if kg then kg.Rotation = r end
+    if tg then tg.Rotation = r end
+    if hg then hg.Rotation = r end
 end)
 
--- Mobile Dragging Logic for Delta
+-- Mobile Dragging Logic
 local drag, dStart, sPos
-toggleBtn.InputBegan:Connect(function(i)
-    if i.UserInputType == Enum.UserInputType.Touch then
-        drag = true; dStart = i.Position; sPos = toggleBtn.Position
-    end
-end)
-UIS.InputChanged:Connect(function(i)
-    if drag and i.UserInputType == Enum.UserInputType.Touch then
-        local delta = i.Position - dStart
-        toggleBtn.Position = UDim2.new(sPos.X.Scale, sPos.X.Offset + delta.X, sPos.Y.Scale, sPos.Y.Offset + delta.Y)
-    end
-end)
+toggleBtn.InputBegan:Connect(function(i) if i.UserInputType == Enum.UserInputType.Touch then drag = true; dStart = i.Position; sPos = toggleBtn.Position end end)
+UIS.InputChanged:Connect(function(i) if drag and i.UserInputType == Enum.UserInputType.Touch then local delta = i.Position - dStart; toggleBtn.Position = UDim2.new(sPos.X.Scale, sPos.X.Offset + delta.X, sPos.Y.Scale, sPos.Y.Offset + delta.Y) end end)
 UIS.InputEnded:Connect(function(i) if i.UserInputType == Enum.UserInputType.Touch then drag = false end end)
