@@ -1,88 +1,83 @@
--- [[ ⚡ GHALOULIX9'S ULTIMATE ELITE HUB - FULL EDITION ⚡ ]] --
--- Optimized for Delta | SAB Jump Method | High-Power Lift
+-- [[ ⚡ GHALOULIX9'S ULTIMATE ELITE HUB - COMPLETE EDITION ⚡ ]] --
+-- Features: BodyVelocity Force-Up, SAB Anti-Death, Glassmorphism UI
+-- Optimized for Delta Mobile | High-Power Bypass
 
 repeat task.wait() until game:IsLoaded()
 
 -- Services
 local Players = game:GetService("Players")
-local UserInputService = game:GetService("UserInputService")
-local TweenService = game:GetService("TweenService")
+local UIS = game:GetService("UserInputService")
+local TS = game:GetService("TweenService")
 local RunService = game:GetService("RunService")
 
 -- Player setup
 local p = Players.LocalPlayer
 local playerGui = p:WaitForChild("PlayerGui")
 
+-- Protection: Remove old versions
+local old = playerGui:FindFirstChild("Ghaloulix9_Ultimate")
+if old then old:Destroy() end
+
 -- ScreenGui
-local SG = Instance.new("ScreenGui")
-SG.Name = "Ghaloulix9_Elite_Full"
+local SG = Instance.new("ScreenGui", playerGui)
+SG.Name = "Ghaloulix9_Ultimate"
 SG.ResetOnSpawn = false
-SG.DisplayOrder = 999
-SG.IgnoreGuiInset = true
 SG.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
 -- Color Palette
 local COLORS = {
-    GLASS_DARK = Color3.fromRGB(15, 15, 25),
-    GLASS_MEDIUM = Color3.fromRGB(25, 25, 40),
-    GLASS_LIGHT = Color3.fromRGB(35, 35, 55),
-    GLASS_TRANSPARENCY = 0.85,
-    TEXT_WHITE = Color3.fromRGB(255, 255, 255),
-    TEXT_GRAY = Color3.fromRGB(180, 180, 200),
+    DARK = Color3.fromRGB(15, 15, 25),
+    MEDIUM = Color3.fromRGB(25, 25, 40),
+    LIGHT = Color3.fromRGB(35, 35, 55),
+    ACCENT = Color3.fromRGB(100, 220, 255),
     SUCCESS = Color3.fromRGB(100, 255, 150),
-    ERROR = Color3.fromRGB(255, 100, 100),
-    ACCENT = Color3.fromRGB(100, 220, 255)
+    ERROR = Color3.fromRGB(255, 100, 100)
 }
 
 -- Rotating Gradient Helper
-local function createGradientStroke(parent, thickness)
-    local stroke = Instance.new("UIStroke")
-    stroke.Thickness = thickness
-    stroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-    local gradient = Instance.new("UIGradient")
+local function addGradient(parent)
+    local stroke = Instance.new("UIStroke", parent)
+    stroke.Thickness = 3
+    local gradient = Instance.new("UIGradient", stroke)
     gradient.Color = ColorSequence.new{
         ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 100, 180)),
         ColorSequenceKeypoint.new(0.5, Color3.fromRGB(100, 220, 255)),
         ColorSequenceKeypoint.new(1, Color3.fromRGB(255, 100, 180))
     }
-    gradient.Parent = stroke
-    stroke.Parent = parent
-    return stroke, gradient
+    return gradient
 end
 
--- [[ UI ELEMENTS ]] --
-
--- Key Screen
+-- [[ 1. KEY SYSTEM UI ]] --
 local keyScreen = Instance.new("Frame", SG)
 keyScreen.Size = UDim2.new(1, 0, 1, 0)
 keyScreen.BackgroundColor3 = Color3.fromRGB(10, 10, 15)
 
 local keyContainer = Instance.new("Frame", keyScreen)
-keyContainer.Size = UDim2.new(0, 400, 0, 300)
+keyContainer.Size = UDim2.new(0, 350, 0, 250)
 keyContainer.Position = UDim2.new(0.5, 0, 0.5, 0)
 keyContainer.AnchorPoint = Vector2.new(0.5, 0.5)
-keyContainer.BackgroundColor3 = COLORS.GLASS_DARK
-Instance.new("UICorner", keyContainer).CornerRadius = UDim.new(0, 20)
-local _, keyGrad = createGradientStroke(keyContainer, 3)
+keyContainer.BackgroundColor3 = COLORS.DARK
+Instance.new("UICorner", keyContainer).CornerRadius = UDim.new(0, 15)
+local keyGrad = addGradient(keyContainer)
 
 local keyInput = Instance.new("TextBox", keyContainer)
-keyInput.Size = UDim2.new(0, 300, 0, 50)
-keyInput.Position = UDim2.new(0.5, -150, 0.4, 0)
-keyInput.PlaceholderText = "Enter Key: GHALOULIX9"
+keyInput.Size = UDim2.new(0, 280, 0, 50)
+keyInput.Position = UDim2.new(0.5, -140, 0.35, 0)
+keyInput.PlaceholderText = "Key: GHALOULIX9"
 keyInput.Text = ""
-keyInput.BackgroundColor3 = COLORS.GLASS_MEDIUM
+keyInput.BackgroundColor3 = COLORS.MEDIUM
 keyInput.TextColor3 = Color3.new(1,1,1)
 Instance.new("UICorner", keyInput)
 
 local submit = Instance.new("TextButton", keyContainer)
-submit.Size = UDim2.new(0, 150, 0, 50)
-submit.Position = UDim2.new(0.5, -75, 0.7, 0)
-submit.Text = "LOGIN"
+submit.Size = UDim2.new(0, 140, 0, 50)
+submit.Position = UDim2.new(0.5, -70, 0.7, 0)
+submit.Text = "UNLOCK"
 submit.BackgroundColor3 = COLORS.ACCENT
 submit.TextColor3 = Color3.new(1,1,1)
 Instance.new("UICorner", submit)
 
--- Toggle Button (The Circle with your ID)
+-- [[ 2. TOGGLE BUTTON (CHANNEL ID IMAGE) ]] --
 local toggleBtn = Instance.new("ImageButton", SG)
 toggleBtn.Size = UDim2.new(0, 75, 0, 75)
 toggleBtn.Position = UDim2.new(1, -100, 0.5, 0)
@@ -90,80 +85,82 @@ toggleBtn.Image = "rbxassetid://108600585930067"
 toggleBtn.BackgroundTransparency = 1
 toggleBtn.Visible = false
 Instance.new("UICorner", toggleBtn).CornerRadius = UDim.new(1, 0)
-local _, toggleGrad = createGradientStroke(toggleBtn, 4)
+local toggleGrad = addGradient(toggleBtn)
 
--- Main Hub
+-- [[ 3. MAIN HUB UI ]] --
 local mainHub = Instance.new("Frame", SG)
-mainHub.Size = UDim2.new(0, 380, 0, 450)
+mainHub.Size = UDim2.new(0, 380, 0, 400)
 mainHub.Position = UDim2.new(0.5, 0, 0.5, 0)
 mainHub.AnchorPoint = Vector2.new(0.5, 0.5)
-mainHub.BackgroundColor3 = COLORS.GLASS_DARK
+mainHub.BackgroundColor3 = COLORS.DARK
 mainHub.Visible = false
 Instance.new("UICorner", mainHub).CornerRadius = UDim.new(0, 20)
-local _, hubGrad = createGradientStroke(mainHub, 4)
+local hubGrad = addGradient(mainHub)
 
 local title = Instance.new("TextLabel", mainHub)
 title.Size = UDim2.new(1, 0, 0, 60)
 title.Text = "💎 Ghaloulix9's Elite Hub 💎"
 title.TextColor3 = Color3.new(1,1,1)
 title.Font = Enum.Font.GothamBold
-title.TextSize = 22
+title.TextSize = 20
 title.BackgroundTransparency = 1
 
 local jumpBtn = Instance.new("TextButton", mainHub)
 jumpBtn.Size = UDim2.new(0, 300, 0, 60)
-jumpBtn.Position = UDim2.new(0.5, -150, 0.3, 0)
+jumpBtn.Position = UDim2.new(0.5, -150, 0.4, 0)
 jumpBtn.Text = "Infinite Jump: OFF"
 jumpBtn.BackgroundColor3 = COLORS.ERROR
 jumpBtn.TextColor3 = Color3.new(1,1,1)
 Instance.new("UICorner", jumpBtn)
 
-local close = Instance.new("TextButton", mainHub)
-close.Size = UDim2.new(0, 40, 0, 40)
-close.Position = UDim2.new(1, -50, 0, 10)
-close.Text = "X"
-close.TextColor3 = Color3.new(1,1,1)
-close.BackgroundTransparency = 1
-
--- [[ LOGIC & PHYSICS ]] --
-
+-- [[ 4. LOGIC & PHYSICS FIXES ]] --
 local infJump = false
-local jumpPower = 100 -- Set to 100 for high lift
 
--- The "No-Death" SAB Method
-UserInputService.JumpRequest:Connect(function()
+-- FORCE-UP BYPASS LOGIC
+UIS.JumpRequest:Connect(function()
     if infJump then
         local char = p.Character
         local hum = char and char:FindFirstChildOfClass("Humanoid")
         local hrp = char and char:FindFirstChild("HumanoidRootPart")
+        
         if hum and hrp and hum.Health > 0 then
-            -- Reset Y velocity to stop falling
+            -- Kill falling speed
             hrp.Velocity = Vector3.new(hrp.Velocity.X, 0, hrp.Velocity.Z)
-            -- Trick engine to reset fall distance
+            
+            -- SAB Method State Reset
             hum:ChangeState(Enum.HumanoidStateType.Landing)
             task.wait(0.01)
             hum:ChangeState(Enum.HumanoidStateType.Jumping)
-            -- High lift boost
-            hrp.Velocity = Vector3.new(hrp.Velocity.X, jumpPower, hrp.Velocity.Z)
+            
+            -- BODY VELOCITY ROCKET (PUNCH THROUGH CEILING)
+            local bv = Instance.new("BodyVelocity")
+            bv.Velocity = Vector3.new(0, 120, 0) 
+            bv.MaxForce = Vector3.new(0, math.huge, 0)
+            bv.Parent = hrp
+            
+            task.delay(0.1, function()
+                bv:Destroy()
+            end)
         end
     end
 end)
 
--- Key System
+-- Key System Action
 submit.MouseButton1Click:Connect(function()
     if keyInput.Text == "GHALOULIX9" then
         keyScreen:Destroy()
         toggleBtn.Visible = true
+        -- Welcome Notification
+        local hint = Instance.new("Hint", SG)
+        hint.Text = "Welcome back, " .. p.DisplayName .. "!"
+        task.wait(3)
+        hint:Destroy()
     end
 end)
 
--- Toggle Hub
+-- Toggle Actions
 toggleBtn.MouseButton1Click:Connect(function()
     mainHub.Visible = not mainHub.Visible
-end)
-
-close.MouseButton1Click:Connect(function()
-    mainHub.Visible = false
 end)
 
 jumpBtn.MouseButton1Click:Connect(function()
@@ -180,8 +177,8 @@ RunService.RenderStepped:Connect(function()
     if toggleGrad then toggleGrad.Rotation = r end
 end)
 
--- Mobile Dragging
-local dragging, dragInput, dragStart, startPos
+-- Mobile Dragging Logic
+local dragging, dragStart, startPos
 toggleBtn.InputBegan:Connect(function(input)
     if input.UserInputType == Enum.UserInputType.Touch then
         dragging = true
@@ -189,18 +186,12 @@ toggleBtn.InputBegan:Connect(function(input)
         startPos = toggleBtn.Position
     end
 end)
-
-UserInputService.InputChanged:Connect(function(input)
+UIS.InputChanged:Connect(function(input)
     if dragging and input.UserInputType == Enum.UserInputType.Touch then
         local delta = input.Position - dragStart
         toggleBtn.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
     end
 end)
-
-UserInputService.InputEnded:Connect(function(input)
-    if input.UserInputType == Enum.UserInputType.Touch then
-        dragging = false
-    end
+UIS.InputEnded:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.Touch then dragging = false end
 end)
-
-SG.Parent = playerGui
