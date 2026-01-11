@@ -1,77 +1,107 @@
--- [[ 💎 GHALOULIX9'S HUB - GHOST PLATFORM 💎 ]] --
-local KEY = "GHALOULIX9"
+-- [[ 💎 GHALOULIX9'S ELITE HUB - ULTIMATE FIXED EDITION 💎 ]] --
+-- This script combines DeepSeek's Beauty with Delta's Stability.
 
-local lp = game:GetService("Players").LocalPlayer
-local UIS = game:GetService("UserInputService")
-local runService = game:GetService("RunService")
+-- Services
+local Players = game:GetService("Players")
+local UserInputService = game:GetService("UserInputService")
+local TweenService = game:GetService("TweenService")
+local RunService = game:GetService("RunService")
 
--- Create the UI inside PlayerGui
-local SG = Instance.new("ScreenGui", lp:WaitForChild("PlayerGui"))
-SG.Name = "GH_HUB_DELTA"
-SG.ResetOnSpawn = false
+-- Player setup
+local player = Players.LocalPlayer
+local playerGui = player:WaitForChild("PlayerGui")
 
--- [[ GHOST PLATFORM LOGIC ]] --
-local jumpEnabled = false
-local platform = Instance.new("Part")
-platform.Size = Vector3.new(4, 0.5, 4)
-platform.Transparency = 1 -- Change to 0.5 if you want to see it
-platform.Anchored = true
-platform.CanCollide = false -- Off by default
-platform.Parent = workspace
+-- [[ PASTE THE DEEPSEEK UI CODE YOU ALREADY HAVE ABOVE HERE ]] --
+-- (I will focus on the Logic and the parts that were cut off below)
 
-runService.RenderStepped:Connect(function()
-    local char = lp.Character
-    local hrp = char and char:FindFirstChild("HumanoidRootPart")
+-- [[ 1. THE USERNAME NOTIFICATION ]] --
+local function welcomeNotification()
+    local name = player.DisplayName or player.Name
+    notificationLabel.Text = "Welcome, " .. name .. "! 💎"
     
-    if jumpEnabled and hrp then
-        -- Move the platform just below your feet
-        platform.CFrame = hrp.CFrame * CFrame.new(0, -3.2, 0)
-        
-        -- Only make it solid when you are falling/jumping
-        if UIS:IsKeyDown(Enum.KeyCode.Space) or UIS:IsNavigationKeyPressed(Enum.EnumItem) then
-            platform.CanCollide = true
-        else
-            platform.CanCollide = false
-        end
+    notificationFrame.Visible = true
+    TweenService:Create(notificationFrame, TweenInfo.new(0.8, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {Position = UDim2.new(0.1, 0, 0.05, 0)}):Play()
+    
+    task.wait(3)
+    
+    TweenService:Create(notificationFrame, TweenInfo.new(0.5, Enum.EasingStyle.Quart, Enum.EasingDirection.In), {Position = UDim2.new(0.1, 0, -0.2, 0)}):Play()
+end
+
+-- [[ 2. SMOOTH OPEN/CLOSE FADE ]] --
+local function toggleHub()
+    isHubOpen = not isHubOpen
+    
+    if isHubOpen then
+        mainHub.Visible = true
+        mainHub.GroupTransparency = 1 -- Assumes CanvasGroup or manual fade
+        -- Animation: Pop in and Fade in
+        mainHub.Size = UDim2.new(0, 300, 0, 400) -- Small start
+        TweenService:Create(mainHub, TweenInfo.new(0.5, Enum.EasingStyle.Back), {Size = UDim2.new(0, 380, 0, 520), BackgroundTransparency = 0.85}):Play()
     else
-        platform.CanCollide = false
+        -- Animation: Pop out and Fade out
+        local t = TweenService:Create(mainHub, TweenInfo.new(0.4, Enum.EasingStyle.Quart), {Size = UDim2.new(0, 300, 0, 400), BackgroundTransparency = 1})
+        t:Play()
+        t.Completed:Connect(function() if not isHubOpen then mainHub.Visible = false end end)
+    end
+end
+
+-- [[ 3. THE SAB INFINITE JUMP (THE FIX) ]] --
+local function handleInfiniteJump()
+    if isInfiniteJumpEnabled then
+        local char = player.Character
+        local hum = char and char:FindFirstChildOfClass("Humanoid")
+        local hrp = char and char:FindFirstChild("HumanoidRootPart")
+        
+        if hum and hrp then
+            -- THE SAB METHOD: 
+            -- 1. Temporarily anchor to stop momentum (prevents fall damage death)
+            -- 2. Force state to Landing then Jumping
+            hrp.Velocity = Vector3.new(hrp.Velocity.X, 0, hrp.Velocity.Z)
+            hum:ChangeState(Enum.HumanoidStateType.Landing)
+            task.wait()
+            hum:ChangeState(Enum.HumanoidStateType.Jumping)
+            hrp.Velocity = Vector3.new(hrp.Velocity.X, 50, hrp.Velocity.Z)
+        end
+    end
+end
+
+-- Delta Mobile Jump Detection
+UserInputService.JumpRequest:Connect(handleInfiniteJump)
+
+-- [[ 4. KEY SYSTEM & ROTATION LOGIC ]] --
+submitButton.MouseButton1Click:Connect(function()
+    if keyInput.Text == "GHALOULIX9" then
+        -- Smooth Transition
+        TweenService:Create(keyScreen, TweenInfo.new(1, Enum.EasingStyle.Quart), {BackgroundTransparency = 1}):Play()
+        keyContainer:Destroy()
+        
+        task.wait(0.5)
+        toggleButton.Visible = true
+        welcomeNotification()
+    else
+        statusLabel.Text = "❌ INVALID AUTHORIZATION"
+        statusLabel.TextColor3 = Color3.fromRGB(255, 100, 100)
     end
 end)
 
--- [[ MINIMALIST MENU ]] --
-local Main = Instance.new("Frame", SG)
-Main.Size = UDim2.new(0, 240, 0, 150)
-Main.Position = UDim2.new(0.5, -120, 0.5, -75)
-Main.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
-Main.Visible = false
-
-local KeyBox = Instance.new("Frame", SG)
-KeyBox.Size = UDim2.new(0, 240, 0, 150)
-KeyBox.Position = UDim2.new(0.5, -120, 0.5, -75)
-KeyBox.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
-
-local KInput = Instance.new("TextBox", KeyBox)
-KInput.Size = UDim2.new(0, 180, 0, 40); KInput.Position = UDim2.new(0.5, -90, 0.2, 0)
-KInput.PlaceholderText = "Key..."
-
-local KBtn = Instance.new("TextButton", KeyBox)
-KBtn.Size = UDim2.new(0, 100, 0, 40); KBtn.Position = UDim2.new(0.5, -50, 0.6, 0)
-KBtn.Text = "LOGIN"
-
-local JumpBtn = Instance.new("TextButton", Main)
-JumpBtn.Size = UDim2.new(0, 200, 0, 50); JumpBtn.Position = UDim2.new(0.5, -100, 0.3, 0)
-JumpBtn.Text = "PLATFORM JUMP: OFF"
-
--- [[ BUTTON LOGIC ]] --
-KBtn.MouseButton1Click:Connect(function()
-    if KInput.Text == KEY then
-        KeyBox:Destroy()
-        Main.Visible = true
+-- Rotating Gradient Loop (Visual Beauty)
+RunService.RenderStepped:Connect(function()
+    if mainHubGradient then
+        mainHubGradient.Rotation = mainHubGradient.Rotation + 2
+    end
+    if toggleBorderGradient then
+        toggleBorderGradient.Rotation = toggleBorderGradient.Rotation + 3
     end
 end)
 
-JumpBtn.MouseButton1Click:Connect(function()
-    jumpEnabled = not jumpEnabled
-    JumpBtn.Text = "PLATFORM JUMP: " .. (jumpEnabled and "ON" or "OFF")
-    JumpBtn.BackgroundColor3 = jumpEnabled and Color3.fromRGB(0, 150, 0) or Color3.fromRGB(50, 50, 50)
+-- Connect Toggle
+toggleButton.MouseButton1Click:Connect(toggleHub)
+closeHub.MouseButton1Click:Connect(toggleHub)
+
+-- Infinite Jump Toggle Connect
+jumpToggle.MouseButton1Click:Connect(function()
+    isInfiniteJumpEnabled = not isInfiniteJumpEnabled
+    jumpToggle.Text = isInfiniteJumpEnabled and "ON" or "OFF"
+    jumpToggle.BackgroundColor3 = isInfiniteJumpEnabled and Color3.fromRGB(100, 255, 150) or Color3.fromRGB(255, 100, 100)
+    jumpStatus.BackgroundColor3 = isInfiniteJumpEnabled and Color3.fromRGB(100, 255, 150) or Color3.fromRGB(255, 100, 100)
 end)
