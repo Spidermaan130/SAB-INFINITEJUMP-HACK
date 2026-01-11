@@ -1,6 +1,6 @@
--- [[ ⚡ GHALOULIX9'S ULTIMATE ELITE HUB - BYPASS EDITION ⚡ ]] --
--- Fix: Uses CFrame Teleportation to bypass games that block jumping.
--- Optimized for Delta Mobile | SAB Anti-Death Included
+-- [[ ⚡ GHALOULIX9'S ULTIMATE ELITE HUB - GOD-BYPASS EDITION ⚡ ]] --
+-- 🚀 CFRAME BYPASS | INFINITE HEALTH | SAB ANTI-DEATH | GLASS UI 🚀
+-- 🔧 Optimized for Delta Mobile | Health-Lock Integrated 🔧
 
 repeat task.wait() until game:IsLoaded()
 
@@ -13,24 +13,25 @@ local p = Players.LocalPlayer
 local playerGui = p:WaitForChild("PlayerGui")
 
 -- Cleanup
-local old = playerGui:FindFirstChild("Ghaloulix9_Bypass")
+local old = playerGui:FindFirstChild("Ghaloulix9_GodHub")
 if old then old:Destroy() end
 
 local SG = Instance.new("ScreenGui", playerGui)
-SG.Name = "Ghaloulix9_Bypass"
+SG.Name = "Ghaloulix9_GodHub"
 SG.ResetOnSpawn = false
 
 local COLORS = {
-    DARK = Color3.fromRGB(15, 15, 25),
-    MEDIUM = Color3.fromRGB(25, 25, 40),
-    ACCENT = Color3.fromRGB(100, 220, 255),
+    GLASS_DARK = Color3.fromRGB(15, 15, 25),
+    GLASS_MEDIUM = Color3.fromRGB(25, 25, 40),
+    ACCENT_CYAN = Color3.fromRGB(100, 220, 255),
     SUCCESS = Color3.fromRGB(100, 255, 150),
     ERROR = Color3.fromRGB(255, 100, 100)
 }
 
-local function addGradient(parent)
+-- Gradient Helper
+local function addGrad(parent, thick)
     local stroke = Instance.new("UIStroke", parent)
-    stroke.Thickness = 3
+    stroke.Thickness = thick
     local gradient = Instance.new("UIGradient", stroke)
     gradient.Color = ColorSequence.new{
         ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 100, 180)),
@@ -40,7 +41,7 @@ local function addGradient(parent)
     return gradient
 end
 
--- [[ UI - KEY SYSTEM ]] --
+-- [[ UI - KEY & HUB ]] --
 local keyScreen = Instance.new("Frame", SG)
 keyScreen.Size = UDim2.new(1, 0, 1, 0)
 keyScreen.BackgroundColor3 = Color3.fromRGB(10, 10, 15)
@@ -49,26 +50,26 @@ local keyContainer = Instance.new("Frame", keyScreen)
 keyContainer.Size = UDim2.new(0, 350, 0, 250)
 keyContainer.Position = UDim2.new(0.5, 0, 0.5, 0)
 keyContainer.AnchorPoint = Vector2.new(0.5, 0.5)
-keyContainer.BackgroundColor3 = COLORS.DARK
+keyContainer.BackgroundColor3 = COLORS.GLASS_DARK
 Instance.new("UICorner", keyContainer)
-local keyGrad = addGradient(keyContainer)
+local keyGrad = addGrad(keyContainer, 3)
 
 local keyInput = Instance.new("TextBox", keyContainer)
-keyInput.Size = UDim2.new(0, 280, 0, 50)
-keyInput.Position = UDim2.new(0.5, -140, 0.35, 0)
+keyInput.Size = UDim2.new(0, 250, 0, 50)
+keyInput.Position = UDim2.new(0.5, -125, 0.4, 0)
 keyInput.PlaceholderText = "Key: GHALOULIX9"
 keyInput.TextColor3 = Color3.new(1,1,1)
-keyInput.BackgroundColor3 = COLORS.MEDIUM
+keyInput.BackgroundColor3 = COLORS.GLASS_MEDIUM
 Instance.new("UICorner", keyInput)
 
 local submit = Instance.new("TextButton", keyContainer)
 submit.Size = UDim2.new(0, 140, 0, 50)
 submit.Position = UDim2.new(0.5, -70, 0.7, 0)
 submit.Text = "UNLOCK"
-submit.BackgroundColor3 = COLORS.ACCENT
+submit.BackgroundColor3 = COLORS.ACCENT_CYAN
 Instance.new("UICorner", submit)
 
--- [[ UI - TOGGLE & HUB ]] --
+-- Main Toggle Button
 local toggleBtn = Instance.new("ImageButton", SG)
 toggleBtn.Size = UDim2.new(0, 75, 0, 75)
 toggleBtn.Position = UDim2.new(1, -100, 0.5, 0)
@@ -76,48 +77,69 @@ toggleBtn.Image = "rbxassetid://108600585930067"
 toggleBtn.BackgroundTransparency = 1
 toggleBtn.Visible = false
 Instance.new("UICorner", toggleBtn).CornerRadius = UDim.new(1, 0)
-local toggleGrad = addGradient(toggleBtn)
+local toggleGrad = addGrad(toggleBtn, 4)
 
+-- Hub
 local mainHub = Instance.new("Frame", SG)
-mainHub.Size = UDim2.new(0, 380, 0, 400)
+mainHub.Size = UDim2.new(0, 350, 0, 400)
 mainHub.Position = UDim2.new(0.5, 0, 0.5, 0)
 mainHub.AnchorPoint = Vector2.new(0.5, 0.5)
-mainHub.BackgroundColor3 = COLORS.DARK
+mainHub.BackgroundColor3 = COLORS.GLASS_DARK
 mainHub.Visible = false
 Instance.new("UICorner", mainHub)
-local hubGrad = addGradient(mainHub)
+local hubGrad = addGrad(mainHub, 4)
 
 local jumpBtn = Instance.new("TextButton", mainHub)
-jumpBtn.Size = UDim2.new(0, 300, 0, 60)
-jumpBtn.Position = UDim2.new(0.5, -150, 0.4, 0)
-jumpBtn.Text = "Teleport Jump: OFF"
+jumpBtn.Size = UDim2.new(0, 280, 0, 70)
+jumpBtn.Position = UDim2.new(0.5, -140, 0.4, 0)
+jumpBtn.Text = "GOD JUMP: OFF"
 jumpBtn.BackgroundColor3 = COLORS.ERROR
 jumpBtn.TextColor3 = Color3.new(1,1,1)
+jumpBtn.Font = Enum.Font.GothamBold
 Instance.new("UICorner", jumpBtn)
 
--- [[ 🚀 THE PHYSICS BYPASS JUMP 🚀 ]] --
-local infJump = false
-local jumpHeight = 7 -- Teleport distance
+-- [[ 🚀 THE GOD-JUMP LOGIC 🚀 ]] --
+local godActive = false
+local JUMP_HEIGHT = 7
 
+-- 1. Constant Health Lock Loop
+RunService.Heartbeat:Connect(function()
+    if godActive then
+        local char = p.Character
+        local hum = char and char:FindFirstChildOfClass("Humanoid")
+        if hum then
+            hum.MaxHealth = 99999999
+            hum.Health = 99999999
+        end
+    end
+end)
+
+-- 2. Teleport Jump Bypass
 UIS.JumpRequest:Connect(function()
-    if infJump then
+    if godActive then
         local char = p.Character
         local hrp = char and char:FindFirstChild("HumanoidRootPart")
         local hum = char and char:FindFirstChildOfClass("Humanoid")
         
         if hrp and hum and hum.Health > 0 then
-            -- Moves the CFrame directly to bypass physics blocks
-            hrp.CFrame = hrp.CFrame * CFrame.new(0, jumpHeight, 0)
+            hrp.Velocity = Vector3.new(hrp.Velocity.X, 0, hrp.Velocity.Z) -- No fall force
+            hrp.CFrame = hrp.CFrame * CFrame.new(0, JUMP_HEIGHT, 0) -- Teleport Up
+            hum:ChangeState(Enum.HumanoidStateType.Jumping) -- Animation
             
-            -- SAB Method to prevent fall damage
-            hum:ChangeState(Enum.HumanoidStateType.Landing)
-            task.wait(0.01)
-            hum:ChangeState(Enum.HumanoidStateType.Jumping)
+            -- SAB Method State Reset
+            task.spawn(function()
+                task.wait(0.05)
+                if hum then
+                    hum:ChangeState(Enum.HumanoidStateType.Landing)
+                    task.wait(0.01)
+                    hum:ChangeState(Enum.HumanoidStateType.Jumping)
+                end
+            end)
         end
     end
 end)
 
--- UI Logic
+-- [[ UI ACTIONS ]] --
 submit.MouseButton1Click:Connect(function()
     if keyInput.Text == "GHALOULIX9" then
         keyScreen:Destroy()
@@ -128,11 +150,22 @@ end)
 toggleBtn.MouseButton1Click:Connect(function() mainHub.Visible = not mainHub.Visible end)
 
 jumpBtn.MouseButton1Click:Connect(function()
-    infJump = not infJump
-    jumpBtn.Text = "Teleport Jump: " .. (infJump and "ON" or "OFF")
-    jumpBtn.BackgroundColor3 = infJump and COLORS.SUCCESS or COLORS.ERROR
+    godActive = not godActive
+    jumpBtn.Text = "GOD JUMP: " .. (godActive and "ON" or "OFF")
+    jumpBtn.BackgroundColor3 = godActive and COLORS.SUCCESS or COLORS.ERROR
+    
+    -- Reset Health if turned off
+    if not godActive then
+        local char = p.Character
+        local hum = char and char:FindFirstChildOfClass("Humanoid")
+        if hum then
+            hum.MaxHealth = 100
+            hum.Health = 100
+        end
+    end
 end)
 
+-- RGB Spin
 RunService.RenderStepped:Connect(function()
     local r = tick() * 60
     if keyGrad then keyGrad.Rotation = r end
@@ -140,17 +173,8 @@ RunService.RenderStepped:Connect(function()
     if toggleGrad then toggleGrad.Rotation = r end
 end)
 
--- Mobile Dragging
-local dragging, dragStart, startPos
-toggleBtn.InputBegan:Connect(function(input)
-    if input.UserInputType == Enum.UserInputType.Touch then
-        dragging = true; dragStart = input.Position; startPos = toggleBtn.Position
-    end
-end)
-UIS.InputChanged:Connect(function(input)
-    if dragging and input.UserInputType == Enum.UserInputType.Touch then
-        local delta = input.Position - dragStart
-        toggleBtn.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
-    end
-end)
-UIS.InputEnded:Connect(function(input) if input.UserInputType == Enum.UserInputType.Touch then dragging = false end end)
+-- Dragging
+local drag, dStart, sPos
+toggleBtn.InputBegan:Connect(function(i) if i.UserInputType == Enum.UserInputType.Touch then drag = true; dStart = i.Position; sPos = toggleBtn.Position end end)
+UIS.InputChanged:Connect(function(i) if drag and i.UserInputType == Enum.UserInputType.Touch then local delta = i.Position - dStart; toggleBtn.Position = UDim2.new(sPos.X.Scale, sPos.X.Offset + delta.X, sPos.Y.Scale, sPos.Y.Offset + delta.Y) end end)
+UIS.InputEnded:Connect(function(i) if i.UserInputType == Enum.UserInputType.Touch then drag = false end end)
