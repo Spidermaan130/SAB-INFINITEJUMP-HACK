@@ -14,7 +14,7 @@ SG.Name = "GH_UI"
 SG.IgnoreGuiInset = true
 SG.ResetOnSpawn = false
 
--- CUSTOM DRAG FUNCTION
+-- STABLE DRAG FUNCTION
 local function makeMovable(gui, dragPart)
     local dragging, dragInput, dragStart, startPos
     dragPart.InputBegan:Connect(function(input)
@@ -22,15 +22,17 @@ local function makeMovable(gui, dragPart)
             dragging = true
             dragStart = input.Position
             startPos = gui.Position
-            input.Changed:Connect(function()
-                if input.UserInputState == Enum.UserInputState.End then dragging = false end
-            end)
         end
     end)
     UIS.InputChanged:Connect(function(input)
         if dragging and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
             local delta = input.Position - dragStart
             gui.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+        end
+    end)
+    UIS.InputEnded:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+            dragging = false
         end
     end)
 end
@@ -62,31 +64,26 @@ UnlockBtn.MouseButton1Click:Connect(function()
         local LFr = buildWindow(UDim2.new(0,300,0,120), UDim2.new(0.5,-150,0.5,-60))
         local BarBG = Instance.new("Frame", LFr); BarBG.Size = UDim2.new(0.8,0,0,10); BarBG.Position = UDim2.new(0.1,0,0.7,0); BarBG.BackgroundColor3 = Color3.new(0,0,0)
         local Bar = Instance.new("Frame", BarBG); Bar.Size = UDim2.new(0,0,1,0); Bar.BackgroundColor3 = Color3.new(0,0,1)
-        local Lbl = Instance.new("TextLabel", LFr); Lbl.Size = UDim2.new(1,0,0,20); Lbl.Position = UDim2.new(0,0,0.85,0); Lbl.Text = "ULTRA SAFE LOADING..."; Lbl.BackgroundTransparency = 1; Lbl.TextScaled = true; style(Lbl)
+        local Lbl = Instance.new("TextLabel", LFr); Lbl.Size = UDim2.new(1,0,0,20); Lbl.Position = UDim2.new(0,0,0.85,0); Lbl.Text = "FINAL STABILIZING..."; Lbl.BackgroundTransparency = 1; Lbl.TextScaled = true; style(Lbl)
         TS:Create(Bar, TweenInfo.new(20), {Size = UDim2.new(1,0,1,0)}):Play()
         for i=20,1,-1 do Lbl.Text = "SAB BEST HACK ("..i.."s)"; task.wait(1) end
         LFr:Destroy()
 
         -- STAGE 3: MAIN
         local Main = buildWindow(UDim2.new(0,240,0,220), UDim2.new(0.1,0,0.4,0))
-        local JBtn = Instance.new("TextButton", Main); JBtn.Size = UDim2.new(0.8,0,0,40); JBtn.Position = UDim2.new(0.1,0,0.4,0); JBtn.Text = "Ultra Jump: OFF"; JBtn.TextScaled = true; style(JBtn)
+        local JBtn = Instance.new("TextButton", Main); JBtn.Size = UDim2.new(0.8,0,0,40); JBtn.Position = UDim2.new(0.1,0,0.4,0); JBtn.Text = "Safe Jump: OFF"; JBtn.TextScaled = true; style(JBtn)
         local SBtn = Instance.new("TextButton", Main); SBtn.Size = UDim2.new(0.8,0,0,40); SBtn.Position = UDim2.new(0.1,0,0.7,0); SBtn.Text = "Auto-Steal: OFF"; SBtn.TextScaled = true; style(SBtn)
 
         local jump, steal = false, false
-        JBtn.MouseButton1Click:Connect(function() jump = not jump; JBtn.Text = "Ultra Jump: "..(jump and "ON" or "OFF"); JBtn.BackgroundColor3 = jump and Color3.new(0, 0.6, 0) or Color3.fromRGB(200, 0, 0) end)
+        JBtn.MouseButton1Click:Connect(function() jump = not jump; JBtn.Text = "Safe Jump: "..(jump and "ON" or "OFF"); JBtn.BackgroundColor3 = jump and Color3.new(0, 0.6, 0) or Color3.fromRGB(200, 0, 0) end)
         SBtn.MouseButton1Click:Connect(function() steal = not steal; SBtn.Text = "Auto-Steal: "..(steal and "ON" or "OFF"); SBtn.BackgroundColor3 = steal and Color3.new(0, 0.6, 0) or Color3.fromRGB(200, 0, 0) end)
         
-        -- ULTRA SAFE JUMP (Invisible Floor Method)
+        -- FINAL STABILIZED JUMP
         UIS.JumpRequest:Connect(function()
             if jump and lp.Character and lp.Character:FindFirstChild("HumanoidRootPart") then
-                local p = Instance.new("Part", workspace)
-                p.Size = Vector3.new(5, 1, 5)
-                p.CFrame = lp.Character.HumanoidRootPart.CFrame * CFrame.new(0, -3.5, 0)
-                p.Transparency = 1
-                p.Anchored = true
+                -- Caps speed to stop character from hitting altitude death barriers
+                lp.Character.HumanoidRootPart.Velocity = Vector3.new(lp.Character.HumanoidRootPart.Velocity.X, 50, lp.Character.HumanoidRootPart.Velocity.Z)
                 lp.Character.Humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
-                task.wait(0.1)
-                p:Destroy()
             end
         end)
 
