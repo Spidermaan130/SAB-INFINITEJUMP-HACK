@@ -1,40 +1,33 @@
--- [[ ⚡ GHALOULIX9'S ULTIMATE ELITE HUB - COMPLETE EDITION ⚡ ]] --
--- Features: BodyVelocity Force-Up, SAB Anti-Death, Glassmorphism UI
--- Optimized for Delta Mobile | High-Power Bypass
+-- [[ ⚡ GHALOULIX9'S ULTIMATE ELITE HUB - BYPASS EDITION ⚡ ]] --
+-- Fix: Uses CFrame Teleportation to bypass games that block jumping.
+-- Optimized for Delta Mobile | SAB Anti-Death Included
 
 repeat task.wait() until game:IsLoaded()
 
--- Services
 local Players = game:GetService("Players")
 local UIS = game:GetService("UserInputService")
 local TS = game:GetService("TweenService")
 local RunService = game:GetService("RunService")
 
--- Player setup
 local p = Players.LocalPlayer
 local playerGui = p:WaitForChild("PlayerGui")
 
--- Protection: Remove old versions
-local old = playerGui:FindFirstChild("Ghaloulix9_Ultimate")
+-- Cleanup
+local old = playerGui:FindFirstChild("Ghaloulix9_Bypass")
 if old then old:Destroy() end
 
--- ScreenGui
 local SG = Instance.new("ScreenGui", playerGui)
-SG.Name = "Ghaloulix9_Ultimate"
+SG.Name = "Ghaloulix9_Bypass"
 SG.ResetOnSpawn = false
-SG.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
--- Color Palette
 local COLORS = {
     DARK = Color3.fromRGB(15, 15, 25),
     MEDIUM = Color3.fromRGB(25, 25, 40),
-    LIGHT = Color3.fromRGB(35, 35, 55),
     ACCENT = Color3.fromRGB(100, 220, 255),
     SUCCESS = Color3.fromRGB(100, 255, 150),
     ERROR = Color3.fromRGB(255, 100, 100)
 }
 
--- Rotating Gradient Helper
 local function addGradient(parent)
     local stroke = Instance.new("UIStroke", parent)
     stroke.Thickness = 3
@@ -47,7 +40,7 @@ local function addGradient(parent)
     return gradient
 end
 
--- [[ 1. KEY SYSTEM UI ]] --
+-- [[ UI - KEY SYSTEM ]] --
 local keyScreen = Instance.new("Frame", SG)
 keyScreen.Size = UDim2.new(1, 0, 1, 0)
 keyScreen.BackgroundColor3 = Color3.fromRGB(10, 10, 15)
@@ -57,16 +50,15 @@ keyContainer.Size = UDim2.new(0, 350, 0, 250)
 keyContainer.Position = UDim2.new(0.5, 0, 0.5, 0)
 keyContainer.AnchorPoint = Vector2.new(0.5, 0.5)
 keyContainer.BackgroundColor3 = COLORS.DARK
-Instance.new("UICorner", keyContainer).CornerRadius = UDim.new(0, 15)
+Instance.new("UICorner", keyContainer)
 local keyGrad = addGradient(keyContainer)
 
 local keyInput = Instance.new("TextBox", keyContainer)
 keyInput.Size = UDim2.new(0, 280, 0, 50)
 keyInput.Position = UDim2.new(0.5, -140, 0.35, 0)
 keyInput.PlaceholderText = "Key: GHALOULIX9"
-keyInput.Text = ""
-keyInput.BackgroundColor3 = COLORS.MEDIUM
 keyInput.TextColor3 = Color3.new(1,1,1)
+keyInput.BackgroundColor3 = COLORS.MEDIUM
 Instance.new("UICorner", keyInput)
 
 local submit = Instance.new("TextButton", keyContainer)
@@ -74,10 +66,9 @@ submit.Size = UDim2.new(0, 140, 0, 50)
 submit.Position = UDim2.new(0.5, -70, 0.7, 0)
 submit.Text = "UNLOCK"
 submit.BackgroundColor3 = COLORS.ACCENT
-submit.TextColor3 = Color3.new(1,1,1)
 Instance.new("UICorner", submit)
 
--- [[ 2. TOGGLE BUTTON (CHANNEL ID IMAGE) ]] --
+-- [[ UI - TOGGLE & HUB ]] --
 local toggleBtn = Instance.new("ImageButton", SG)
 toggleBtn.Size = UDim2.new(0, 75, 0, 75)
 toggleBtn.Position = UDim2.new(1, -100, 0.5, 0)
@@ -87,89 +78,61 @@ toggleBtn.Visible = false
 Instance.new("UICorner", toggleBtn).CornerRadius = UDim.new(1, 0)
 local toggleGrad = addGradient(toggleBtn)
 
--- [[ 3. MAIN HUB UI ]] --
 local mainHub = Instance.new("Frame", SG)
 mainHub.Size = UDim2.new(0, 380, 0, 400)
 mainHub.Position = UDim2.new(0.5, 0, 0.5, 0)
 mainHub.AnchorPoint = Vector2.new(0.5, 0.5)
 mainHub.BackgroundColor3 = COLORS.DARK
 mainHub.Visible = false
-Instance.new("UICorner", mainHub).CornerRadius = UDim.new(0, 20)
+Instance.new("UICorner", mainHub)
 local hubGrad = addGradient(mainHub)
-
-local title = Instance.new("TextLabel", mainHub)
-title.Size = UDim2.new(1, 0, 0, 60)
-title.Text = "💎 Ghaloulix9's Elite Hub 💎"
-title.TextColor3 = Color3.new(1,1,1)
-title.Font = Enum.Font.GothamBold
-title.TextSize = 20
-title.BackgroundTransparency = 1
 
 local jumpBtn = Instance.new("TextButton", mainHub)
 jumpBtn.Size = UDim2.new(0, 300, 0, 60)
 jumpBtn.Position = UDim2.new(0.5, -150, 0.4, 0)
-jumpBtn.Text = "Infinite Jump: OFF"
+jumpBtn.Text = "Teleport Jump: OFF"
 jumpBtn.BackgroundColor3 = COLORS.ERROR
 jumpBtn.TextColor3 = Color3.new(1,1,1)
 Instance.new("UICorner", jumpBtn)
 
--- [[ 4. LOGIC & PHYSICS FIXES ]] --
+-- [[ 🚀 THE PHYSICS BYPASS JUMP 🚀 ]] --
 local infJump = false
+local jumpHeight = 7 -- Teleport distance
 
--- FORCE-UP BYPASS LOGIC
 UIS.JumpRequest:Connect(function()
     if infJump then
         local char = p.Character
-        local hum = char and char:FindFirstChildOfClass("Humanoid")
         local hrp = char and char:FindFirstChild("HumanoidRootPart")
+        local hum = char and char:FindFirstChildOfClass("Humanoid")
         
-        if hum and hrp and hum.Health > 0 then
-            -- Kill falling speed
-            hrp.Velocity = Vector3.new(hrp.Velocity.X, 0, hrp.Velocity.Z)
+        if hrp and hum and hum.Health > 0 then
+            -- Moves the CFrame directly to bypass physics blocks
+            hrp.CFrame = hrp.CFrame * CFrame.new(0, jumpHeight, 0)
             
-            -- SAB Method State Reset
+            -- SAB Method to prevent fall damage
             hum:ChangeState(Enum.HumanoidStateType.Landing)
             task.wait(0.01)
             hum:ChangeState(Enum.HumanoidStateType.Jumping)
-            
-            -- BODY VELOCITY ROCKET (PUNCH THROUGH CEILING)
-            local bv = Instance.new("BodyVelocity")
-            bv.Velocity = Vector3.new(0, 120, 0) 
-            bv.MaxForce = Vector3.new(0, math.huge, 0)
-            bv.Parent = hrp
-            
-            task.delay(0.1, function()
-                bv:Destroy()
-            end)
         end
     end
 end)
 
--- Key System Action
+-- UI Logic
 submit.MouseButton1Click:Connect(function()
     if keyInput.Text == "GHALOULIX9" then
         keyScreen:Destroy()
         toggleBtn.Visible = true
-        -- Welcome Notification
-        local hint = Instance.new("Hint", SG)
-        hint.Text = "Welcome back, " .. p.DisplayName .. "!"
-        task.wait(3)
-        hint:Destroy()
     end
 end)
 
--- Toggle Actions
-toggleBtn.MouseButton1Click:Connect(function()
-    mainHub.Visible = not mainHub.Visible
-end)
+toggleBtn.MouseButton1Click:Connect(function() mainHub.Visible = not mainHub.Visible end)
 
 jumpBtn.MouseButton1Click:Connect(function()
     infJump = not infJump
-    jumpBtn.Text = "Infinite Jump: " .. (infJump and "ON" or "OFF")
+    jumpBtn.Text = "Teleport Jump: " .. (infJump and "ON" or "OFF")
     jumpBtn.BackgroundColor3 = infJump and COLORS.SUCCESS or COLORS.ERROR
 end)
 
--- RGB Rotation
 RunService.RenderStepped:Connect(function()
     local r = tick() * 60
     if keyGrad then keyGrad.Rotation = r end
@@ -177,13 +140,11 @@ RunService.RenderStepped:Connect(function()
     if toggleGrad then toggleGrad.Rotation = r end
 end)
 
--- Mobile Dragging Logic
+-- Mobile Dragging
 local dragging, dragStart, startPos
 toggleBtn.InputBegan:Connect(function(input)
     if input.UserInputType == Enum.UserInputType.Touch then
-        dragging = true
-        dragStart = input.Position
-        startPos = toggleBtn.Position
+        dragging = true; dragStart = input.Position; startPos = toggleBtn.Position
     end
 end)
 UIS.InputChanged:Connect(function(input)
@@ -192,6 +153,4 @@ UIS.InputChanged:Connect(function(input)
         toggleBtn.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
     end
 end)
-UIS.InputEnded:Connect(function(input)
-    if input.UserInputType == Enum.UserInputType.Touch then dragging = false end
-end)
+UIS.InputEnded:Connect(function(input) if input.UserInputType == Enum.UserInputType.Touch then dragging = false end end)
