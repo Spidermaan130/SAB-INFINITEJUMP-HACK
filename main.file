@@ -1,6 +1,6 @@
 -- [[ ⚡ GHALOULIX9'S ULTIMATE ELITE HUB - BRAINROT EDITION ⚡ ]] --
--- 🧠 Special Fix: Item Rubberbanding & Anti-Cheat Teleport Back 🧠
--- 🔧 Optimized for Delta Mobile | Physics-Sync Technology 🔧
+-- 🧠 Fixes: Rubberbanding, Item Weight, and "Removed for Cheating" 🧠
+-- 🛡️ Includes: Server-Deceiver & Network Priority 🛡️
 
 repeat task.wait() until game:IsLoaded()
 
@@ -99,18 +99,40 @@ Instance.new("UICorner", jumpBtn)
 
 -- [[ 🚀 THE BYPASS LOGIC 🚀 ]] --
 local active = false
-local JUMP_POWER = 35 
+local JUMP_POWER = 34 
 
--- Anti-Detection Buffer
+-- 🛡️ SERVER-DECEIVER LOOP 🛡️
 RunService.Heartbeat:Connect(function()
     if active then
         local char = p.Character
         local hum = char and char:FindFirstChildOfClass("Humanoid")
-        if hum then
+        local hrp = char and char:FindFirstChild("HumanoidRootPart")
+        
+        if hum and hrp then
+            -- 1. Anti-Death & State Lock
             hum:SetStateEnabled(Enum.HumanoidStateType.Dead, false)
             if hum.Health <= 0 then hum.Health = 100 end
-            -- Tell server our mobile physics are high priority
-            p.SimulationRadius = 1000
+            
+            -- 2. Network Priority (Stops Rubberbanding)
+            p.SimulationRadius = math.huge
+            
+            -- 3. Fake Physics State (Tricks Anti-Cheat)
+            if hum:GetState() == Enum.HumanoidStateType.NoPhysics then
+                hum:ChangeState(Enum.HumanoidStateType.FallingDown)
+            end
+        end
+    end
+end)
+
+-- 🛡️ MASSLESS ITEM SYSTEM 🛡️
+p.CharacterChildAdded:Connect(function(child)
+    if active and child:IsA("Tool") then
+        task.wait(0.1) -- Wait for item to load
+        for _, part in pairs(child:GetDescendants()) do
+            if part:IsA("BasePart") then
+                part.CanCollide = false
+                part.Massless = true -- Makes Brainrot weightless
+            end
         end
     end
 end)
@@ -121,7 +143,6 @@ UIS.JumpRequest:Connect(function()
         local hrp = char and char:FindFirstChild("HumanoidRootPart")
         
         if hrp then
-            -- Use BodyVelocity for better item-carrying stability
             local bv = Instance.new("BodyVelocity")
             bv.MaxForce = Vector3.new(0, 500000, 0)
             bv.Velocity = Vector3.new(0, JUMP_POWER, 0)
@@ -129,7 +150,7 @@ UIS.JumpRequest:Connect(function()
             
             task.wait(0.15) 
             
-            -- VELOCITY DECAY: Stops rubberbanding by smoothing the stop
+            -- Smooth Decay to look "Human" to the server
             for i = 1, 4 do
                 bv.Velocity = bv.Velocity * 0.4
                 task.wait(0.03)
@@ -164,7 +185,7 @@ RunService.RenderStepped:Connect(function()
     if hg then hg.Rotation = r end
 end)
 
--- Mobile Dragging
+-- Mobile Dragging Logic for Delta
 local drag, dStart, sPos
 toggleBtn.InputBegan:Connect(function(i) if i.UserInputType == Enum.UserInputType.Touch then drag = true; dStart = i.Position; sPos = toggleBtn.Position end end)
 UIS.InputChanged:Connect(function(i) if drag and i.UserInputType == Enum.UserInputType.Touch then local delta = i.Position - dStart; toggleBtn.Position = UDim2.new(sPos.X.Scale, sPos.X.Offset + delta.X, sPos.Y.Scale, sPos.Y.Offset + delta.Y) end end)
