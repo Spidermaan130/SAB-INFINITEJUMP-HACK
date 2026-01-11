@@ -1,107 +1,99 @@
--- [[ 💎 GHALOULIX9'S ELITE HUB - ULTIMATE FIXED EDITION 💎 ]] --
--- This script combines DeepSeek's Beauty with Delta's Stability.
+-- [[ 💎 GHALOULIX9'S HUB - DELTA EXCLUSIVE 💎 ]] --
+-- Simplified for maximum performance and zero load crashes.
 
--- Services
-local Players = game:GetService("Players")
-local UserInputService = game:GetService("UserInputService")
-local TweenService = game:GetService("TweenService")
-local RunService = game:GetService("RunService")
+repeat task.wait() until game:IsLoaded()
+local player = game:GetService("Players").LocalPlayer
+local UIS = game:GetService("UserInputService")
+local TS = game:GetService("TweenService")
 
--- Player setup
-local player = Players.LocalPlayer
-local playerGui = player:WaitForChild("PlayerGui")
+-- Protection: Remove old versions to prevent overlap
+local old = player:WaitForChild("PlayerGui"):FindFirstChild("GhaloulixHub")
+if old then old:Destroy() end
 
--- [[ PASTE THE DEEPSEEK UI CODE YOU ALREADY HAVE ABOVE HERE ]] --
--- (I will focus on the Logic and the parts that were cut off below)
+-- Main ScreenGui
+local SG = Instance.new("ScreenGui", player.PlayerGui)
+SG.Name = "GhaloulixHub"
+SG.ResetOnSpawn = false
 
--- [[ 1. THE USERNAME NOTIFICATION ]] --
-local function welcomeNotification()
-    local name = player.DisplayName or player.Name
-    notificationLabel.Text = "Welcome, " .. name .. "! 💎"
+-- [[ 1. THE NOTIFICATION SYSTEM ]] --
+local function notify(text)
+    local nFrame = Instance.new("Frame", SG)
+    nFrame.Size = UDim2.new(0, 250, 0, 50)
+    nFrame.Position = UDim2.new(0.5, -125, -0.1, 0)
+    nFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 25)
+    Instance.new("UICorner", nFrame)
+    local nLab = Instance.new("TextLabel", nFrame)
+    nLab.Size = UDim2.new(1, 0, 1, 0)
+    nLab.Text = text; nLab.TextColor3 = Color3.new(1,1,1); nLab.BackgroundTransparency = 1; nLab.Font = Enum.Font.GothamBold
     
-    notificationFrame.Visible = true
-    TweenService:Create(notificationFrame, TweenInfo.new(0.8, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {Position = UDim2.new(0.1, 0, 0.05, 0)}):Play()
-    
-    task.wait(3)
-    
-    TweenService:Create(notificationFrame, TweenInfo.new(0.5, Enum.EasingStyle.Quart, Enum.EasingDirection.In), {Position = UDim2.new(0.1, 0, -0.2, 0)}):Play()
+    TS:Create(nFrame, TweenInfo.new(0.5, Enum.EasingStyle.Back), {Position = UDim2.new(0.5, -125, 0.05, 0)}):Play()
+    task.delay(3, function()
+        TS:Create(nFrame, TweenInfo.new(0.5), {Position = UDim2.new(0.5, -125, -0.2, 0)}):Play()
+        task.wait(0.5)
+        nFrame:Destroy()
+    end)
 end
 
--- [[ 2. SMOOTH OPEN/CLOSE FADE ]] --
-local function toggleHub()
-    isHubOpen = not isHubOpen
-    
-    if isHubOpen then
-        mainHub.Visible = true
-        mainHub.GroupTransparency = 1 -- Assumes CanvasGroup or manual fade
-        -- Animation: Pop in and Fade in
-        mainHub.Size = UDim2.new(0, 300, 0, 400) -- Small start
-        TweenService:Create(mainHub, TweenInfo.new(0.5, Enum.EasingStyle.Back), {Size = UDim2.new(0, 380, 0, 520), BackgroundTransparency = 0.85}):Play()
-    else
-        -- Animation: Pop out and Fade out
-        local t = TweenService:Create(mainHub, TweenInfo.new(0.4, Enum.EasingStyle.Quart), {Size = UDim2.new(0, 300, 0, 400), BackgroundTransparency = 1})
-        t:Play()
-        t.Completed:Connect(function() if not isHubOpen then mainHub.Visible = false end end)
-    end
-end
+-- [[ 2. KEY SYSTEM (GHALOULIX9) ]] --
+local KeyBox = Instance.new("Frame", SG)
+KeyBox.Size = UDim2.new(0, 300, 0, 180); KeyBox.Position = UDim2.new(0.5, -150, 0.5, -90)
+KeyBox.BackgroundColor3 = Color3.fromRGB(25, 25, 30)
+Instance.new("UICorner", KeyBox)
 
--- [[ 3. THE SAB INFINITE JUMP (THE FIX) ]] --
-local function handleInfiniteJump()
-    if isInfiniteJumpEnabled then
+local KInput = Instance.new("TextBox", KeyBox)
+KInput.Size = UDim2.new(0, 240, 0, 40); KInput.Position = UDim2.new(0.5, -120, 0.3, 0)
+KInput.PlaceholderText = "Enter Key: GHALOULIX9"; KInput.Text = ""
+
+local KBtn = Instance.new("TextButton", KeyBox)
+KBtn.Size = UDim2.new(0, 120, 0, 40); KBtn.Position = UDim2.new(0.5, -60, 0.7, 0)
+KBtn.Text = "AUTHENTICATE"; KBtn.BackgroundColor3 = Color3.fromRGB(0, 150, 255)
+Instance.new("UICorner", KBtn)
+
+-- [[ 3. THE HUB & JUMP ]] --
+local Main = Instance.new("Frame", SG)
+Main.Size = UDim2.new(0, 350, 0, 250); Main.Position = UDim2.new(0.5, -175, 0.5, -125)
+Main.BackgroundColor3 = Color3.fromRGB(15, 15, 20); Main.Visible = false
+Instance.new("UICorner", Main)
+
+local Toggle = Instance.new("ImageButton", SG)
+Toggle.Size = UDim2.new(0, 60, 0, 60); Toggle.Position = UDim2.new(0, 20, 0.5, -30)
+Toggle.Image = "rbxassetid://108600585930067"; Toggle.Visible = false
+Instance.new("UICorner", Toggle).CornerRadius = UDim.new(1, 0)
+
+local jumpEnabled = false
+local function handleJump()
+    if jumpEnabled then
         local char = player.Character
         local hum = char and char:FindFirstChildOfClass("Humanoid")
         local hrp = char and char:FindFirstChild("HumanoidRootPart")
-        
         if hum and hrp then
-            -- THE SAB METHOD: 
-            -- 1. Temporarily anchor to stop momentum (prevents fall damage death)
-            -- 2. Force state to Landing then Jumping
+            -- SAB METHOD (RESETS VELOCITY TO 0 SO YOU DON'T DIE)
             hrp.Velocity = Vector3.new(hrp.Velocity.X, 0, hrp.Velocity.Z)
-            hum:ChangeState(Enum.HumanoidStateType.Landing)
-            task.wait()
             hum:ChangeState(Enum.HumanoidStateType.Jumping)
             hrp.Velocity = Vector3.new(hrp.Velocity.X, 50, hrp.Velocity.Z)
         end
     end
 end
+UIS.JumpRequest:Connect(handleJump)
 
--- Delta Mobile Jump Detection
-UserInputService.JumpRequest:Connect(handleInfiniteJump)
-
--- [[ 4. KEY SYSTEM & ROTATION LOGIC ]] --
-submitButton.MouseButton1Click:Connect(function()
-    if keyInput.Text == "GHALOULIX9" then
-        -- Smooth Transition
-        TweenService:Create(keyScreen, TweenInfo.new(1, Enum.EasingStyle.Quart), {BackgroundTransparency = 1}):Play()
-        keyContainer:Destroy()
-        
-        task.wait(0.5)
-        toggleButton.Visible = true
-        welcomeNotification()
-    else
-        statusLabel.Text = "❌ INVALID AUTHORIZATION"
-        statusLabel.TextColor3 = Color3.fromRGB(255, 100, 100)
+-- Login Logic
+KBtn.MouseButton1Click:Connect(function()
+    if KInput.Text == "GHALOULIX9" then
+        KeyBox:Destroy()
+        Main.Visible = true
+        Toggle.Visible = true
+        notify("Welcome, " .. player.DisplayName)
     end
 end)
 
--- Rotating Gradient Loop (Visual Beauty)
-RunService.RenderStepped:Connect(function()
-    if mainHubGradient then
-        mainHubGradient.Rotation = mainHubGradient.Rotation + 2
-    end
-    if toggleBorderGradient then
-        toggleBorderGradient.Rotation = toggleBorderGradient.Rotation + 3
-    end
+-- Main Menu Button
+local JBtn = Instance.new("TextButton", Main)
+JBtn.Size = UDim2.new(0, 200, 0, 50); JBtn.Position = UDim2.new(0.5, -100, 0.4, 0)
+JBtn.Text = "Infinite Jump: OFF"
+JBtn.MouseButton1Click:Connect(function()
+    jumpEnabled = not jumpEnabled
+    JBtn.Text = "Infinite Jump: " .. (jumpEnabled and "ON" or "OFF")
+    JBtn.BackgroundColor3 = jumpEnabled and Color3.fromRGB(0, 180, 100) or Color3.fromRGB(40, 40, 45)
 end)
 
--- Connect Toggle
-toggleButton.MouseButton1Click:Connect(toggleHub)
-closeHub.MouseButton1Click:Connect(toggleHub)
-
--- Infinite Jump Toggle Connect
-jumpToggle.MouseButton1Click:Connect(function()
-    isInfiniteJumpEnabled = not isInfiniteJumpEnabled
-    jumpToggle.Text = isInfiniteJumpEnabled and "ON" or "OFF"
-    jumpToggle.BackgroundColor3 = isInfiniteJumpEnabled and Color3.fromRGB(100, 255, 150) or Color3.fromRGB(255, 100, 100)
-    jumpStatus.BackgroundColor3 = isInfiniteJumpEnabled and Color3.fromRGB(100, 255, 150) or Color3.fromRGB(255, 100, 100)
-end)
+Toggle.MouseButton1Click:Connect(function() Main.Visible = not Main.Visible end)
