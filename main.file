@@ -1,99 +1,598 @@
--- [[ 💎 GHALOULIX9'S HUB - DELTA EXCLUSIVE 💎 ]] --
--- Simplified for maximum performance and zero load crashes.
+-- ⚡ Ghaloulix9's Elite Script - Premium Glassmorphism UI with SAB Jump Protection ⚡
+-- 🔧 Optimized for Delta Executor | Ultra Stable | Zero Fall Damage Guaranteed 🔧
 
 repeat task.wait() until game:IsLoaded()
-local player = game:GetService("Players").LocalPlayer
-local UIS = game:GetService("UserInputService")
-local TS = game:GetService("TweenService")
 
--- Protection: Remove old versions to prevent overlap
-local old = player:WaitForChild("PlayerGui"):FindFirstChild("GhaloulixHub")
-if old then old:Destroy() end
+-- Services
+local Players = game:GetService("Players")
+local UserInputService = game:GetService("UserInputService")
+local TweenService = game:GetService("TweenService")
+local RunService = game:GetService("RunService")
 
--- Main ScreenGui
-local SG = Instance.new("ScreenGui", player.PlayerGui)
-SG.Name = "GhaloulixHub"
+-- Player setup
+local p = Players.LocalPlayer
+local playerGui = p:WaitForChild("PlayerGui")
+
+-- ScreenGui
+local SG = Instance.new("ScreenGui")
+SG.Name = "Ghaloulix9_Elite"
 SG.ResetOnSpawn = false
+SG.DisplayOrder = 999
+SG.IgnoreGuiInset = true
+SG.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
--- [[ 1. THE NOTIFICATION SYSTEM ]] --
-local function notify(text)
-    local nFrame = Instance.new("Frame", SG)
-    nFrame.Size = UDim2.new(0, 250, 0, 50)
-    nFrame.Position = UDim2.new(0.5, -125, -0.1, 0)
-    nFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 25)
-    Instance.new("UICorner", nFrame)
-    local nLab = Instance.new("TextLabel", nFrame)
-    nLab.Size = UDim2.new(1, 0, 1, 0)
-    nLab.Text = text; nLab.TextColor3 = Color3.new(1,1,1); nLab.BackgroundTransparency = 1; nLab.Font = Enum.Font.GothamBold
+-- Glassmorphism Color Palette
+local COLORS = {
+    GLASS_DARK = Color3.fromRGB(15, 15, 25),
+    GLASS_MEDIUM = Color3.fromRGB(25, 25, 40),
+    GLASS_LIGHT = Color3.fromRGB(35, 35, 55),
+    GLASS_TRANSPARENCY = 0.88,
+    TEXT_WHITE = Color3.fromRGB(255, 255, 255),
+    TEXT_GRAY = Color3.fromRGB(180, 180, 200),
+    ACCENT_PINK = Color3.fromRGB(255, 100, 180),
+    ACCENT_CYAN = Color3.fromRGB(100, 220, 255),
+    ACCENT_PURPLE = Color3.fromRGB(180, 100, 255),
+    SUCCESS = Color3.fromRGB(100, 255, 150),
+    ERROR = Color3.fromRGB(255, 100, 100)
+}
+
+-- Create rotating RGB gradient
+local function createRGBGradient()
+    local gradient = Instance.new("UIGradient")
+    gradient.Color = ColorSequence.new{
+        ColorSequenceKeypoint.new(0, COLORS.ACCENT_PINK),
+        ColorSequenceKeypoint.new(0.33, COLORS.ACCENT_CYAN),
+        ColorSequenceKeypoint.new(0.66, COLORS.ACCENT_PURPLE),
+        ColorSequenceKeypoint.new(1, COLORS.ACCENT_PINK)
+    }
+    gradient.Rotation = 0
+    return gradient
+end
+
+-- Create gradient stroke
+local function createGradientStroke(parent, thickness)
+    local stroke = Instance.new("UIStroke")
+    stroke.Thickness = thickness
+    stroke.LineJoinMode = Enum.LineJoinMode.Round
+    stroke.Transparency = 0
     
-    TS:Create(nFrame, TweenInfo.new(0.5, Enum.EasingStyle.Back), {Position = UDim2.new(0.5, -125, 0.05, 0)}):Play()
-    task.delay(3, function()
-        TS:Create(nFrame, TweenInfo.new(0.5), {Position = UDim2.new(0.5, -125, -0.2, 0)}):Play()
-        task.wait(0.5)
-        nFrame:Destroy()
+    local gradient = createRGBGradient()
+    gradient.Parent = stroke
+    
+    stroke.Parent = parent
+    return stroke, gradient
+end
+
+-- Notification System
+local notificationFrame = Instance.new("Frame")
+notificationFrame.Name = "NotificationFrame"
+notificationFrame.Size = UDim2.new(0.7, 0, 0, 70)
+notificationFrame.Position = UDim2.new(0.15, 0, -0.1, 0)
+notificationFrame.BackgroundColor3 = COLORS.GLASS_MEDIUM
+notificationFrame.BackgroundTransparency = COLORS.GLASS_TRANSPARENCY
+notificationFrame.Visible = false
+notificationFrame.AnchorPoint = Vector2.new(0, 0)
+
+local notificationCorner = Instance.new("UICorner")
+notificationCorner.CornerRadius = UDim.new(0.2, 0)
+notificationCorner.Parent = notificationFrame
+
+local notificationStroke = createGradientStroke(notificationFrame, 3)
+
+local notificationLabel = Instance.new("TextLabel")
+notificationLabel.Name = "NotificationLabel"
+notificationLabel.Size = UDim2.new(1, -40, 1, -20)
+notificationLabel.Position = UDim2.new(0, 20, 0, 10)
+notificationLabel.BackgroundTransparency = 1
+notificationLabel.Text = ""
+notificationLabel.TextColor3 = COLORS.TEXT_WHITE
+notificationLabel.Font = Enum.Font.GothamBold
+notificationLabel.TextSize = 22
+notificationLabel.TextStrokeTransparency = 0.4
+notificationLabel.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
+
+-- Key Entry Screen
+local keyScreen = Instance.new("Frame")
+keyScreen.Name = "KeyScreen"
+keyScreen.Size = UDim2.new(1, 0, 1, 0)
+keyScreen.BackgroundColor3 = Color3.fromRGB(10, 10, 20)
+keyScreen.BackgroundTransparency = 0
+keyScreen.Visible = true
+
+-- Key Container
+local keyContainer = Instance.new("Frame")
+keyContainer.Name = "KeyContainer"
+keyContainer.Size = UDim2.new(0, 420, 0, 480)
+keyContainer.Position = UDim2.new(0.5, -210, 0.5, -240)
+keyContainer.BackgroundColor3 = COLORS.GLASS_DARK
+keyContainer.BackgroundTransparency = COLORS.GLASS_TRANSPARENCY
+keyContainer.AnchorPoint = Vector2.new(0.5, 0.5)
+
+local keyContainerCorner = Instance.new("UICorner")
+keyContainerCorner.CornerRadius = UDim.new(0.25, 0)
+keyContainerCorner.Parent = keyContainer
+
+local keyContainerStroke, keyContainerGradient = createGradientStroke(keyContainer, 4)
+
+-- Key Title
+local keyTitle = Instance.new("TextLabel")
+keyTitle.Name = "KeyTitle"
+keyTitle.Size = UDim2.new(1, -40, 0, 90)
+keyTitle.Position = UDim2.new(0, 20, 0, 40)
+keyTitle.BackgroundTransparency = 1
+keyTitle.Text = "🔐 ELITE ACCESS 🔐"
+keyTitle.TextColor3 = COLORS.TEXT_WHITE
+keyTitle.Font = Enum.Font.GothamBold
+keyTitle.TextSize = 32
+keyTitle.TextStrokeTransparency = 0.3
+
+-- Key Subtitle
+local keySubtitle = Instance.new("TextLabel")
+keySubtitle.Name = "KeySubtitle"
+keySubtitle.Size = UDim2.new(1, -40, 0, 50)
+keySubtitle.Position = UDim2.new(0, 20, 0, 130)
+keySubtitle.BackgroundTransparency = 1
+keySubtitle.Text = "Enter authorization key to continue"
+keySubtitle.TextColor3 = COLORS.TEXT_GRAY
+keySubtitle.Font = Enum.Font.Gotham
+keySubtitle.TextSize = 18
+
+-- Key Input
+local keyInput = Instance.new("TextBox")
+keyInput.Name = "KeyInput"
+keyInput.Size = UDim2.new(1, -40, 0, 70)
+keyInput.Position = UDim2.new(0, 20, 0, 200)
+keyInput.BackgroundColor3 = COLORS.GLASS_MEDIUM
+keyInput.BackgroundTransparency = COLORS.GLASS_TRANSPARENCY - 0.1
+keyInput.Text = ""
+keyInput.PlaceholderText = "Enter key here..."
+keyInput.PlaceholderColor3 = COLORS.TEXT_GRAY
+keyInput.TextColor3 = COLORS.TEXT_WHITE
+keyInput.Font = Enum.Font.Gotham
+keyInput.TextSize = 24
+keyInput.ClearTextOnFocus = false
+keyInput.TextXAlignment = Enum.TextXAlignment.Center
+
+local keyInputCorner = Instance.new("UICorner")
+keyInputCorner.CornerRadius = UDim.new(0.15, 0)
+keyInputCorner.Parent = keyInput
+
+local keyInputStroke = createGradientStroke(keyInput, 2)
+
+-- Submit Button
+local submitButton = Instance.new("TextButton")
+submitButton.Name = "SubmitButton"
+submitButton.Size = UDim2.new(1, -40, 0, 70)
+submitButton.Position = UDim2.new(0, 20, 0, 290)
+submitButton.BackgroundColor3 = COLORS.GLASS_LIGHT
+submitButton.BackgroundTransparency = COLORS.GLASS_TRANSPARENCY - 0.15
+submitButton.AutoButtonColor = false
+submitButton.Text = "UNLOCK ELITE HUB"
+submitButton.TextColor3 = COLORS.TEXT_WHITE
+submitButton.Font = Enum.Font.GothamBold
+submitButton.TextSize = 20
+
+local submitCorner = Instance.new("UICorner")
+submitCorner.CornerRadius = UDim.new(0.15, 0)
+submitCorner.Parent = submitButton
+
+local submitStroke = createGradientStroke(submitButton, 2)
+
+-- Status Label
+local statusLabel = Instance.new("TextLabel")
+statusLabel.Name = "StatusLabel"
+statusLabel.Size = UDim2.new(1, -40, 0, 40)
+statusLabel.Position = UDim2.new(0, 20, 0, 380)
+statusLabel.BackgroundTransparency = 1
+statusLabel.Text = ""
+statusLabel.TextColor3 = COLORS.TEXT_GRAY
+statusLabel.Font = Enum.Font.Gotham
+statusLabel.TextSize = 16
+statusLabel.TextTransparency = 0.5
+
+-- Toggle Button (Circular, Draggable, Pulsating)
+local toggleButton = Instance.new("ImageButton")
+toggleButton.Name = "ToggleButton"
+toggleButton.Image = "rbxassetid://108600585930067"
+toggleButton.BackgroundTransparency = 1
+toggleButton.Size = UDim2.new(0, 85, 0, 85)
+toggleButton.Position = UDim2.new(1, -100, 1, -100)
+toggleButton.AnchorPoint = Vector2.new(0.5, 0.5)
+toggleButton.Visible = false
+toggleButton.AutoButtonColor = false
+toggleButton.ZIndex = 1000
+
+-- Pulsating Glow Effect
+local toggleGlow = Instance.new("ImageLabel")
+toggleGlow.Name = "ToggleGlow"
+toggleGlow.Image = "rbxassetid://8992239981"
+toggleGlow.ImageColor3 = COLORS.ACCENT_CYAN
+toggleGlow.ImageTransparency = 0.6
+toggleGlow.BackgroundTransparency = 1
+toggleGlow.Size = UDim2.new(1, 40, 1, 40)
+toggleGlow.Position = UDim2.new(0, -20, 0, -20)
+toggleGlow.ZIndex = toggleButton.ZIndex - 1
+
+-- Rotating Gradient Border
+local toggleBorder = Instance.new("Frame")
+toggleBorder.Name = "ToggleBorder"
+toggleBorder.Size = UDim2.new(1, 15, 1, 15)
+toggleBorder.Position = UDim2.new(0, -7.5, 0, -7.5)
+toggleBorder.BackgroundTransparency = 1
+toggleBorder.ZIndex = toggleButton.ZIndex - 1
+
+local toggleBorderStroke, toggleBorderGradient = createGradientStroke(toggleBorder, 4)
+
+-- Main Hub
+local mainHub = Instance.new("Frame")
+mainHub.Name = "MainHub"
+mainHub.Size = UDim2.new(0, 400, 0, 550)
+mainHub.Position = UDim2.new(0.5, -200, 0.5, -275)
+mainHub.BackgroundColor3 = COLORS.GLASS_DARK
+mainHub.BackgroundTransparency = 1  -- Start transparent
+mainHub.Visible = false
+mainHub.AnchorPoint = Vector2.new(0.5, 0.5)
+mainHub.Active = true
+
+local mainHubCorner = Instance.new("UICorner")
+mainHubCorner.CornerRadius = UDim.new(0.2, 0)
+mainHubCorner.Parent = mainHub
+
+local mainHubStroke, mainHubGradient = createGradientStroke(mainHub, 4)
+
+-- Hub Title
+local hubTitle = Instance.new("TextLabel")
+hubTitle.Name = "HubTitle"
+hubTitle.Size = UDim2.new(1, -40, 0, 80)
+hubTitle.Position = UDim2.new(0, 20, 0, 25)
+hubTitle.BackgroundTransparency = 1
+hubTitle.Text = "💎 Ghaloulix9's Elite Hub 💎"
+hubTitle.TextColor3 = COLORS.TEXT_WHITE
+hubTitle.Font = Enum.Font.GothamBold
+hubTitle.TextSize = 26
+hubTitle.TextStrokeTransparency = 0.3
+
+-- Infinite Jump Card
+local jumpCard = Instance.new("Frame")
+jumpCard.Name = "JumpCard"
+jumpCard.Size = UDim2.new(1, -40, 0, 160)
+jumpCard.Position = UDim2.new(0, 20, 0, 120)
+jumpCard.BackgroundColor3 = COLORS.GLASS_MEDIUM
+jumpCard.BackgroundTransparency = COLORS.GLASS_TRANSPARENCY
+
+local jumpCardCorner = Instance.new("UICorner")
+jumpCardCorner.CornerRadius = UDim.new(0.15, 0)
+jumpCardCorner.Parent = jumpCard
+
+local jumpCardStroke = createGradientStroke(jumpCard, 2)
+
+-- Jump Title
+local jumpTitle = Instance.new("TextLabel")
+jumpTitle.Name = "JumpTitle"
+jumpTitle.Size = UDim2.new(1, -20, 0, 50)
+jumpTitle.Position = UDim2.new(0, 10, 0, 15)
+jumpTitle.BackgroundTransparency = 1
+jumpTitle.Text = "🚀 Stable Infinite Jump"
+jumpTitle.TextColor3 = COLORS.TEXT_WHITE
+jumpTitle.Font = Enum.Font.GothamBold
+jumpTitle.TextSize = 20
+jumpTitle.TextXAlignment = Enum.TextXAlignment.Left
+
+-- Jump Description
+local jumpDesc = Instance.new("TextLabel")
+jumpDesc.Name = "JumpDesc"
+jumpDesc.Size = UDim2.new(1, -20, 0, 60)
+jumpDesc.Position = UDim2.new(0, 10, 0, 65)
+jumpDesc.BackgroundTransparency = 1
+jumpDesc.Text = "SAB Method Protection: Zero fall damage guaranteed. Resets velocity and fall timer every jump."
+jumpDesc.TextColor3 = COLORS.TEXT_GRAY
+jumpDesc.Font = Enum.Font.Gotham
+jumpDesc.TextSize = 14
+jumpDesc.TextXAlignment = Enum.TextXAlignment.Left
+jumpDesc.TextWrapped = true
+
+-- Jump Toggle Button
+local jumpToggle = Instance.new("TextButton")
+jumpToggle.Name = "JumpToggle"
+jumpToggle.Size = UDim2.new(0, 110, 0, 45)
+jumpToggle.Position = UDim2.new(1, -120, 1, -55)
+jumpToggle.BackgroundColor3 = COLORS.ERROR
+jumpToggle.BackgroundTransparency = COLORS.GLASS_TRANSPARENCY - 0.2
+jumpToggle.AutoButtonColor = false
+jumpToggle.Text = "OFF"
+jumpToggle.TextColor3 = COLORS.TEXT_WHITE
+jumpToggle.Font = Enum.Font.GothamBold
+jumpToggle.TextSize = 16
+
+local jumpToggleCorner = Instance.new("UICorner")
+jumpToggleCorner.CornerRadius = UDim.new(0.1, 0)
+jumpToggleCorner.Parent = jumpToggle
+
+local jumpToggleStroke = createGradientStroke(jumpToggle, 2)
+
+-- Jump Status Indicator
+local jumpStatus = Instance.new("Frame")
+jumpStatus.Name = "JumpStatus"
+jumpStatus.Size = UDim2.new(0, 12, 0, 12)
+jumpStatus.Position = UDim2.new(1, -140, 0, 20)
+jumpStatus.BackgroundColor3 = COLORS.ERROR
+jumpStatus.BorderSizePixel = 0
+
+local jumpStatusCorner = Instance.new("UICorner")
+jumpStatusCorner.CornerRadius = UDim.new(1, 0)
+jumpStatusCorner.Parent = jumpStatus
+
+-- Close Hub Button
+local closeHub = Instance.new("TextButton")
+closeHub.Name = "CloseHub"
+closeHub.Size = UDim2.new(0, 45, 0, 45)
+closeHub.Position = UDim2.new(1, -55, 0, 20)
+closeHub.BackgroundColor3 = COLORS.GLASS_LIGHT
+closeHub.BackgroundTransparency = COLORS.GLASS_TRANSPARENCY
+closeHub.AutoButtonColor = false
+closeHub.Text = "✕"
+closeHub.TextColor3 = COLORS.TEXT_WHITE
+closeHub.Font = Enum.Font.GothamBold
+closeHub.TextSize = 20
+
+local closeHubCorner = Instance.new("UICorner")
+closeHubCorner.CornerRadius = UDim.new(0.2, 0)
+closeHubCorner.Parent = closeHub
+
+local closeHubStroke = createGradientStroke(closeHub, 2)
+
+-- Parent All Elements
+SG.Parent = playerGui
+notificationFrame.Parent = SG
+notificationLabel.Parent = notificationFrame
+keyScreen.Parent = SG
+keyContainer.Parent = keyScreen
+keyTitle.Parent = keyContainer
+keySubtitle.Parent = keyContainer
+keyInput.Parent = keyContainer
+submitButton.Parent = keyContainer
+statusLabel.Parent = keyContainer
+toggleButton.Parent = SG
+toggleGlow.Parent = toggleButton
+toggleBorder.Parent = toggleButton
+mainHub.Parent = SG
+hubTitle.Parent = mainHub
+jumpCard.Parent = mainHub
+jumpTitle.Parent = jumpCard
+jumpDesc.Parent = jumpCard
+jumpToggle.Parent = jumpCard
+jumpStatus.Parent = jumpCard
+closeHub.Parent = mainHub
+
+-- Variables
+local CORRECT_KEY = "GHALOULIX9"
+local infJump = false
+local isHubOpen = false
+local hasValidKey = false
+local isDragging = false
+local dragStart, frameStart
+local rotationSpeed = 45 -- degrees per second
+
+-- SAB INFINITE JUMP SYSTEM (FIXED - NO FALL DAMAGE)
+local jumpConnection = nil
+
+local function setupSABJump()
+    local function onJumpRequest()
+        if not infJump then return end
+        
+        local character = p.Character
+        if not character then return end
+        
+        local humanoid = character:FindFirstChildOfClass("Humanoid")
+        local humanoidRootPart = character:FindFirstChild("HumanoidRootPart")
+        
+        if humanoid and humanoidRootPart and humanoid.Health > 0 then
+            -- SAB METHOD: Reset fall-damage timer
+            -- 1. Reset vertical velocity to 0
+            humanoidRootPart.Velocity = Vector3.new(
+                humanoidRootPart.Velocity.X,
+                0,
+                humanoidRootPart.Velocity.Z
+            )
+            
+            -- 2. Force Landing state to reset fall timer
+            humanoid:ChangeState(Enum.HumanoidStateType.Landing)
+            
+            -- 3. Brief wait for state to register
+            task.wait(0.01)
+            
+            -- 4. Force Jumping state
+            humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
+            
+            -- 5. Apply upward velocity for consistent jump height
+            humanoidRootPart.Velocity = Vector3.new(
+                humanoidRootPart.Velocity.X,
+                50, -- Optimal jump height
+                humanoidRootPart.Velocity.Z
+            )
+            
+            -- 6. Cooldown to prevent spam
+            task.wait(0.08)
+        end
+    end
+    
+    -- Connect to JumpRequest
+    jumpConnection = UserInputService.JumpRequest:Connect(onJumpRequest)
+    
+    -- Handle character respawns
+    p.CharacterAdded:Connect(function()
+        task.wait(0.5) -- Wait for character to load
+        
+        if jumpConnection then
+            jumpConnection:Disconnect()
+        end
+        
+        jumpConnection = UserInputService.JumpRequest:Connect(onJumpRequest)
+    end)
+    
+    p.CharacterRemoving:Connect(function()
+        if jumpConnection then
+            jumpConnection:Disconnect()
+            jumpConnection = nil
+        end
     end)
 end
 
--- [[ 2. KEY SYSTEM (GHALOULIX9) ]] --
-local KeyBox = Instance.new("Frame", SG)
-KeyBox.Size = UDim2.new(0, 300, 0, 180); KeyBox.Position = UDim2.new(0.5, -150, 0.5, -90)
-KeyBox.BackgroundColor3 = Color3.fromRGB(25, 25, 30)
-Instance.new("UICorner", KeyBox)
+-- Setup jump system immediately
+setupSABJump()
 
-local KInput = Instance.new("TextBox", KeyBox)
-KInput.Size = UDim2.new(0, 240, 0, 40); KInput.Position = UDim2.new(0.5, -120, 0.3, 0)
-KInput.PlaceholderText = "Enter Key: GHALOULIX9"; KInput.Text = ""
-
-local KBtn = Instance.new("TextButton", KeyBox)
-KBtn.Size = UDim2.new(0, 120, 0, 40); KBtn.Position = UDim2.new(0.5, -60, 0.7, 0)
-KBtn.Text = "AUTHENTICATE"; KBtn.BackgroundColor3 = Color3.fromRGB(0, 150, 255)
-Instance.new("UICorner", KBtn)
-
--- [[ 3. THE HUB & JUMP ]] --
-local Main = Instance.new("Frame", SG)
-Main.Size = UDim2.new(0, 350, 0, 250); Main.Position = UDim2.new(0.5, -175, 0.5, -125)
-Main.BackgroundColor3 = Color3.fromRGB(15, 15, 20); Main.Visible = false
-Instance.new("UICorner", Main)
-
-local Toggle = Instance.new("ImageButton", SG)
-Toggle.Size = UDim2.new(0, 60, 0, 60); Toggle.Position = UDim2.new(0, 20, 0.5, -30)
-Toggle.Image = "rbxassetid://108600585930067"; Toggle.Visible = false
-Instance.new("UICorner", Toggle).CornerRadius = UDim.new(1, 0)
-
-local jumpEnabled = false
-local function handleJump()
-    if jumpEnabled then
-        local char = player.Character
-        local hum = char and char:FindFirstChildOfClass("Humanoid")
-        local hrp = char and char:FindFirstChild("HumanoidRootPart")
-        if hum and hrp then
-            -- SAB METHOD (RESETS VELOCITY TO 0 SO YOU DON'T DIE)
-            hrp.Velocity = Vector3.new(hrp.Velocity.X, 0, hrp.Velocity.Z)
-            hum:ChangeState(Enum.HumanoidStateType.Jumping)
-            hrp.Velocity = Vector3.new(hrp.Velocity.X, 50, hrp.Velocity.Z)
-        end
+-- Animation Functions
+local function animateHover(object, isHovering)
+    local scale = isHovering and 1.05 or 1
+    local transparency = isHovering and 0.8 : COLORS.GLASS_TRANSPARENCY
+    
+    TweenService:Create(object, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+        Size = object.Size * scale
+    }):Play()
+    
+    if object:IsA("TextButton") or object:IsA("TextBox") then
+        TweenService:Create(object, TweenInfo.new(0.2), {
+            BackgroundTransparency = transparency
+        }):Play()
     end
 end
-UIS.JumpRequest:Connect(handleJump)
 
--- Login Logic
-KBtn.MouseButton1Click:Connect(function()
-    if KInput.Text == "GHALOULIX9" then
-        KeyBox:Destroy()
-        Main.Visible = true
-        Toggle.Visible = true
-        notify("Welcome, " .. player.DisplayName)
-    end
-end)
+local function animateClick(object)
+    local originalSize = object.Size
+    
+    TweenService:Create(object, TweenInfo.new(0.1, Enum.EasingStyle.Back, Enum.EasingDirection.In), {
+        Size = object.Size * 0.95
+    }):Play()
+    
+    task.wait(0.1)
+    
+    TweenService:Create(object, TweenInfo.new(0.2, Enum.EasingStyle.Elastic, Enum.EasingDirection.Out), {
+        Size = originalSize
+    }):Play()
+end
 
--- Main Menu Button
-local JBtn = Instance.new("TextButton", Main)
-JBtn.Size = UDim2.new(0, 200, 0, 50); JBtn.Position = UDim2.new(0.5, -100, 0.4, 0)
-JBtn.Text = "Infinite Jump: OFF"
-JBtn.MouseButton1Click:Connect(function()
-    jumpEnabled = not jumpEnabled
-    JBtn.Text = "Infinite Jump: " .. (jumpEnabled and "ON" or "OFF")
-    JBtn.BackgroundColor3 = jumpEnabled and Color3.fromRGB(0, 180, 100) or Color3.fromRGB(40, 40, 45)
-end)
+-- Pulsating toggle button animation
+local function startTogglePulse()
+    task.spawn(function()
+        while toggleButton and toggleButton.Parent do
+            TweenService:Create(toggleButton, TweenInfo.new(1.5, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
+                Size = UDim2.new(0, 90, 0, 90)
+            }):Play()
+            
+            TweenService:Create(toggleGlow, TweenInfo.new(1.5, Enum.EasingStyle.Sine), {
+                ImageTransparency = 0.4
+            }):Play()
+            
+            task.wait(1.5)
+            
+            TweenService:Create(toggleButton, TweenInfo.new(1.5, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
+                Size = UDim2.new(0, 85, 0, 85)
+            }):Play()
+            
+            TweenService:Create(toggleGlow, TweenInfo.new(1.5, Enum.EasingStyle.Sine), {
+                ImageTransparency = 0.6
+            }):Play()
+            
+            task.wait(1.5)
+        end
+    end)
+end
 
-Toggle.MouseButton1Click:Connect(function() Main.Visible = not Main.Visible end)
+-- Show notification
+local function showNotification(message)
+    notificationLabel.Text = message
+    
+    TweenService:Create(notificationFrame, TweenInfo.new(0.5, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {
+        Position = UDim2.new(0.15, 0, 0.02, 0),
+        BackgroundTransparency = COLORS.GLASS_TRANSPARENCY - 0.1
+    }):Play()
+    
+    TweenService:Create(notificationLabel, TweenInfo.new(0.3), {
+        TextTransparency = 0
+    }):Play()
+    
+    notificationFrame.Visible = true
+    
+    task.wait(3)
+    
+    TweenService:Create(notificationFrame, TweenInfo.new(0.5, Enum.EasingStyle.Back, Enum.EasingDirection.In), {
+        Position = UDim2.new(0.15, 0, -0.1, 0),
+        BackgroundTransparency = COLORS.GLASS_TRANSPARENCY
+    }):Play()
+    
+    TweenService:Create(notificationLabel, TweenInfo.new(0.3), {
+        TextTransparency = 1
+    }):Play()
+    
+    task.wait(0.5)
+    notificationFrame.Visible = false
+end
+
+-- Key validation
+local function validateKey()
+    local enteredKey = keyInput.Text:upper():gsub("%s+", "")
+    
+    if enteredKey == CORRECT_KEY then
+        hasValidKey = true
+        
+        -- Animate key screen fade out
+        TweenService:Create(keyContainer, TweenInfo.new(1, Enum.EasingStyle.Quad), {
+            Position = UDim2.new(0.5, -210, 1.5, -240),
+            BackgroundTransparency = 1
+        }):Play()
+        
+        TweenService:Create(keyTitle, TweenInfo.new(0.8), {
+            TextTransparency = 1
+        }):Play()
+        
+        TweenService:Create(keySubtitle, TweenInfo.new(0.8), {
+            TextTransparency = 1
+        }):Play()
+        
+        TweenService:Create(keyInput, TweenInfo.new(0.8), {
+            TextTransparency = 1,
+            BackgroundTransparency = 1
+        }):Play()
+        
+        TweenService:Create(submitButton, TweenInfo.new(0.8), {
+            TextTransparency = 1,
+            BackgroundTransparency = 1
+        }):Play()
+        
+        TweenService:Create(statusLabel, TweenInfo.new(0.8), {
+            TextTransparency = 1
+        }):Play()
+        
+        -- Show toggle button
+        task.wait(0.8)
+        
+        toggleButton.Position = UDim2.new(1, -100, 0.5, 0)
+        toggleButton.Visible = true
+        
+        TweenService:Create(toggleButton, TweenInfo.new(0.7, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {
+            Position = UDim2.new(1, -100, 1, -100)
+        }):Play()
+        
+        -- Show welcome notification
+        task.wait(0.5)
+        showNotification("Welcome, " .. p.DisplayName .. "! 💎")
+        
+        -- Start animations
+        startTogglePulse()
+        
+        return true
+    else
+        statusLabel.Text = "❌ Invalid authorization key"
+        statusLabel.TextColor3 = COLORS.ERROR
+        
+        TweenService:Create(statusLabel, TweenInfo.new(0.3), {
+            TextTransparency = 0
+        }):Play()
+        
+        TweenService:Create(keyInput, TweenInfo.new(0.2), {
+            BackgroundColor3 = Color3.fromRGB(60, 30, 30)
+        }):Play()
+        
+        task.wait(0.5)
+        
+    
