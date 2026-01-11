@@ -1,6 +1,6 @@
--- [[ ⚡ GHALOULIX9'S ULTIMATE ELITE HUB - UNSTOPPABLE EDITION ⚡ ]] --
--- 🚀 CFRAME BYPASS | ANTI-DEATH STATE LOCK | SAB METHOD | GLASS UI 🚀
--- 🔧 Optimized for Delta Mobile | Bypasses Hard-Kill Scripts 🔧
+-- [[ ⚡ GHALOULIX9'S ULTIMATE ELITE HUB - SMOOTH MOTION ⚡ ]] --
+-- 🚀 NO SLIDE BYPASS | ANTI-DEATH | SMOOTH MOVEMENT | GLASS UI 🚀
+-- 🔧 Optimized for Delta Mobile | Fixes Character Slipping 🔧
 
 repeat task.wait() until game:IsLoaded()
 
@@ -12,11 +12,11 @@ local p = Players.LocalPlayer
 local playerGui = p:WaitForChild("PlayerGui")
 
 -- Cleanup
-local old = playerGui:FindFirstChild("Ghaloulix9_Unstoppable")
+local old = playerGui:FindFirstChild("Ghaloulix9_Smooth")
 if old then old:Destroy() end
 
 local SG = Instance.new("ScreenGui", playerGui)
-SG.Name = "Ghaloulix9_Unstoppable"
+SG.Name = "Ghaloulix9_Smooth"
 SG.ResetOnSpawn = false
 
 local COLORS = {
@@ -89,31 +89,31 @@ local hubGrad = addGrad(mainHub, 4)
 local jumpBtn = Instance.new("TextButton", mainHub)
 jumpBtn.Size = UDim2.new(0, 280, 0, 70)
 jumpBtn.Position = UDim2.new(0.5, -140, 0.4, 0)
-jumpBtn.Text = "UNSTOPPABLE JUMP: OFF"
+jumpBtn.Text = "SMOOTH JUMP: OFF"
 jumpBtn.BackgroundColor3 = COLORS.ERROR
 jumpBtn.TextColor3 = Color3.new(1,1,1)
 Instance.new("UICorner", jumpBtn)
 
--- [[ 🚀 THE UNSTOPPABLE LOGIC 🚀 ]] --
+-- [[ 🚀 SMOOTH MOTION LOGIC 🚀 ]] --
 local active = false
-local JUMP_HEIGHT = 8
+local JUMP_HEIGHT = 7
 
--- ANTI-DEATH STATE LOCK
+-- ANTI-DEATH & ANTI-SLIDE LOOP
 RunService.Stepped:Connect(function()
     if active then
         local char = p.Character
         local hum = char and char:FindFirstChildOfClass("Humanoid")
         if hum then
-            -- Bypasses the "Dying" state entirely
             hum:SetStateEnabled(Enum.HumanoidStateType.Dead, false)
-            if hum.Health <= 0 then
-                hum.Health = 100
-            end
+            if hum.Health <= 0 then hum.Health = 100 end
+            
+            -- FIX SLIDING: Maintain normal friction
+            hum.PlatformStand = false
         end
     end
 end)
 
--- CFRAME JUMP (THE BYPASS)
+-- SMOOTH JUMP REQUEST
 UIS.JumpRequest:Connect(function()
     if active then
         local char = p.Character
@@ -121,14 +121,19 @@ UIS.JumpRequest:Connect(function()
         local hum = char and char:FindFirstChildOfClass("Humanoid")
         
         if hrp and hum then
-            -- Stop all downward speed
-            hrp.Velocity = Vector3.new(hrp.Velocity.X, 0, hrp.Velocity.Z)
-            -- Teleport up
-            hrp.CFrame = hrp.CFrame * CFrame.new(0, JUMP_HEIGHT, 0)
-            -- Reset state to stop fall damage detection
+            -- 1. Reset velocity to stop sliding/slipping
+            hrp.Velocity = Vector3.new(0, 0, 0)
+            
+            -- 2. Teleport Up
+            hrp.CFrame = hrp.CFrame + Vector3.new(0, JUMP_HEIGHT, 0)
+            
+            -- 3. Physics Refresh (The "Anti-Slip" trick)
+            hrp.Anchored = true
+            task.wait(0.01)
+            hrp.Anchored = false
+            
+            -- 4. Re-enable movement state
             hum:ChangeState(Enum.HumanoidStateType.Jumping)
-            task.wait(0.02)
-            hum:ChangeState(Enum.HumanoidStateType.Physics)
         end
     end
 end)
@@ -145,14 +150,8 @@ toggleBtn.MouseButton1Click:Connect(function() mainHub.Visible = not mainHub.Vis
 
 jumpBtn.MouseButton1Click:Connect(function()
     active = not active
-    jumpBtn.Text = "UNSTOPPABLE JUMP: " .. (active and "ON" or "OFF")
+    jumpBtn.Text = "SMOOTH JUMP: " .. (active and "ON" or "OFF")
     jumpBtn.BackgroundColor3 = active and COLORS.SUCCESS or COLORS.ERROR
-    
-    local char = p.Character
-    local hum = char and char:FindFirstChildOfClass("Humanoid")
-    if hum and not active then
-        hum:SetStateEnabled(Enum.HumanoidStateType.Dead, true)
-    end
 end)
 
 -- RGB Spin
