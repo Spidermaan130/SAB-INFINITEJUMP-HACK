@@ -1,6 +1,6 @@
--- [[ ⚡ GHALOULIX9'S ULTIMATE ELITE HUB - GHOST BYPASS ⚡ ]] --
--- 🛡️ ANTI-CHEAT BYPASS | PHYSICS JUMP | ANTI-DEATH | GLASS UI 🛡️
--- 🔧 Optimized for Delta Mobile | No-Slip & No-Kill Edition 🔧
+-- [[ ⚡ GHALOULIX9'S ULTIMATE ELITE HUB - BRAINROT EDITION ⚡ ]] --
+-- 🧠 Special Fix: Item Rubberbanding & Anti-Cheat Teleport Back 🧠
+-- 🔧 Optimized for Delta Mobile | Physics-Sync Technology 🔧
 
 repeat task.wait() until game:IsLoaded()
 
@@ -12,11 +12,11 @@ local p = Players.LocalPlayer
 local playerGui = p:WaitForChild("PlayerGui")
 
 -- Cleanup
-local old = playerGui:FindFirstChild("Ghaloulix9_GhostFinal")
+local old = playerGui:FindFirstChild("Ghaloulix9_Final_Bypass")
 if old then old:Destroy() end
 
 local SG = Instance.new("ScreenGui", playerGui)
-SG.Name = "Ghaloulix9_GhostFinal"
+SG.Name = "Ghaloulix9_Final_Bypass"
 SG.ResetOnSpawn = false
 
 local COLORS = {
@@ -27,7 +27,7 @@ local COLORS = {
     ERROR = Color3.fromRGB(255, 100, 100)
 }
 
--- RGB Gradient Helper
+-- [[ UI ELEMENTS ]] --
 local function addGrad(parent, thick)
     local stroke = Instance.new("UIStroke", parent)
     stroke.Thickness = thick
@@ -40,7 +40,7 @@ local function addGrad(parent, thick)
     return gradient
 end
 
--- [[ UI - KEY SYSTEM ]] --
+-- Key System UI
 local keyScreen = Instance.new("Frame", SG)
 keyScreen.Size = UDim2.new(1, 0, 1, 0)
 keyScreen.BackgroundColor3 = Color3.fromRGB(10, 10, 15)
@@ -65,11 +65,11 @@ Instance.new("UICorner", keyInput)
 local submit = Instance.new("TextButton", keyContainer)
 submit.Size = UDim2.new(0, 140, 0, 50)
 submit.Position = UDim2.new(0.5, -70, 0.7, 0)
-submit.Text = "UNLOCK HUB"
+submit.Text = "UNLOCK"
 submit.BackgroundColor3 = COLORS.ACCENT
 Instance.new("UICorner", submit)
 
--- [[ UI - MAIN HUB ]] --
+-- Main Hub UI
 local toggleBtn = Instance.new("ImageButton", SG)
 toggleBtn.Size = UDim2.new(0, 75, 0, 75)
 toggleBtn.Position = UDim2.new(1, -100, 0.5, 0)
@@ -80,7 +80,7 @@ Instance.new("UICorner", toggleBtn).CornerRadius = UDim.new(1, 0)
 local tg = addGrad(toggleBtn, 4)
 
 local mainHub = Instance.new("Frame", SG)
-mainHub.Size = UDim2.new(0, 350, 0, 400)
+mainHub.Size = UDim2.new(0, 350, 0, 200)
 mainHub.Position = UDim2.new(0.5, 0, 0.5, 0)
 mainHub.AnchorPoint = Vector2.new(0.5, 0.5)
 mainHub.BackgroundColor3 = COLORS.DARK
@@ -91,25 +91,26 @@ local hg = addGrad(mainHub, 4)
 local jumpBtn = Instance.new("TextButton", mainHub)
 jumpBtn.Size = UDim2.new(0, 280, 0, 70)
 jumpBtn.Position = UDim2.new(0.5, -140, 0.4, 0)
-jumpBtn.Text = "GHOST JUMP: OFF"
+jumpBtn.Text = "BRAINROT JUMP: OFF"
 jumpBtn.BackgroundColor3 = COLORS.ERROR
 jumpBtn.TextColor3 = Color3.new(1,1,1)
 jumpBtn.Font = Enum.Font.GothamBold
 Instance.new("UICorner", jumpBtn)
 
--- [[ 🚀 PHYSICS-BASED BYPASS LOGIC 🚀 ]] --
+-- [[ 🚀 THE BYPASS LOGIC 🚀 ]] --
 local active = false
-local JUMP_POWER = 35 -- Adjusted power for natural feel
+local JUMP_POWER = 35 
 
--- Safety Loop: Prevents "Hard Kills" from detection
-RunService.Stepped:Connect(function()
+-- Anti-Detection Buffer
+RunService.Heartbeat:Connect(function()
     if active then
         local char = p.Character
         local hum = char and char:FindFirstChildOfClass("Humanoid")
         if hum then
             hum:SetStateEnabled(Enum.HumanoidStateType.Dead, false)
             if hum.Health <= 0 then hum.Health = 100 end
-            hum.PlatformStand = false 
+            -- Tell server our mobile physics are high priority
+            p.SimulationRadius = 1000
         end
     end
 end)
@@ -118,25 +119,23 @@ UIS.JumpRequest:Connect(function()
     if active then
         local char = p.Character
         local hrp = char and char:FindFirstChild("HumanoidRootPart")
-        local hum = char and char:FindFirstChildOfClass("Humanoid")
         
-        if hrp and hum and hum.Health > 0 then
-            -- Create a physics-friendly lift
-            local attachment = Instance.new("Attachment", hrp)
-            local force = Instance.new("LinearVelocity", hrp)
-            force.Attachment0 = attachment
-            force.MaxForce = 50000 -- Strong enough to lift, but looks like physics
-            force.VelocityConstraintMode = Enum.VelocityConstraintMode.Vector
+        if hrp then
+            -- Use BodyVelocity for better item-carrying stability
+            local bv = Instance.new("BodyVelocity")
+            bv.MaxForce = Vector3.new(0, 500000, 0)
+            bv.Velocity = Vector3.new(0, JUMP_POWER, 0)
+            bv.Parent = hrp
             
-            -- Natural upward movement (Bypasses CFrame speed detection)
-            force.VectorVelocity = Vector3.new(0, JUMP_POWER, 0)
+            task.wait(0.15) 
             
-            -- Tiny duration for a smooth hop
-            task.wait(0.12)
-            force:Destroy()
-            attachment:Destroy()
+            -- VELOCITY DECAY: Stops rubberbanding by smoothing the stop
+            for i = 1, 4 do
+                bv.Velocity = bv.Velocity * 0.4
+                task.wait(0.03)
+            end
             
-            hum:ChangeState(Enum.HumanoidStateType.Jumping)
+            bv:Destroy()
         end
     end
 end)
@@ -153,11 +152,11 @@ toggleBtn.MouseButton1Click:Connect(function() mainHub.Visible = not mainHub.Vis
 
 jumpBtn.MouseButton1Click:Connect(function()
     active = not active
-    jumpBtn.Text = "GHOST JUMP: " .. (active and "ON" or "OFF")
+    jumpBtn.Text = "BRAINROT JUMP: " .. (active and "ON" or "OFF")
     jumpBtn.BackgroundColor3 = active and COLORS.SUCCESS or COLORS.ERROR
 end)
 
--- RGB Rotation Animation
+-- RGB Spin
 RunService.RenderStepped:Connect(function()
     local r = tick() * 60
     if kg then kg.Rotation = r end
@@ -165,7 +164,7 @@ RunService.RenderStepped:Connect(function()
     if hg then hg.Rotation = r end
 end)
 
--- Mobile Dragging Logic
+-- Mobile Dragging
 local drag, dStart, sPos
 toggleBtn.InputBegan:Connect(function(i) if i.UserInputType == Enum.UserInputType.Touch then drag = true; dStart = i.Position; sPos = toggleBtn.Position end end)
 UIS.InputChanged:Connect(function(i) if drag and i.UserInputType == Enum.UserInputType.Touch then local delta = i.Position - dStart; toggleBtn.Position = UDim2.new(sPos.X.Scale, sPos.X.Offset + delta.X, sPos.Y.Scale, sPos.Y.Offset + delta.Y) end end)
