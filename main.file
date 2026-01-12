@@ -1,6 +1,6 @@
--- [[ 🛡️ GHALOULIX9'S STEALTH BYPASS: ORIGINAL SPEED EDITION 🛡️ ]] --
--- Blocks: 6357, 2359, 3355, 3352, 1358
--- Fix: Keeps original movement speed while jumping.
+-- [[ 🛡️ GHALOULIX9'S VELOCITY-FIX: ANTI-FRICTION EDITION 🛡️ ]] --
+-- Fixes: Getting slower after every jump
+-- Blocks: ALL BAC CODES (6357, 2359, 1358, etc.)
 
 repeat task.wait() until game:IsLoaded()
 
@@ -12,68 +12,60 @@ local TeleportService = game:GetService("TeleportService")
 local p = Players.LocalPlayer
 local playerGui = p:WaitForChild("PlayerGui")
 
--- [[ 🚀 SECTION 1: THE HARD-LOCK BYPASS (TELEPORT & KICK) 🚀 ]] --
+-- [[ 🚀 SECTION 1: THE UNIVERSAL BAC SHIELD 🚀 ]] --
 local mt = getrawmetatable(game)
 local oldNamecall = mt.__namecall
 setreadonly(mt, false)
 
 mt.__namecall = newcclosure(function(self, ...)
     local method = getnamecallmethod()
-    local args = {...}
-    
-    -- Block Teleport Server-Hops
-    if self == TeleportService and (method:find("Teleport") or method == "TeleportToPlaceInstance") then
-        return nil
-    end
-
-    -- Block All Kick Codes
-    if method == "Kick" or method == "kick" or (method == "Destroy" and self == p) then
-        return nil
-    end
-    
-    -- Block Detection Reports
+    if self == TeleportService and method:find("Teleport") then return nil end
+    if method == "Kick" or method == "kick" or (method == "Destroy" and self == p) then return nil end
     if method == "FireServer" and tostring(self):lower():find("bac") then
-        local remoteName = tostring(self)
-        if remoteName:find("Heartbeat") or remoteName:find("Ping") then
-            return oldNamecall(self, unpack(args))
-        end
+        if tostring(self):find("Heartbeat") then return oldNamecall(self, ...) end
         return nil 
     end
-    
     return oldNamecall(self, ...)
 end)
 setreadonly(mt, true)
 
--- [[ 🚀 SECTION 2: ORIGINAL SPEED MOVEMENT 🚀 ]] --
+-- [[ 🚀 SECTION 2: THE MOMENTUM LOCK 🚀 ]] --
 local active = false
-local JUMP_POWER = 38 -- Adjusted for "Steal a Brainrot" gravity
+local JUMP_POWER = 38
+local lastVelocity = Vector3.new(0,0,0)
 
-task.spawn(function()
-    while task.wait() do
-        local char = p.Character
-        local hum = char and char:FindFirstChildOfClass("Humanoid")
+RunService.Heartbeat:Connect(function()
+    local char = p.Character
+    local hrp = char and char:FindFirstChild("HumanoidRootPart")
+    local hum = char and char:FindFirstChildOfClass("Humanoid")
+    
+    if active and hrp and hum then
+        -- Force state to stop the 33s stability kick
+        hum:ChangeState(Enum.HumanoidStateType.Running)
         
-        if active and hum then
-            -- Fake "Running" state to bypass BAC-1358
-            hum:ChangeState(Enum.HumanoidStateType.Running)
+        -- ANTI-SLOWDOWN LOGIC:
+        -- If you are moving, we lock your speed so the game can't drain it
+        if hum.MoveDirection.Magnitude > 0 then
+            local speed = hum.WalkSpeed
+            local direction = hum.MoveDirection
+            -- Keep the X and Z speed exactly at WalkSpeed, only allow Y to change
+            hrp.Velocity = Vector3.new(direction.X * speed, hrp.Velocity.Y, direction.Z * speed)
         end
     end
 end)
 
--- PURE INFINITE JUMP (No speed changes)
+-- Pure Jump Logic
 UIS.JumpRequest:Connect(function()
     if active then
         local char = p.Character
         local hrp = char and char:FindFirstChild("HumanoidRootPart")
         if hrp then
-            -- This ONLY changes Vertical (Y) speed. 
-            -- Your X and Z (original walk speed) are NOT touched.
             hrp.Velocity = Vector3.new(hrp.Velocity.X, JUMP_POWER, hrp.Velocity.Z)
         end
     end
 end)
 
--- [[ 🚀 SECTION 3: YOUR HUB UI 🚀 ]] --
+-- [[ 🚀 SECTION 3: THE UI 🚀 ]] --
 local old = playerGui:FindFirstChild("Ghaloulix9_Final_Bypass")
 if old then old:Destroy() end
 
@@ -81,27 +73,16 @@ local SG = Instance.new("ScreenGui", playerGui)
 SG.Name = "Ghaloulix9_Final_Bypass"
 SG.ResetOnSpawn = false
 
-local COLORS = {
-    DARK = Color3.fromRGB(15, 15, 25),
-    MEDIUM = Color3.fromRGB(25, 25, 40),
-    ACCENT = Color3.fromRGB(100, 220, 255),
-    SUCCESS = Color3.fromRGB(100, 255, 150),
-    ERROR = Color3.fromRGB(255, 100, 100)
-}
+local COLORS = { DARK = Color3.fromRGB(15, 15, 25), ACCENT = Color3.fromRGB(100, 220, 255), SUCCESS = Color3.fromRGB(100, 255, 150), ERROR = Color3.fromRGB(255, 100, 100) }
 
-local function addGrad(parent, thick)
+local function addGrad(parent)
     local stroke = Instance.new("UIStroke", parent)
-    stroke.Thickness = thick
+    stroke.Thickness = 3
     local gradient = Instance.new("UIGradient", stroke)
-    gradient.Color = ColorSequence.new{
-        ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 100, 180)),
-        ColorSequenceKeypoint.new(0.5, Color3.fromRGB(100, 220, 255)),
-        ColorSequenceKeypoint.new(1, Color3.fromRGB(255, 100, 180))
-    }
-    return gradient
+    gradient.Color = ColorSequence.new{ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 100, 180)), ColorSequenceKeypoint.new(1, Color3.fromRGB(100, 220, 255))}
 end
 
--- Key Screen
+-- UI Construction (Key System)
 local keyScreen = Instance.new("Frame", SG)
 keyScreen.Size = UDim2.new(1, 0, 1, 0)
 keyScreen.BackgroundColor3 = Color3.fromRGB(10, 10, 15)
@@ -111,14 +92,14 @@ keyContainer.Position = UDim2.new(0.5, 0, 0.5, 0)
 keyContainer.AnchorPoint = Vector2.new(0.5, 0.5)
 keyContainer.BackgroundColor3 = COLORS.DARK
 Instance.new("UICorner", keyContainer)
-addGrad(keyContainer, 3)
+addGrad(keyContainer)
 
 local keyInput = Instance.new("TextBox", keyContainer)
 keyInput.Size = UDim2.new(0, 250, 0, 50)
 keyInput.Position = UDim2.new(0.5, -125, 0.4, 0)
 keyInput.PlaceholderText = "Key: GHALOULIX9"
 keyInput.TextColor3 = Color3.new(1,1,1)
-keyInput.BackgroundColor3 = COLORS.MEDIUM
+keyInput.BackgroundColor3 = Color3.fromRGB(30,30,45)
 Instance.new("UICorner", keyInput)
 
 local submit = Instance.new("TextButton", keyContainer)
@@ -128,44 +109,39 @@ submit.Text = "UNLOCK"
 submit.BackgroundColor3 = COLORS.ACCENT
 Instance.new("UICorner", submit)
 
--- Main Toggle
+-- Main Hub
 local toggleBtn = Instance.new("ImageButton", SG)
-toggleBtn.Size = UDim2.new(0, 75, 0, 75)
-toggleBtn.Position = UDim2.new(1, -100, 0.5, 0)
+toggleBtn.Size = UDim2.new(0, 70, 0, 70)
+toggleBtn.Position = UDim2.new(1, -90, 0.5, 0)
 toggleBtn.Image = "rbxassetid://108600585930067"
 toggleBtn.BackgroundTransparency = 1
 toggleBtn.Visible = false
 Instance.new("UICorner", toggleBtn).CornerRadius = UDim.new(1, 0)
-addGrad(toggleBtn, 4)
+addGrad(toggleBtn)
 
 local mainHub = Instance.new("Frame", SG)
-mainHub.Size = UDim2.new(0, 350, 0, 200)
+mainHub.Size = UDim2.new(0, 350, 0, 180)
 mainHub.Position = UDim2.new(0.5, 0, 0.5, 0)
 mainHub.AnchorPoint = Vector2.new(0.5, 0.5)
 mainHub.BackgroundColor3 = COLORS.DARK
 mainHub.Visible = false
 Instance.new("UICorner", mainHub)
-addGrad(mainHub, 4)
+addGrad(mainHub)
 
 local jumpBtn = Instance.new("TextButton", mainHub)
 jumpBtn.Size = UDim2.new(0, 280, 0, 70)
-jumpBtn.Position = UDim2.new(0.5, -140, 0.4, 0)
+jumpBtn.Position = UDim2.new(0.5, -140, 0.5, -35)
 jumpBtn.Text = "BRAINROT JUMP: OFF"
 jumpBtn.BackgroundColor3 = COLORS.ERROR
 jumpBtn.TextColor3 = Color3.new(1,1,1)
 jumpBtn.Font = Enum.Font.GothamBold
 Instance.new("UICorner", jumpBtn)
 
--- Logic
+-- Actions
 submit.MouseButton1Click:Connect(function()
-    if keyInput.Text == "GHALOULIX9" then
-        keyScreen:Destroy()
-        toggleBtn.Visible = true
-    end
+    if keyInput.Text == "GHALOULIX9" then keyScreen:Destroy(); toggleBtn.Visible = true end
 end)
-
 toggleBtn.MouseButton1Click:Connect(function() mainHub.Visible = not mainHub.Visible end)
-
 jumpBtn.MouseButton1Click:Connect(function()
     active = not active
     jumpBtn.Text = "BRAINROT JUMP: " .. (active and "ON" or "OFF")
