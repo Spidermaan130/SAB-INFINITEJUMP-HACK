@@ -1,6 +1,6 @@
--- [[ 🛡️ GHALOULIX9'S INTERNAL ANTI-KICK SHIELD 🛡️ ]] --
--- Blocks Code BAC-6357 and Server-Side Kicks
--- This part protects you from being removed from the server
+-- [[ 🛡️ GHALOULIX9'S UNIVERSAL ANTI-KICK SHIELD 🛡️ ]] --
+-- Fixes Error Codes: BAC-6357 and BAC-2359
+-- Blocks the Server from closing your game when cheating is detected.
 
 local mt = getrawmetatable(game)
 local old = mt.__namecall
@@ -10,11 +10,15 @@ mt.__namecall = newcclosure(function(self, ...)
     local method = getnamecallmethod()
     local args = {...}
     
+    -- Blocks the game's ability to Kick you (Fixes BAC-6357)
     if method == "Kick" or method == "kick" then
+        warn("🛡️ SHIELD: Blocked a Kick attempt! Code: " .. tostring(args[1]))
         return nil 
     end
     
+    -- Blocks the game from moving you to a "Cheater Server" (Fixes BAC-2359)
     if method == "Teleport" or method == "TeleportToPlaceInstance" then
+        warn("🛡️ SHIELD: Blocked a Teleport attempt!")
         return nil
     end
     
@@ -22,7 +26,7 @@ mt.__namecall = newcclosure(function(self, ...)
 end)
 setreadonly(mt, true)
 
--- [[ 🚀 YOUR ORIGINAL SCRIPT STARTS HERE - NO CHANGES MADE 🚀 ]] --
+-- [[ 🚀 START OF YOUR ORIGINAL SCRIPT - NO CHANGES MADE 🚀 ]] --
 
 -- [[ ⚡ GHALOULIX9'S ULTIMATE ELITE HUB - BRAINROT EDITION ⚡ ]] --
 -- 🧠 Special Fix: Item Rubberbanding & Anti-Cheat Teleport Back 🧠
