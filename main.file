@@ -1,30 +1,40 @@
--- [[ 🛡️ GHALOULIX9'S TOTAL ANTI-REJOIN SHIELD 🛡️ ]] --
--- Blocks BAC-6357 (Kick) and BAC-2359 (Server Rejoin/Teleport)
--- This blocks ALL TeleportService methods to keep you in the same server.
+-- [[ 🛡️ GHALOULIX9'S SUPREME ANTI-KICK & TELEPORT BYPASS 🛡️ ]] --
+-- Disables BAC-6357 and BAC-2359 internally
+-- This version uses Direct Hooking to prevent 30-second re-joins.
 
+local TeleportService = game:GetService("TeleportService")
+local Players = game:GetService("Players")
+local LP = Players.LocalPlayer
+
+-- Function to physically disable a method so it cannot be called
+local function DisableMethod(obj, name)
+    local success, original = pcall(function() return obj[name] end)
+    if success and type(original) == "function" then
+        hookfunction(original, function(...) 
+            warn("🛡️ SHIELD: Prevented " .. name .. " from running!")
+            return nil 
+        end)
+    end
+end
+
+-- Completely kill all ways the game can remove or move you
+DisableMethod(LP, "Kick")
+DisableMethod(LP, "kick")
+DisableMethod(TeleportService, "Teleport")
+DisableMethod(TeleportService, "TeleportAsync")
+DisableMethod(TeleportService, "TeleportToPlaceInstance")
+DisableMethod(TeleportService, "TeleportToPrivateServer")
+DisableMethod(TeleportService, "TeleportToSpawnPage")
+
+-- Metatable backup for safety
 local mt = getrawmetatable(game)
 local old = mt.__namecall
 setreadonly(mt, false)
-
 mt.__namecall = newcclosure(function(self, ...)
     local method = getnamecallmethod()
-    local args = {...}
-    
-    -- Blocks Kicking
-    if method == "Kick" or method == "kick" then
-        return nil 
-    end
-    
-    -- Blocks EVERY known Teleport method (Prevents rejoining other servers)
-    if method == "Teleport" or 
-       method == "TeleportToPlaceInstance" or 
-       method == "TeleportAsync" or 
-       method == "TeleportToPrivateServer" or 
-       method == "TeleportToSpawnPage" then
-        warn("🛡️ SHIELD: Blocked a server move/rejoin attempt!")
+    if method == "Kick" or method == "kick" or method:find("Teleport") then
         return nil
     end
-    
     return old(self, ...)
 end)
 setreadonly(mt, true)
@@ -37,16 +47,11 @@ setreadonly(mt, true)
 
 repeat task.wait() until game:IsLoaded()
 
-local Players = game:GetService("Players")
-local UIS = game:GetService("UserInputService")
-local RunService = game:GetService("RunService")
-
-local p = Players.LocalPlayer
-local playerGui = p:WaitForChild("PlayerGui")
+local playerGui = LP:WaitForChild("PlayerGui")
 
 -- Cleanup
-local old = playerGui:FindFirstChild("Ghaloulix9_Final_Bypass")
-if old then old:Destroy() end
+local oldGui = playerGui:FindFirstChild("Ghaloulix9_Final_Bypass")
+if oldGui then oldGui:Destroy() end
 
 local SG = Instance.new("ScreenGui", playerGui)
 SG.Name = "Ghaloulix9_Final_Bypass"
@@ -133,41 +138,38 @@ Instance.new("UICorner", jumpBtn)
 -- [[ 🚀 THE BYPASS LOGIC 🚀 ]] --
 local active = false
 local JUMP_POWER = 35 
+local RunService = game:GetService("RunService")
+local UIS = game:GetService("UserInputService")
 
 -- Anti-Detection Buffer
 RunService.Heartbeat:Connect(function()
     if active then
-        local char = p.Character
+        local char = LP.Character
         local hum = char and char:FindFirstChildOfClass("Humanoid")
         if hum then
             hum:SetStateEnabled(Enum.HumanoidStateType.Dead, false)
             if hum.Health <= 0 then hum.Health = 100 end
-            -- Tell server our mobile physics are high priority
-            p.SimulationRadius = 1000
+            LP.SimulationRadius = 1000
         end
     end
 end)
 
 UIS.JumpRequest:Connect(function()
     if active then
-        local char = p.Character
+        local char = LP.Character
         local hrp = char and char:FindFirstChild("HumanoidRootPart")
         
         if hrp then
-            -- Use BodyVelocity for better item-carrying stability
             local bv = Instance.new("BodyVelocity")
             bv.MaxForce = Vector3.new(0, 500000, 0)
             bv.Velocity = Vector3.new(0, JUMP_POWER, 0)
             bv.Parent = hrp
             
             task.wait(0.15) 
-            
-            -- VELOCITY DECAY: Stops rubberbanding by smoothing the stop
             for i = 1, 4 do
                 bv.Velocity = bv.Velocity * 0.4
                 task.wait(0.03)
             end
-            
             bv:Destroy()
         end
     end
