@@ -1,6 +1,6 @@
--- [[ 🛡️ GHALOULIX9'S UNIVERSAL ANTI-KICK SHIELD 🛡️ ]] --
--- Fixes Error Codes: BAC-6357 and BAC-2359
--- Blocks the Server from closing your game when cheating is detected.
+-- [[ 🛡️ GHALOULIX9'S TOTAL ANTI-REJOIN SHIELD 🛡️ ]] --
+-- Blocks BAC-6357 (Kick) and BAC-2359 (Server Rejoin/Teleport)
+-- This blocks ALL TeleportService methods to keep you in the same server.
 
 local mt = getrawmetatable(game)
 local old = mt.__namecall
@@ -10,15 +10,18 @@ mt.__namecall = newcclosure(function(self, ...)
     local method = getnamecallmethod()
     local args = {...}
     
-    -- Blocks the game's ability to Kick you (Fixes BAC-6357)
+    -- Blocks Kicking
     if method == "Kick" or method == "kick" then
-        warn("🛡️ SHIELD: Blocked a Kick attempt! Code: " .. tostring(args[1]))
         return nil 
     end
     
-    -- Blocks the game from moving you to a "Cheater Server" (Fixes BAC-2359)
-    if method == "Teleport" or method == "TeleportToPlaceInstance" then
-        warn("🛡️ SHIELD: Blocked a Teleport attempt!")
+    -- Blocks EVERY known Teleport method (Prevents rejoining other servers)
+    if method == "Teleport" or 
+       method == "TeleportToPlaceInstance" or 
+       method == "TeleportAsync" or 
+       method == "TeleportToPrivateServer" or 
+       method == "TeleportToSpawnPage" then
+        warn("🛡️ SHIELD: Blocked a server move/rejoin attempt!")
         return nil
     end
     
