@@ -1,11 +1,17 @@
--- [[ 👑 GHALOULIX9'S GOD-TIER UNIVERSAL BAC BYPASS 👑 ]] --
--- Fixes ALL CODES: 6357, 2359, 3355, 3352, 1358
--- Optimizes Infinite Jump for Stable, Fast Movement on Delta
+-- [[ 🛡️ GHALOULIX9'S OMEGA BYPASS INTEGRATED 🛡️ ]] --
+-- Fixes ALL BAC CODES: 6357, 2359, 3355, 3352, 1358
+-- Removes Kicks and Stability Timers indefinitely.
+
+repeat task.wait() until game:IsLoaded()
 
 local Players = game:GetService("Players")
-local LP = Players.LocalPlayer
+local UIS = game:GetService("UserInputService")
+local RunService = game:GetService("RunService")
 
--- 1. 🛡️ THE UNIVERSAL ERROR KILLER (Blocks ALL BAC Methods)
+local p = Players.LocalPlayer
+local playerGui = p:WaitForChild("PlayerGui")
+
+-- [[ 🚀 SECTION 1: THE ANTI-ERROR SHIELD 🚀 ]] --
 local mt = getrawmetatable(game)
 local oldNamecall = mt.__namecall
 setreadonly(mt, false)
@@ -14,19 +20,19 @@ mt.__namecall = newcclosure(function(self, ...)
     local method = getnamecallmethod()
     local args = {...}
     
-    -- Blocks Kicks, Destroys, and Teleports (Fixes 6357, 2359, 3355)
-    if method == "Kick" or method == "kick" or (method == "Destroy" and self == LP) or method:find("Teleport") then
+    -- Blocks Kicks and Forced Teleports (6357, 2359, 3355)
+    if method == "Kick" or method == "kick" or (method == "Destroy" and self == p) or method:find("Teleport") then
         return nil
     end
     
-    -- Blocks Speed/Stability Reports (Fixes 1358, 3352)
+    -- Blocks Detection Logs (3352, 1358)
     if method == "FireServer" and tostring(self):lower():find("bac") then
         local remoteName = tostring(self)
-        -- Only let Heartbeats pass so the server thinks we are connected
+        -- Allow Heartbeats so server thinks you are "clean"
         if remoteName:find("Heartbeat") or remoteName:find("Ping") then
             return oldNamecall(self, unpack(args))
         end
-        -- Kill all "Detection" reports
+        -- Block actual "Cheat Found" reports
         return nil
     end
     
@@ -34,32 +40,23 @@ mt.__namecall = newcclosure(function(self, ...)
 end)
 setreadonly(mt, true)
 
--- 2. 🚀 PHYSICS STABILIZER (Fixes Slow Movement & 1358 Stability)
+-- [[ 🚀 SECTION 2: STABILITY SPOOFER 🚀 ]] --
 task.spawn(function()
     while task.wait() do
-        local char = LP.Character
+        local char = p.Character
         local hum = char and char:FindFirstChildOfClass("Humanoid")
-        local hrp = char and char:FindFirstChild("HumanoidRootPart")
-        
-        if hum and hrp then
-            -- Forces the server to think you are walking, even in mid-air
+        if hum then
+            -- Tricks the game into thinking you are walking on the floor
+            -- This stops the 33-second airtime kick (BAC-1358)
             hum:ChangeState(Enum.HumanoidStateType.Running)
-            
-            -- Prevents "Slow Movement" by keeping your horizontal velocity active
-            if hum.MoveDirection.Magnitude > 0 then
-                hrp.Velocity = Vector3.new(hrp.Velocity.X, hrp.Velocity.Y, hrp.Velocity.Z)
-            end
         end
     end
 end)
 
--- [[ 🚀 START OF YOUR ORIGINAL HUB - OPTIMIZED FOR DELTA 🚀 ]] --
-
-repeat task.wait() until game:IsLoaded()
-
-local playerGui = LP:WaitForChild("PlayerGui")
-local oldGui = playerGui:FindFirstChild("Ghaloulix9_Final_Bypass")
-if oldGui then oldGui:Destroy() end
+-- [[ 🚀 SECTION 3: YOUR HUB UI 🚀 ]] --
+-- Cleanup
+local old = playerGui:FindFirstChild("Ghaloulix9_Final_Bypass")
+if old then old:Destroy() end
 
 local SG = Instance.new("ScreenGui", playerGui)
 SG.Name = "Ghaloulix9_Final_Bypass"
@@ -73,7 +70,6 @@ local COLORS = {
     ERROR = Color3.fromRGB(255, 100, 100)
 }
 
--- UI Building
 local function addGrad(parent, thick)
     local stroke = Instance.new("UIStroke", parent)
     stroke.Thickness = thick
@@ -86,21 +82,24 @@ local function addGrad(parent, thick)
     return gradient
 end
 
+-- Key System
 local keyScreen = Instance.new("Frame", SG)
 keyScreen.Size = UDim2.new(1, 0, 1, 0)
 keyScreen.BackgroundColor3 = Color3.fromRGB(10, 10, 15)
+
 local keyContainer = Instance.new("Frame", keyScreen)
 keyContainer.Size = UDim2.new(0, 350, 0, 250)
 keyContainer.Position = UDim2.new(0.5, 0, 0.5, 0)
 keyContainer.AnchorPoint = Vector2.new(0.5, 0.5)
 keyContainer.BackgroundColor3 = COLORS.DARK
 Instance.new("UICorner", keyContainer)
-addGrad(keyContainer, 3)
+local kg = addGrad(keyContainer, 3)
 
 local keyInput = Instance.new("TextBox", keyContainer)
 keyInput.Size = UDim2.new(0, 250, 0, 50)
 keyInput.Position = UDim2.new(0.5, -125, 0.4, 0)
 keyInput.PlaceholderText = "Key: GHALOULIX9"
+keyInput.Text = ""
 keyInput.TextColor3 = Color3.new(1,1,1)
 keyInput.BackgroundColor3 = COLORS.MEDIUM
 Instance.new("UICorner", keyInput)
@@ -112,6 +111,7 @@ submit.Text = "UNLOCK"
 submit.BackgroundColor3 = COLORS.ACCENT
 Instance.new("UICorner", submit)
 
+-- Main Hub
 local toggleBtn = Instance.new("ImageButton", SG)
 toggleBtn.Size = UDim2.new(0, 75, 0, 75)
 toggleBtn.Position = UDim2.new(1, -100, 0.5, 0)
@@ -119,7 +119,7 @@ toggleBtn.Image = "rbxassetid://108600585930067"
 toggleBtn.BackgroundTransparency = 1
 toggleBtn.Visible = false
 Instance.new("UICorner", toggleBtn).CornerRadius = UDim.new(1, 0)
-addGrad(toggleBtn, 4)
+local tg = addGrad(toggleBtn, 4)
 
 local mainHub = Instance.new("Frame", SG)
 mainHub.Size = UDim2.new(0, 350, 0, 200)
@@ -128,7 +128,7 @@ mainHub.AnchorPoint = Vector2.new(0.5, 0.5)
 mainHub.BackgroundColor3 = COLORS.DARK
 mainHub.Visible = false
 Instance.new("UICorner", mainHub)
-addGrad(mainHub, 4)
+local hg = addGrad(mainHub, 4)
 
 local jumpBtn = Instance.new("TextButton", mainHub)
 jumpBtn.Size = UDim2.new(0, 280, 0, 70)
@@ -139,23 +139,20 @@ jumpBtn.TextColor3 = Color3.new(1,1,1)
 jumpBtn.Font = Enum.Font.GothamBold
 Instance.new("UICorner", jumpBtn)
 
--- LOGIC
+-- Logic
 local active = false
 local JUMP_POWER = 35 
-local RunService = game:GetService("RunService")
-local UIS = game:GetService("UserInputService")
 
 UIS.JumpRequest:Connect(function()
     if active then
-        local char = LP.Character
+        local char = p.Character
         local hrp = char and char:FindFirstChild("HumanoidRootPart")
         if hrp then
-            -- STABLE JUMP: Uses Force instead of Velocity for smoother items-carrying
             local bv = Instance.new("BodyVelocity")
-            bv.MaxForce = Vector3.new(0, 800000, 0)
+            bv.MaxForce = Vector3.new(0, 800000, 0) -- High force for stability
             bv.Velocity = Vector3.new(0, JUMP_POWER, 0)
             bv.Parent = hrp
-            task.wait(0.12) 
+            task.wait(0.12) -- Short burst to avoid height detection
             bv:Destroy()
         end
     end
@@ -176,7 +173,15 @@ jumpBtn.MouseButton1Click:Connect(function()
     jumpBtn.BackgroundColor3 = active and COLORS.SUCCESS or COLORS.ERROR
 end)
 
--- Mobile Dragging
+-- RGB Spin
+RunService.RenderStepped:Connect(function()
+    local r = tick() * 60
+    if kg then kg.Rotation = r end
+    if tg then tg.Rotation = r end
+    if hg then hg.Rotation = r end
+end)
+
+-- Dragging
 local drag, dStart, sPos
 toggleBtn.InputBegan:Connect(function(i) if i.UserInputType == Enum.UserInputType.Touch then drag = true; dStart = i.Position; sPos = toggleBtn.Position end end)
 UIS.InputChanged:Connect(function(i) if drag and i.UserInputType == Enum.UserInputType.Touch then local delta = i.Position - dStart; toggleBtn.Position = UDim2.new(sPos.X.Scale, sPos.X.Offset + delta.X, sPos.Y.Scale, sPos.Y.Offset + delta.Y) end end)
