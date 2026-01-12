@@ -1,43 +1,48 @@
--- [[ 🛡️ GHALOULIX9'S DEEP STEALTH ANTI-KICK 🛡️ ]] --
--- Blocks BAC-6357 and BAC-2359 indefinitely.
--- Prevents the server from "Re-checking" you after 35 seconds.
+-- [[ ☢️ GHALOULIX9'S NUCLEAR ANTI-KICK SHIELD ☢️ ]] --
+-- Fixes BAC-6357, BAC-2359, and the new BAC-3355
+-- Blocks the 23-second "Hard Kick" and Client Crashes
 
-local TeleportService = game:GetService("TeleportService")
 local Players = game:GetService("Players")
 local LP = Players.LocalPlayer
 
--- 1. KILL ALL TELEPORTING (Deep Hook)
-local function KillTeleport()
-    local old; old = hookmetamethod(game, "__namecall", function(self, ...)
-        local method = getnamecallmethod()
-        local args = {...}
-        
-        -- Blocks all ways the server can kick or move you
-        if method == "Kick" or method == "kick" or method:find("Teleport") then
-            warn("🛡️ SHIELD: Blocked Server-Side " .. method .. " attempt!")
-            return nil
-        end
-        
-        -- Blocks the game from sending "Cheat Logs" back to the server
-        if method == "FireServer" and (tostring(self):find("BAC") or tostring(self):find("Detect")) then
-            warn("🛡️ SHIELD: Blocked a cheat report log!")
-            return nil
-        end
-        
-        return old(self, ...)
-    end)
-end
-KillTeleport()
+-- 1. THE "GHOST" BYPASS (Blinds the Anti-Cheat)
+local mt = getrawmetatable(game)
+local oldNamecall = mt.__namecall
+setreadonly(mt, false)
 
--- 2. STATE SPOOFER (Makes you look like you are walking, not flying)
+mt.__namecall = newcclosure(function(self, ...)
+    local method = getnamecallmethod()
+    local args = {...}
+    
+    -- Blocks Kicks & Crashes (Fixes BAC-3355)
+    if method == "Kick" or method == "kick" or method == "Destroy" and self == LP then
+        warn("☢️ NUCLEAR SHIELD: Blocked a Hard Kick/Crash attempt!")
+        return nil
+    end
+    
+    -- Blocks the game from sending your "High Speed" data to the server
+    if method == "FireServer" and (tostring(self):find("BAC") or tostring(self):find("Check") or tostring(self):find("Detect")) then
+        return nil
+    end
+    
+    -- Blocks all Teleports (Fixes BAC-2359)
+    if method:find("Teleport") then
+        return nil
+    end
+    
+    return oldNamecall(self, ...)
+end)
+setreadonly(mt, true)
+
+-- 2. CLIENT-SIDE SCRIPT KILLER
+-- Finds and disables the local anti-cheat script if it tries to run
 task.spawn(function()
-    while task.wait(0.1) do
-        local char = LP.Character
-        local hum = char and char:FindFirstChildOfClass("Humanoid")
-        if hum then
-            -- Prevents the game from detecting you are in "Freefall" or "Jumping" state
-            hum:SetStateEnabled(Enum.HumanoidStateType.FallingDown, false)
-            hum:SetStateEnabled(Enum.HumanoidStateType.Ragdoll, false)
+    while task.wait(1) do
+        for _, v in pairs(getnilinstances()) do
+            if v:IsA("LocalScript") and (v.Name:find("BAC") or v.Name:find("AntiCheat")) then
+                v.Disabled = true
+                warn("☢️ NUCLEAR SHIELD: Disabled hidden Anti-Cheat script!")
+            end
         end
     end
 end)
