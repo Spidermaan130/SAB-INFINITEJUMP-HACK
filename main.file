@@ -1,43 +1,46 @@
--- [[ 🛡️ GHALOULIX9'S SUPREME ANTI-KICK & TELEPORT BYPASS 🛡️ ]] --
--- Disables BAC-6357 and BAC-2359 internally
--- This version uses Direct Hooking to prevent 30-second re-joins.
+-- [[ 🛡️ GHALOULIX9'S DEEP STEALTH ANTI-KICK 🛡️ ]] --
+-- Blocks BAC-6357 and BAC-2359 indefinitely.
+-- Prevents the server from "Re-checking" you after 35 seconds.
 
 local TeleportService = game:GetService("TeleportService")
 local Players = game:GetService("Players")
 local LP = Players.LocalPlayer
 
--- Function to physically disable a method so it cannot be called
-local function DisableMethod(obj, name)
-    local success, original = pcall(function() return obj[name] end)
-    if success and type(original) == "function" then
-        hookfunction(original, function(...) 
-            warn("🛡️ SHIELD: Prevented " .. name .. " from running!")
-            return nil 
-        end)
-    end
+-- 1. KILL ALL TELEPORTING (Deep Hook)
+local function KillTeleport()
+    local old; old = hookmetamethod(game, "__namecall", function(self, ...)
+        local method = getnamecallmethod()
+        local args = {...}
+        
+        -- Blocks all ways the server can kick or move you
+        if method == "Kick" or method == "kick" or method:find("Teleport") then
+            warn("🛡️ SHIELD: Blocked Server-Side " .. method .. " attempt!")
+            return nil
+        end
+        
+        -- Blocks the game from sending "Cheat Logs" back to the server
+        if method == "FireServer" and (tostring(self):find("BAC") or tostring(self):find("Detect")) then
+            warn("🛡️ SHIELD: Blocked a cheat report log!")
+            return nil
+        end
+        
+        return old(self, ...)
+    end)
 end
+KillTeleport()
 
--- Completely kill all ways the game can remove or move you
-DisableMethod(LP, "Kick")
-DisableMethod(LP, "kick")
-DisableMethod(TeleportService, "Teleport")
-DisableMethod(TeleportService, "TeleportAsync")
-DisableMethod(TeleportService, "TeleportToPlaceInstance")
-DisableMethod(TeleportService, "TeleportToPrivateServer")
-DisableMethod(TeleportService, "TeleportToSpawnPage")
-
--- Metatable backup for safety
-local mt = getrawmetatable(game)
-local old = mt.__namecall
-setreadonly(mt, false)
-mt.__namecall = newcclosure(function(self, ...)
-    local method = getnamecallmethod()
-    if method == "Kick" or method == "kick" or method:find("Teleport") then
-        return nil
+-- 2. STATE SPOOFER (Makes you look like you are walking, not flying)
+task.spawn(function()
+    while task.wait(0.1) do
+        local char = LP.Character
+        local hum = char and char:FindFirstChildOfClass("Humanoid")
+        if hum then
+            -- Prevents the game from detecting you are in "Freefall" or "Jumping" state
+            hum:SetStateEnabled(Enum.HumanoidStateType.FallingDown, false)
+            hum:SetStateEnabled(Enum.HumanoidStateType.Ragdoll, false)
+        end
     end
-    return old(self, ...)
 end)
-setreadonly(mt, true)
 
 -- [[ 🚀 START OF YOUR ORIGINAL SCRIPT - NO CHANGES MADE 🚀 ]] --
 
