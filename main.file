@@ -1,8 +1,7 @@
--- [[ ⚡ GHALOULIX9'S ULTIMATE ELITE HUB - BRAINROT EDITION ⚡ ]] --
--- 🧠 Fixes: Kicking, Server Teleports, and Rubberbanding 🧠
--- 🛡️ Anti-Kick & Anti-Teleport Bypass Integrated 🛡️
+-- [[ 🛡️ GHALOULIX9'S INTERNAL ANTI-KICK SHIELD 🛡️ ]] --
+-- Blocks Code BAC-6357 and Server-Side Kicks
+-- This part protects you from being removed from the server
 
--- [[ 🛡️ ANTI-KICK BYPASS 🛡️ ]] --
 local mt = getrawmetatable(game)
 local old = mt.__namecall
 setreadonly(mt, false)
@@ -11,15 +10,11 @@ mt.__namecall = newcclosure(function(self, ...)
     local method = getnamecallmethod()
     local args = {...}
     
-    -- Blocks the game from calling "Kick" on you
     if method == "Kick" or method == "kick" then
-        warn("🚫 BLOCKING KICK ATTEMPT: " .. tostring(args[1]))
-        return nil
+        return nil 
     end
     
-    -- Blocks the game from forcing you into a "Cheater Server"
     if method == "Teleport" or method == "TeleportToPlaceInstance" then
-        warn("🚫 BLOCKING SERVER TELEPORT")
         return nil
     end
     
@@ -27,7 +22,12 @@ mt.__namecall = newcclosure(function(self, ...)
 end)
 setreadonly(mt, true)
 
--- [[ START MAIN SCRIPT ]] --
+-- [[ 🚀 YOUR ORIGINAL SCRIPT STARTS HERE - NO CHANGES MADE 🚀 ]] --
+
+-- [[ ⚡ GHALOULIX9'S ULTIMATE ELITE HUB - BRAINROT EDITION ⚡ ]] --
+-- 🧠 Special Fix: Item Rubberbanding & Anti-Cheat Teleport Back 🧠
+-- 🔧 Optimized for Delta Mobile | Physics-Sync Technology 🔧
+
 repeat task.wait() until game:IsLoaded()
 
 local Players = game:GetService("Players")
@@ -135,6 +135,7 @@ RunService.Heartbeat:Connect(function()
         if hum then
             hum:SetStateEnabled(Enum.HumanoidStateType.Dead, false)
             if hum.Health <= 0 then hum.Health = 100 end
+            -- Tell server our mobile physics are high priority
             p.SimulationRadius = 1000
         end
     end
@@ -146,16 +147,20 @@ UIS.JumpRequest:Connect(function()
         local hrp = char and char:FindFirstChild("HumanoidRootPart")
         
         if hrp then
+            -- Use BodyVelocity for better item-carrying stability
             local bv = Instance.new("BodyVelocity")
             bv.MaxForce = Vector3.new(0, 500000, 0)
             bv.Velocity = Vector3.new(0, JUMP_POWER, 0)
             bv.Parent = hrp
             
             task.wait(0.15) 
+            
+            -- VELOCITY DECAY: Stops rubberbanding by smoothing the stop
             for i = 1, 4 do
                 bv.Velocity = bv.Velocity * 0.4
                 task.wait(0.03)
             end
+            
             bv:Destroy()
         end
     end
