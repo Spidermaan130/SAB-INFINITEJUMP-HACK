@@ -1,11 +1,11 @@
 -- [[ ⚡ GHALOULIX9 HUB ⚡ ]] --
 -- Whitelist: Ghaloulix9, Ueisizury, MELINA009874
--- FIX: Forced Button Rendering & Full Note Warning
+-- Protections: BAC-3209, 2359, 1358
 
 local Players = game:GetService("Players")
 local localPlayer = Players.LocalPlayer
 
--- [[ 🛡️ SECTION 1: USERNAME CHECK 🛡️ ]] --
+-- [[ 🛡️ SECTION 1: USERNAME WHITELIST 🛡️ ]] --
 local allowedUsers = {
     ["Ghaloulix9"] = true,
     ["Ueisizury"] = true,
@@ -30,7 +30,7 @@ local UIS = game:GetService("UserInputService")
 local RunService = game:GetService("RunService")
 local TeleportService = game:GetService("TeleportService")
 
--- [[ 🛡️ SECTION 3: ANTI-KICK SHIELD (BAC-3209) 🛡️ ]] --
+-- [[ 🚀 SECTION 3: ANTI-KICK SHIELD (BAC-3209) 🚀 ]] --
 local mt = getrawmetatable(game)
 local oldNamecall = mt.__namecall
 setreadonly(mt, false)
@@ -49,14 +49,13 @@ local Window = Rayfield:CreateWindow({
    LoadingTitle = "STEAL A BRAINROT",
    LoadingSubtitle = "By Ghaloulix9",
    ConfigurationSaving = { Enabled = false },
-   DisableRayfieldPrompts = true,
+   DisableRayfieldPrompts = true, -- Removes the Keybind/Analytics buttons
    DisableBuildWarnings = true, 
    KeySystem = true,
    KeySettings = {
       Title = "Elite Access",
       Subtitle = "Key: GHALOULIX9",
-      -- FULL WARNING ADDED HERE
-      Note = "WARNING ⚠️: THIS INFINITE JUMP SCRIPT IS NOT CONFIRMED YET BUT IT WORKS SO YEA BE CAREFUL WITH IT GOOD LUCK", 
+      Note = "WARNING ⚠️: THIS INFINITE JUMP SCRIPT IS NOT CONFIRMED YET BUT IT WORKS SO YEA BE CAREFUL WITH IT GOOD LUCK", --
       FileName = "Ghaloulix9Key",
       SaveKey = true,
       Key = {"GHALOULIX9"}
@@ -76,6 +75,7 @@ local active = false
 local JUMP_POWER = 38
 
 -- [[ 🚀 SECTION 5: INFINITE JUMP PHYSICS 🚀 ]] --
+-- This is the code you confirmed "worked completely"
 RunService.Heartbeat:Connect(function()
     local char = localPlayer.Character
     local hrp = char and char:FindFirstChild("HumanoidRootPart")
@@ -98,9 +98,12 @@ UIS.JumpRequest:Connect(function()
     end
 end)
 
--- [[ 🚀 SECTION 6: THE GUI BUTTON 🚀 ]] --
+-- [[ 🚀 SECTION 6: THE FORCED GUI BUTTON 🚀 ]] --
+-- Delay added to ensure the Main Tab exists before drawing the button
+task.wait(0.5) 
 local MainSection = MainTab:CreateSection("Movement Controls")
 
+-- THE BUTTON YOU NEED
 MainSection:CreateToggle({
    Name = "BRAINROT INFINITE JUMP",
    CurrentValue = false,
@@ -108,4 +111,11 @@ MainSection:CreateToggle({
    Callback = function(Value)
       active = Value
    end,
+})
+
+Rayfield:Notify({
+   Title = "⚡ HUB LOADED ⚡",
+   Content = "Toggle is now inside the 'Main' tab!",
+   Duration = 5,
+   Image = 4483362458,
 })
