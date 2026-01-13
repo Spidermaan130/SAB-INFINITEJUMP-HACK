@@ -1,11 +1,11 @@
 -- [[ ⚡ GHALOULIX9 HUB ⚡ ]] --
--- Whitelisted: Ghaloulix9, Ueisizury, MELINA009874
--- Bypasses: BAC-3209, 2359, 1358
+-- Whitelist: Ghaloulix9, Ueisizury, MELINA009874
+-- FIX: Forced Button Rendering
 
 local Players = game:GetService("Players")
 local localPlayer = Players.LocalPlayer
 
--- [[ 🛡️ SECTION 1: WHITELIST 🛡️ ]] --
+-- [[ 🛡️ SECTION 1: USERNAME CHECK 🛡️ ]] --
 local allowedUsers = {
     ["Ghaloulix9"] = true,
     ["Ueisizury"] = true,
@@ -21,7 +21,7 @@ if not allowedUsers[localPlayer.Name] then
     return 
 end
 
--- [[ 🚀 SECTION 2: LOAD RAYFIELD 🚀 ]] --
+-- [[ 🚀 SECTION 2: LOAD LIBRARIES 🚀 ]] --
 local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
 
 repeat task.wait() until game:IsLoaded()
@@ -30,7 +30,8 @@ local UIS = game:GetService("UserInputService")
 local RunService = game:GetService("RunService")
 local TeleportService = game:GetService("TeleportService")
 
--- [[ 🚀 SECTION 3: ANTI-KICK SHIELD 🚀 ]] --
+-- [[ 🛡️ SECTION 3: ANTI-KICK SHIELD (BAC-3209) 🛡️ ]] --
+-- Prevents the kick shown in your screenshot
 local mt = getrawmetatable(game)
 local oldNamecall = mt.__namecall
 setreadonly(mt, false)
@@ -49,9 +50,9 @@ local Window = Rayfield:CreateWindow({
    LoadingTitle = "STEAL A BRAINROT",
    LoadingSubtitle = "Elite Access Only",
    ConfigurationSaving = { Enabled = false },
-   -- These settings remove the "Keybind" and "Analytics" buttons
+   -- Hides the Keybind and Analytics buttons from your screenshot
    DisableRayfieldPrompts = true,
-   DisableBuildWarnings = true,
+   DisableBuildWarnings = true, 
    KeySystem = true,
    KeySettings = {
       Title = "Elite Access",
@@ -71,7 +72,7 @@ Window:ModifyTheme({
     ["AccentColor"] = Color3.fromRGB(0, 0, 200)
 })
 
-local MainTab = Window:CreateTab("Movement", 4483362458)
+local MainTab = Window:CreateTab("Main", 4483362458)
 local InfoTab = Window:CreateTab("WARNINGS", 4483362458)
 
 local active = false
@@ -101,16 +102,29 @@ UIS.JumpRequest:Connect(function()
     end
 end)
 
--- [[ 🚀 SECTION 6: THE ONLY BUTTON 🚀 ]] --
-MainTab:CreateToggle({
+-- [[ 🚀 SECTION 6: THE GUI BUTTON 🚀 ]] --
+-- Forced into the 'Main' tab with a Section
+local MainSection = MainTab:CreateSection("Movement Controls")
+
+local JumpToggle = MainTab:CreateToggle({
    Name = "BRAINROT INFINITE JUMP",
    CurrentValue = false,
-   Flag = "InfJump",
-   Callback = function(Value) active = Value end,
+   Flag = "GhaloulixJump", 
+   Callback = function(Value)
+      active = Value
+   end,
 })
 
+-- Completed Warning
 InfoTab:CreateSection("USER NOTICE")
 InfoTab:CreateParagraph({
     Title = "WARNING ⚠️", 
     Content = "THIS INFINITE JUMP SCRIPT IS NOT CONFIRMED YET BUT IT WORKS SO YEA BE CAREFUL WITH IT GOOD LUCK"
+})
+
+Rayfield:Notify({
+   Title = "⚡ GHALOULIX9 HUB Loaded ⚡",
+   Content = "Toggle active in the Main Tab!",
+   Duration = 5,
+   Image = 4483362458,
 })
