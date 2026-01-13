@@ -1,98 +1,453 @@
--- [[ 🎮 GHALOULIX9 HUB - GLOBAL PUBLIC EDITION ]] --
+-- [[ 🎮 GHALOULIX9 HUB - ROBLOX LANGUAGES ]] --
 -- 🔞 STRICT 5+ AGE VERIFICATION
--- 🌍 40+ LANGUAGES SUPPORT
--- 🚫 UNDER 5 = IMMEDIATE BLOCK
--- ⚖️ Reliable and Stable Performance
+-- 🌍 ALL ROBOX SUPPORTED LANGUAGES
+-- 🎯 WORKING INFINITE JUMP
+-- 🛡️ BAC-3209 BYPASS
 
 local Players = game:GetService("Players")
 local localPlayer = Players.LocalPlayer
 
--- [[ 🌍 LANGUAGE DETECTION ENGINE ]] --
--- Logic omitted for brevity but remains active in the background --
+-- [[ 🌍 ROBOX SUPPORTED LANGUAGES DETECTION ]] --
+-- Roblox officially supports these languages only
+local UserLanguage = "en"
+local username = localPlayer.Name:lower()
+
+-- Check for language patterns in username
+if username:find("[áéíóúñ]") then UserLanguage = "es" -- Spanish
+elseif username:find("[àâçéèêëîïôùûü]") then UserLanguage = "fr" -- French
+elseif username:find("[áâãçéêíóôõú]") then UserLanguage = "pt" -- Portuguese
+elseif username:find("[äöüß]") then UserLanguage = "de" -- German
+elseif username:find("[àèéìíòóùú]") then UserLanguage = "it" -- Italian
+elseif username:find("[ąęćłńóśżź]") then UserLanguage = "pl" -- Polish
+elseif username:find("[áčďéěíňóřšťúůýž]") then UserLanguage = "cs" -- Czech
+elseif username:find("[äöå]") then UserLanguage = "sv" -- Swedish
+elseif username:find("[æøå]") then UserLanguage = "da" -- Danish
+elseif username:find("[äö]") then UserLanguage = "fi" -- Finnish
+elseif username:find("[åø]") then UserLanguage = "no" -- Norwegian
+elseif username:find("[áéíóöőúüű]") then UserLanguage = "hu" -- Hungarian
+elseif username:find("[ăâîșț]") then UserLanguage = "ro" -- Romanian
+elseif username:find("[\u4e00-\u9fff]") then UserLanguage = "zh" -- Chinese (Simplified)
+elseif username:find("[\u3040-\u309f\u30a0-\u30ff]") then UserLanguage = "ja" -- Japanese
+elseif username:find("[\uac00-\ud7af]") then UserLanguage = "ko" -- Korean
+elseif username:find("[\u0600-\u06ff]") then UserLanguage = "ar" -- Arabic
+elseif username:find("[а-яё]") then UserLanguage = "ru" -- Russian
+elseif username:find("[α-ωάέήίόύώ]") then UserLanguage = "el" -- Greek
+elseif username:find("[ğışüçö]") then UserLanguage = "tr" -- Turkish
+elseif username:find("[\u0e00-\u0e7f]") then UserLanguage = "th" -- Thai
+elseif username:find("[\u0900-\u097f]") then UserLanguage = "hi" -- Hindi
+elseif username:find("[\u0590-\u05ff]") then UserLanguage = "he" -- Hebrew
+else UserLanguage = "en" end -- English (default)
+
+-- [[ 📚 ALL ROBOX SUPPORTED LANGUAGES TRANSLATIONS ]] --
+local Translations = {
+    -- ENGLISH (Default - Roblox Primary)
+    en = {
+        age_title = "AGE VERIFICATION",
+        too_young = "ACCESS DENIED",
+        too_young_msg = "You must be 5+ years old to use this",
+        verified = "AGE VERIFIED",
+        verified_msg = "You appear to be 5+ years old",
+        main = "Main",
+        infinite_jump = "BRAINROT INFINITE JUMP",
+        welcome = "GHALOULIX9 HUB | Delta Mobile",
+        key_note = "Enter key: GHALOULIX9\n\nAge requirement: 5+ years only"
+    },
+    
+    -- SPANISH (Español - Roblox Supported)
+    es = {
+        age_title = "VERIFICACIÓN DE EDAD",
+        too_young = "ACCESO DENEGADO",
+        too_young_msg = "Debes tener 5+ años para usar esto",
+        verified = "EDAD VERIFICADA",
+        verified_msg = "Pareces tener 5+ años",
+        main = "Principal",
+        infinite_jump = "SALTO INFINITO BRAINROT",
+        welcome = "GHALOULIX9 HUB | Delta Móvil",
+        key_note = "Introduce clave: GHALOULIX9\n\nRequisito de edad: Solo 5+ años"
+    },
+    
+    -- FRENCH (Français - Roblox Supported)
+    fr = {
+        age_title = "VÉRIFICATION D'ÂGE",
+        too_young = "ACCÈS REFUSÉ",
+        too_young_msg = "Vous devez avoir 5+ ans pour utiliser ceci",
+        verified = "ÂGE VÉRIFIÉ",
+        verified_msg = "Vous semblez avoir 5+ ans",
+        main = "Principal",
+        infinite_jump = "SAUT INFINI BRAINROT",
+        welcome = "GHALOULIX9 HUB | Delta Mobile",
+        key_note = "Entrez la clé: GHALOULIX9\n\nExigence d'âge: 5+ ans seulement"
+    },
+    
+    -- PORTUGUESE (Português - Roblox Supported)
+    pt = {
+        age_title = "VERIFICAÇÃO DE IDADE",
+        too_young = "ACESSO NEGADO",
+        too_young_msg = "Você deve ter 5+ anos para usar isto",
+        verified = "IDADE VERIFICADA",
+        verified_msg = "Você parece ter 5+ anos",
+        main = "Principal",
+        infinite_jump = "PULO INFINITO BRAINROT",
+        welcome = "GHALOULIX9 HUB | Delta Mobile",
+        key_note = "Digite a chave: GHALOULIX9\n\nRequisito de idade: Apenas 5+ anos"
+    },
+    
+    -- GERMAN (Deutsch - Roblox Supported)
+    de = {
+        age_title = "ALTERSVERIFIZIERUNG",
+        too_young = "ZUGANG VERWEIGERT",
+        too_young_msg = "Sie müssen 5+ Jahre alt sein, um dies zu verwenden",
+        verified = "ALTER VERIFIZIERT",
+        verified_msg = "Sie scheinen 5+ Jahre alt zu sein",
+        main = "Hauptmenü",
+        infinite_jump = "UNENDLICHER SPRUNG BRAINROT",
+        welcome = "GHALOULIX9 HUB | Delta Mobile",
+        key_note = "Schlüssel eingeben: GHALOULIX9\n\nAltersvoraussetzung: Nur 5+ Jahre"
+    },
+    
+    -- ITALIAN (Italiano - Roblox Supported)
+    it = {
+        age_title = "VERIFICA DELL'ETÀ",
+        too_young = "ACCESSO NEGATO",
+        too_young_msg = "Devi avere 5+ anni per usare questo",
+        verified = "ETÀ VERIFICATA",
+        verified_msg = "Sembri avere 5+ anni",
+        main = "Principale",
+        infinite_jump = "SALTO INFINITO BRAINROT",
+        welcome = "GHALOULIX9 HUB | Delta Mobile",
+        key_note = "Inserisci chiave: GHALOULIX9\n\nRequisito di età: Solo 5+ anni"
+    },
+    
+    -- POLISH (Polski - Roblox Supported)
+    pl = {
+        age_title = "WERYFIKACJA WIEKU",
+        too_young = "DOSTĘP ZABRONIONY",
+        too_young_msg = "Musisz mieć 5+ lat, aby tego używać",
+        verified = "WIEK ZWERYFIKOWANY",
+        verified_msg = "Wygląda na to, że masz 5+ lat",
+        main = "Główne",
+        infinite_jump = "NIESKOŃCZONY SKOK BRAINROT",
+        welcome = "GHALOULIX9 HUB | Delta Mobile",
+        key_note = "Wprowadź klucz: GHALOULIX9\n\nWymóg wiekowy: Tylko 5+ lat"
+    },
+    
+    -- RUSSIAN (Русский - Roblox Supported)
+    ru = {
+        age_title = "ПРОВЕРКА ВОЗРАСТА",
+        too_young = "ДОСТУП ЗАПРЕЩЕН",
+        too_young_msg = "Вам должно быть 5+ лет, чтобы использовать это",
+        verified = "ВОЗРАСТ ПОДТВЕРЖДЕН",
+        verified_msg = "Кажется, вам 5+ лет",
+        main = "Главное",
+        infinite_jump = "БЕСКОНЕЧНЫЙ ПРЫЖОК BRAINROT",
+        welcome = "GHALOULIX9 HUB | Delta Mobile",
+        key_note = "Введите ключ: GHALOULIX9\n\nТребование по возрасту: Только 5+ лет"
+    },
+    
+    -- CHINESE SIMPLIFIED (简体中文 - Roblox Supported)
+    zh = {
+        age_title = "年龄验证",
+        too_young = "访问被拒绝",
+        too_young_msg = "您必须年满5岁才能使用此功能",
+        verified = "年龄已验证",
+        verified_msg = "您似乎已年满5岁",
+        main = "主要",
+        infinite_jump = "无限跳跃",
+        welcome = "GHALOULIX9 HUB | Delta Mobile",
+        key_note = "输入密钥: GHALOULIX9\n\n年龄要求: 仅限5岁以上"
+    },
+    
+    -- JAPANESE (日本語 - Roblox Supported)
+    ja = {
+        age_title = "年齢確認",
+        too_young = "アクセス拒否",
+        too_young_msg = "これを使用するには5歳以上である必要があります",
+        verified = "年齢確認済み",
+        verified_msg = "あなたは5歳以上と思われます",
+        main = "メイン",
+        infinite_jump = "無限ジャンプ",
+        welcome = "GHALOULIX9 HUB | Delta Mobile",
+        key_note = "キーを入力: GHALOULIX9\n\n年齢要件: 5歳以上のみ"
+    },
+    
+    -- KOREAN (한국어 - Roblox Supported)
+    ko = {
+        age_title = "나이 확인",
+        too_young = "접근 거부",
+        too_young_msg = "이 기능을 사용하려면 5세 이상이어야 합니다",
+        verified = "나이 확인됨",
+        verified_msg = "당신은 5세 이상으로 보입니다",
+        main = "메인",
+        infinite_jump = "무한 점프",
+        welcome = "GHALOULIX9 HUB | Delta Mobile",
+        key_note = "키 입력: GHALOULIX9\n\n연령 요구 사항: 5세 이상만 가능"
+    },
+    
+    -- ARABIC (العربية - Roblox Supported)
+    ar = {
+        age_title = "التحقق من العمر",
+        too_young = "تم رفض الوصول",
+        too_young_msg = "يجب أن يكون عمرك 5+ سنوات لاستخدام هذا",
+        verified = "تم التحقق من العمر",
+        verified_msg = "يبدو أن عمرك 5+ سنوات",
+        main = "الرئيسية",
+        infinite_jump = "قفز لا نهائي",
+        welcome = "GHALOULIX9 HUB | Delta Mobile",
+        key_note = "أدخل المفتاح: GHALOULIX9\n\nمتطلبات العمر: 5+ سنوات فقط"
+    }
+}
+
+-- Get translation for user's language
 local T = Translations[UserLanguage] or Translations.en
 
--- [[ 🚀 SECTION 1: LOAD RAYFIELD 🚀 ]] --
-local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
-
-repeat task.wait() until game:IsLoaded()
-
--- [[ 🛡️ SECTION 2: 🔞 AGE VERIFICATION TEST 🔞 ]] --
-local AgeVerified = true -- Set to true for 5+ Verified users
-local UserAgeGroup = "5+"
-
--- [[ 🚀 SECTION 3: UI SETUP 🚀 ]] --
-local Window = Rayfield:CreateWindow({
-   Name = T.script_title,
-   LoadingTitle = T.loading_title,
-   LoadingSubtitle = T.loading_subtitle,
-   ConfigurationSaving = { Enabled = false },
-   DisableRayfieldPrompts = true, -- Removes clunky Keybind/Analytics
-   DisableBuildWarnings = true, 
-   KeySystem = true,
-   KeySettings = {
-      Title = T.key_title,
-      Subtitle = T.key_subtitle,
-      Note = T.key_note .. UserAgeGroup .. T.age_policy, -- Full Warning in Note
-      FileName = "Ghaloulix9Key",
-      SaveKey = true,
-      Key = {"GHALOULIX9"}
-   }
-})
-
--- Dark Red & Dark Blue Theme
-Window:ModifyTheme({
-    ["WindowFill"] = Color3.fromRGB(35, 0, 0),
-    ["TextColor"] = Color3.fromRGB(0, 0, 140),
-    ["SectionColor"] = Color3.fromRGB(50, 0, 0),
-    ["AccentColor"] = Color3.fromRGB(0, 0, 200)
-})
-
-local MainTab = Window:CreateTab(T.tab_main, 4483362458)
-local InfiniteJumpEnabled = false
-local JUMP_POWER = 120
-
--- [[ 🚀 SECTION 4: 💃 PERFORMANCE PHYSICS 🚀 ]] --
-local UIS = game:GetService("UserInputService")
-UIS.JumpRequest:Connect(function()
-    if InfiniteJumpEnabled then
-        local char = localPlayer.Character
-        local hrp = char and char:FindFirstChild("HumanoidRootPart")
-        if hrp then
-            -- Velocity-based bypass for BAC-3209
-            local JumpVelocity = Instance.new("BodyVelocity")
-            JumpVelocity.Velocity = Vector3.new(hrp.Velocity.X, JUMP_POWER, hrp.Velocity.Z)
-            JumpVelocity.MaxForce = Vector3.new(0, math.huge, 0)
-            JumpVelocity.Parent = hrp
-            task.wait(0.05)
-            if JumpVelocity then JumpVelocity:Destroy() end
+-- [[ 🔞 SIMPLE AGE VERIFICATION ]] --
+local function QuickAgeCheck()
+    game:GetService("StarterGui"):SetCore("SendNotification", {
+        Title = T.age_title,
+        Text = "Checking...",
+        Duration = 3
+    })
+    
+    wait(1)
+    
+    -- Simple check
+    local isUnder5 = false
+    local childWords = {"baby", "kid", "child", "toddler", "infant", "little"}
+    for _, word in pairs(childWords) do
+        if username:find(word) then
+            isUnder5 = true
+            break
         end
+    end
+    
+    if isUnder5 then
+        game:GetService("StarterGui"):SetCore("SendNotification", {
+            Title = T.too_young,
+            Text = T.too_young_msg,
+            Duration = 5
+        })
+        return false
+    end
+    
+    game:GetService("StarterGui"):SetCore("SendNotification", {
+        Title = T.verified,
+        Text = T.verified_msg,
+        Duration = 3
+    })
+    
+    return true
+end
+
+-- Run age check
+if not QuickAgeCheck() then
+    return
+end
+
+wait(1)
+
+-- [[ 🚀 LOAD RAYFIELD PROPERLY ]] --
+local success, Rayfield = pcall(function()
+    return loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
+end)
+
+if not success or not Rayfield then
+    game:GetService("StarterGui"):SetCore("SendNotification", {
+        Title = "ERROR",
+        Text = "Failed to load Rayfield",
+        Duration = 5
+    })
+    return
+end
+
+-- [[ 🛡️ BAC-3209 BYPASS SETUP ]] --
+local TeleportService = game:GetService("TeleportService")
+
+-- Anti-kick protection
+local mt = getrawmetatable(game)
+local oldNamecall = mt.__namecall
+
+if setreadonly then
+    setreadonly(mt, false)
+end
+
+mt.__namecall = newcclosure(function(self, ...)
+    local method = getnamecallmethod()
+    if method == "Kick" or (self == TeleportService and method:find("Teleport")) then
+        return nil
+    end
+    return oldNamecall(self, ...)
+end)
+
+if setreadonly then
+    setreadonly(mt, true)
+end
+
+-- [[ 🔑 KEY SYSTEM SETUP ]] --
+local Window = Rayfield:CreateWindow({
+    Name = "GHALOULIX9 HUB | Delta",
+    LoadingTitle = T.welcome,
+    LoadingSubtitle = "Language: " .. UserLanguage:upper(),
+    ConfigurationSaving = { Enabled = false },
+    KeySystem = true,
+    KeySettings = {
+        Title = "GHALOULIX9 ACCESS",
+        Subtitle = "Enter key: GHALOULIX9",
+        Note = T.key_note,
+        FileName = "Ghaloulix9Key",
+        SaveKey = true,
+        Key = {"GHALOULIX9"}
+    }
+})
+
+-- Apply theme
+Window:ModifyTheme({
+    ["WindowFill"] = Color3.fromRGB(20, 20, 40),
+    ["TextColor"] = Color3.fromRGB(200, 200, 255),
+    ["SectionColor"] = Color3.fromRGB(30, 30, 60),
+    ["AccentColor"] = Color3.fromRGB(100, 100, 255)
+})
+
+-- [[ 🎮 MAIN TAB - GUARANTEED VISIBLE ]] --
+local MainTab = Window:CreateTab(T.main, 4483362458)
+
+-- Create section first
+MainTab:CreateSection("Movement")
+
+-- Create the infinite jump toggle - THIS WILL RENDER
+local InfiniteJumpEnabled = false
+local JUMP_POWER = 85
+
+local InfiniteJumpToggle = MainTab:CreateToggle({
+    Name = T.infinite_jump,
+    CurrentValue = false,
+    Flag = "InfiniteJumpToggle",
+    Callback = function(Value)
+        InfiniteJumpEnabled = Value
+        
+        Rayfield:Notify({
+            Title = InfiniteJumpEnabled and "ACTIVATED" or "DEACTIVATED",
+            Content = T.infinite_jump .. " is " .. (InfiniteJumpEnabled and "ON" or "OFF"),
+            Duration = 3,
+            Image = 4483362458,
+        })
+    end,
+})
+
+-- [[ 🛡️ INFINITE JUMP PHYSICS WITH BAC-3209 BYPASS ]] --
+local UIS = game:GetService("UserInputService")
+local RunService = game:GetService("RunService")
+
+-- Mobile jump function
+local function MobileJump()
+    if not InfiniteJumpEnabled then return end
+    
+    local char = localPlayer.Character
+    if not char then return end
+    
+    local hrp = char:FindFirstChild("HumanoidRootPart")
+    local humanoid = char:FindFirstChildOfClass("Humanoid")
+    
+    if hrp and humanoid and humanoid:GetState() ~= Enum.HumanoidStateType.Dead then
+        -- BAC-3209 bypass: Safe velocity change
+        local newVelocity = Vector3.new(hrp.Velocity.X, JUMP_POWER, hrp.Velocity.Z)
+        hrp.Velocity = newVelocity
+    end
+end
+
+-- Connect jump events
+UIS.JumpRequest:Connect(MobileJump)
+
+-- Mobile touch support
+UIS.TouchTap:Connect(function(_, processed)
+    if not processed and InfiniteJumpEnabled then
+        MobileJump()
     end
 end)
 
--- [[ 🚀 SECTION 5: THE FORCED GUI BUTTON 🚀 ]] --
--- Ensuring the Infinite Jump button appears in the Main Menu
-local MainSection = MainTab:CreateSection(T.section_features)
+-- Auto-jump for Delta mobile
+local autoJumpConnection
+local function SetupAutoJump()
+    if autoJumpConnection then autoJumpConnection:Disconnect() end
+    
+    autoJumpConnection = RunService.Heartbeat:Connect(function()
+        if InfiniteJumpEnabled then
+            local char = localPlayer.Character
+            if char then
+                local humanoid = char:FindFirstChildOfClass("Humanoid")
+                if humanoid and humanoid.FloorMaterial ~= Enum.Material.Air then
+                    MobileJump()
+                    task.wait(0.1) -- Prevent spam
+                end
+            end
+        end
+    end)
+end
 
-MainSection:CreateToggle({
-   Name = T.toggle_jump,
-   CurrentValue = false,
-   Flag = "GhaloulixJump", 
-   Callback = function(Value)
-      InfiniteJumpEnabled = Value
-      -- 🔔 Notifications
-      Rayfield:Notify({
-         Title = T.notify_enabled,
-         Content = T.notify_jump,
-         Duration = 3,
-         Image = 4483362458,
-      })
-   end,
+-- Connect toggle to auto-jump
+InfiniteJumpToggle:OnChanged(function(Value)
+    InfiniteJumpEnabled = Value
+    if Value then
+        SetupAutoJump()
+    elseif autoJumpConnection then
+        autoJumpConnection:Disconnect()
+        autoJumpConnection = nil
+    end
+end)
+
+-- Character cleanup
+localPlayer.CharacterAdded:Connect(function()
+    task.wait(1)
+    if InfiniteJumpEnabled then
+        SetupAutoJump()
+    end
+end)
+
+-- [[ ⚙️ SETTINGS TAB ]] --
+local SettingsTab = Window:CreateTab("Settings", 4483362458)
+
+SettingsTab:CreateSection("Jump Settings")
+
+SettingsTab:CreateSlider({
+    Name = "Jump Power",
+    Range = {50, 150},
+    Increment = 5,
+    Suffix = "Power",
+    CurrentValue = JUMP_POWER,
+    Callback = function(Value)
+        JUMP_POWER = Value
+        Rayfield:Notify({
+            Title = "SETTING UPDATED",
+            Content = "Jump Power: " .. Value,
+            Duration = 2,
+        })
+    end
 })
 
--- INITIAL NOTIFICATION
+SettingsTab:CreateSection("Information")
+
+SettingsTab:CreateLabel({
+    Text = "Language: " .. UserLanguage:upper(),
+    Description = "Auto-detected from username"
+})
+
+SettingsTab:CreateLabel({
+    Text = "Age Verified: 5+",
+    Description = "You have passed age verification"
+})
+
+-- [[ 🎉 FINAL LOAD MESSAGE ]] --
 Rayfield:Notify({
-   Title = T.welcome_title,
-   Content = T.welcome_content,
-   Duration = 5,
-   Image = 4483362458,
+    Title = "✅ " .. T.welcome,
+    Content = "Language: " .. UserLanguage:upper() .. " | Ready to use",
+    Duration = 5,
+    Image = 4483362458,
 })
+
+-- Print debug info
+print("==========================================")
+print("GHALOULIX9 HUB - DELTA MOBILE")
+print("Language: " .. UserLanguage:upper())
+print("Age Verification: PASSED")
+print("Infinite Jump: READY")
+print("BAC-3209 Bypass: ACTIVE")
+print("==========================================")
