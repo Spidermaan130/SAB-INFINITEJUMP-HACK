@@ -1,11 +1,11 @@
 -- [[ ⚡ GHALOULIX9 HUB ⚡ ]] --
--- Whitelisted Users: Ghaloulix9, Ueisizury, MELINA009874
--- Protections: BAC-3209, 2359, 1358
+-- Whitelisted: Ghaloulix9, Ueisizury, MELINA009874
+-- Bypasses: BAC-3209, 2359, 1358
 
 local Players = game:GetService("Players")
 local localPlayer = Players.LocalPlayer
 
--- [[ 🛡️ SECTION 1: USERNAME WHITELIST 🛡️ ]] --
+-- [[ 🛡️ SECTION 1: WHITELIST 🛡️ ]] --
 local allowedUsers = {
     ["Ghaloulix9"] = true,
     ["Ueisizury"] = true,
@@ -13,21 +13,15 @@ local allowedUsers = {
 }
 
 if not allowedUsers[localPlayer.Name] then
-    local errorMessage = "you can't use the script bcs the owner didn't let you"
-    
-    -- Notification for unauthorized users
     game:GetService("StarterGui"):SetCore("SendNotification", {
         Title = "⚡ ACCESS DENIED ⚡",
-        Text = errorMessage,
+        Text = "you can't use the script bcs the owner didn't let you",
         Duration = 10
     })
-    
-    -- Halt script execution
-    error(errorMessage)
     return 
 end
 
--- [[ 🚀 SECTION 2: LOAD LIBRARIES 🚀 ]] --
+-- [[ 🚀 SECTION 2: LOAD RAYFIELD 🚀 ]] --
 local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
 
 repeat task.wait() until game:IsLoaded()
@@ -36,36 +30,28 @@ local UIS = game:GetService("UserInputService")
 local RunService = game:GetService("RunService")
 local TeleportService = game:GetService("TeleportService")
 
--- [[ 🚀 SECTION 3: THE OMEGA BYPASS SHIELD 🚀 ]] --
+-- [[ 🚀 SECTION 3: ANTI-KICK SHIELD 🚀 ]] --
 local mt = getrawmetatable(game)
 local oldNamecall = mt.__namecall
 setreadonly(mt, false)
-
 mt.__namecall = newcclosure(function(self, ...)
     local method = getnamecallmethod()
-    
-    -- Block Kicks & Server Teleports
-    if (self == TeleportService and method:find("Teleport")) or method == "Kick" or method == "kick" or (method == "Destroy" and self == localPlayer) then 
-        return nil 
-    end
-    
-    -- Block BAC detection reports specifically 3209 and 1358
-    if method == "FireServer" and tostring(self):lower():find("bac") then
-        if tostring(self):find("Heartbeat") or tostring(self):find("Ping") then 
-            return oldNamecall(self, ...) 
-        end
+    if (self == TeleportService and method:find("Teleport")) or method == "Kick" or (method == "FireServer" and tostring(self):lower():find("bac") and not tostring(self):find("Heartbeat")) then 
         return nil 
     end
     return oldNamecall(self, ...)
 end)
 setreadonly(mt, true)
 
--- [[ 🚀 SECTION 4: UI CONSTRUCTION 🚀 ]] --
+-- [[ 🚀 SECTION 4: CLEAN UI SETUP 🚀 ]] --
 local Window = Rayfield:CreateWindow({
    Name = "⚡ GHALOULIX9 HUB ⚡",
    LoadingTitle = "STEAL A BRAINROT",
    LoadingSubtitle = "Elite Access Only",
    ConfigurationSaving = { Enabled = false },
+   -- These settings remove the "Keybind" and "Analytics" buttons
+   DisableRayfieldPrompts = true,
+   DisableBuildWarnings = true,
    KeySystem = true,
    KeySettings = {
       Title = "Elite Access",
@@ -77,10 +63,10 @@ local Window = Rayfield:CreateWindow({
    }
 })
 
--- Dark Red & Dark Blue Theme Customization
+-- Dark Red & Dark Blue Theme
 Window:ModifyTheme({
-    ["WindowFill"] = Color3.fromRGB(35, 0, 0), -- Dark Red
-    ["TextColor"] = Color3.fromRGB(0, 0, 140), -- Dark Blue
+    ["WindowFill"] = Color3.fromRGB(35, 0, 0),
+    ["TextColor"] = Color3.fromRGB(0, 0, 140),
     ["SectionColor"] = Color3.fromRGB(50, 0, 0),
     ["AccentColor"] = Color3.fromRGB(0, 0, 200)
 })
@@ -91,18 +77,14 @@ local InfoTab = Window:CreateTab("WARNINGS", 4483362458)
 local active = false
 local JUMP_POWER = 38
 
--- [[ 🚀 SECTION 5: INFINITE JUMP & MOMENTUM PHYSICS 🚀 ]] --
--- This logic keeps your speed constant and allows unlimited jumps
+-- [[ 🚀 SECTION 5: THE WORKING INFINITE JUMP 🚀 ]] --
+-- This logic keeps your speed constant
 RunService.Heartbeat:Connect(function()
     local char = localPlayer.Character
     local hrp = char and char:FindFirstChild("HumanoidRootPart")
     local hum = char and char:FindFirstChildOfClass("Humanoid")
-    
     if active and hrp and hum then
-        -- Anti-Kick: Prevents air-time detection codes like 1358
         hum:ChangeState(Enum.HumanoidStateType.Running)
-        
-        -- Momentum Lock: Prevents being slowed down by anti-cheat friction
         if hum.MoveDirection.Magnitude > 0 then
             local speed = hum.WalkSpeed
             local dir = hum.MoveDirection
@@ -115,36 +97,20 @@ UIS.JumpRequest:Connect(function()
     if active then
         local char = localPlayer.Character
         local hrp = char and char:FindFirstChild("HumanoidRootPart")
-        if hrp then
-            hrp.Velocity = Vector3.new(hrp.Velocity.X, JUMP_POWER, hrp.Velocity.Z)
-        end
+        if hrp then hrp.Velocity = Vector3.new(hrp.Velocity.X, JUMP_POWER, hrp.Velocity.Z) end
     end
 end)
 
--- [[ 🚀 SECTION 6: HUB CONTENT 🚀 ]] --
-MainTab:CreateSection("Bypass Controls")
-
+-- [[ 🚀 SECTION 6: THE ONLY BUTTON 🚀 ]] --
 MainTab:CreateToggle({
    Name = "BRAINROT INFINITE JUMP",
    CurrentValue = false,
    Flag = "InfJump",
-   Callback = function(Value)
-      active = Value
-   end,
+   Callback = function(Value) active = Value end,
 })
 
-MainTab:CreateLabel("🛡️ OMEGA SHIELD: ACTIVE (BAC-3209)", 4483362458, Color3.fromRGB(0, 0, 139))
-
--- FULL USER WARNING
 InfoTab:CreateSection("USER NOTICE")
 InfoTab:CreateParagraph({
     Title = "WARNING ⚠️", 
     Content = "THIS INFINITE JUMP SCRIPT IS NOT CONFIRMED YET BUT IT WORKS SO YEA BE CAREFUL WITH IT GOOD LUCK"
-})
-
-Rayfield:Notify({
-   Title = "⚡ GHALOULIX9 HUB Loaded ⚡",
-   Content = "Welcome back, " .. localPlayer.Name .. "!",
-   Duration = 5,
-   Image = 4483362458,
 })
