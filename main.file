@@ -1,18 +1,42 @@
--- [[ 🛡️ GHALOULIX9'S ULTIMATE ELITE BYPASS 🛡️ ]] --
--- Fixes: BAC-3209, 2359, 1358
+-- [[ ⚡ GHALOULIX9 HUB ⚡ ]] --
+-- Whitelisted Users: Ghaloulix9, Ueisizury, MELINA009874
+-- Protections: BAC-3209, 2359, 1358
 
--- LOAD RAYFIELD FIRST
+local Players = game:GetService("Players")
+local localPlayer = Players.LocalPlayer
+
+-- [[ 🛡️ SECTION 1: USERNAME WHITELIST 🛡️ ]] --
+local allowedUsers = {
+    ["Ghaloulix9"] = true,
+    ["Ueisizury"] = true,
+    ["MELINA009874"] = true
+}
+
+if not allowedUsers[localPlayer.Name] then
+    local errorMessage = "you can't use the script bcs the owner didn't let you"
+    
+    -- Notification for unauthorized users
+    game:GetService("StarterGui"):SetCore("SendNotification", {
+        Title = "⚡ ACCESS DENIED ⚡",
+        Text = errorMessage,
+        Duration = 10
+    })
+    
+    -- Halt script execution
+    error(errorMessage)
+    return 
+end
+
+-- [[ 🚀 SECTION 2: LOAD LIBRARIES 🚀 ]] --
 local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
 
 repeat task.wait() until game:IsLoaded()
 
-local Players = game:GetService("Players")
 local UIS = game:GetService("UserInputService")
 local RunService = game:GetService("RunService")
 local TeleportService = game:GetService("TeleportService")
-local p = Players.LocalPlayer
 
--- [[ 🚀 SECTION 1: THE HARD-LOCKED SHIELD 🚀 ]] --
+-- [[ 🚀 SECTION 3: THE OMEGA BYPASS SHIELD 🚀 ]] --
 local mt = getrawmetatable(game)
 local oldNamecall = mt.__namecall
 setreadonly(mt, false)
@@ -20,12 +44,12 @@ setreadonly(mt, false)
 mt.__namecall = newcclosure(function(self, ...)
     local method = getnamecallmethod()
     
-    -- Block Kicks & Teleports
-    if (self == TeleportService and method:find("Teleport")) or method == "Kick" or method == "kick" or (method == "Destroy" and self == p) then 
+    -- Block Kicks & Server Teleports
+    if (self == TeleportService and method:find("Teleport")) or method == "Kick" or method == "kick" or (method == "Destroy" and self == localPlayer) then 
         return nil 
     end
     
-    -- Block Anti-Cheat Detection (Specifically BAC-3209 & 1358)
+    -- Block BAC detection reports specifically 3209 and 1358
     if method == "FireServer" and tostring(self):lower():find("bac") then
         if tostring(self):find("Heartbeat") or tostring(self):find("Ping") then 
             return oldNamecall(self, ...) 
@@ -36,24 +60,24 @@ mt.__namecall = newcclosure(function(self, ...)
 end)
 setreadonly(mt, true)
 
--- [[ 🚀 SECTION 2: RAYFIELD UI SETUP 🚀 ]] --
+-- [[ 🚀 SECTION 4: UI CONSTRUCTION 🚀 ]] --
 local Window = Rayfield:CreateWindow({
-   Name = "⚡ GHALOULIX9'S ELITE HUB ⚡",
+   Name = "⚡ GHALOULIX9 HUB ⚡",
    LoadingTitle = "STEAL A BRAINROT",
-   LoadingSubtitle = "By Ghaloulix9",
+   LoadingSubtitle = "Elite Access Only",
    ConfigurationSaving = { Enabled = false },
    KeySystem = true,
    KeySettings = {
       Title = "Elite Access",
       Subtitle = "Key: GHALOULIX9",
-      Note = "WARNING ⚠️: THIS INFINITE JUMP SCRIPT IS NOT CONFIRMED YET BUT IT WORKS SO YEA BE CAREFUL WITH IT GOOD LUCK",
+      Note = "Key is GHALOULIX9", 
       FileName = "Ghaloulix9Key",
       SaveKey = true,
       Key = {"GHALOULIX9"}
    }
 })
 
--- Dark Red & Dark Blue Theme
+-- Dark Red & Dark Blue Theme Customization
 Window:ModifyTheme({
     ["WindowFill"] = Color3.fromRGB(35, 0, 0), -- Dark Red
     ["TextColor"] = Color3.fromRGB(0, 0, 140), -- Dark Blue
@@ -62,21 +86,23 @@ Window:ModifyTheme({
 })
 
 local MainTab = Window:CreateTab("Movement", 4483362458)
+local InfoTab = Window:CreateTab("WARNINGS", 4483362458)
+
 local active = false
 local JUMP_POWER = 38
 
--- [[ 🚀 SECTION 3: THE WORKING INFINITE JUMP & MOMENTUM LOCK 🚀 ]] --
--- This is the code that worked completely for you
+-- [[ 🚀 SECTION 5: INFINITE JUMP & MOMENTUM PHYSICS 🚀 ]] --
+-- This logic keeps your speed constant and allows unlimited jumps
 RunService.Heartbeat:Connect(function()
-    local char = p.Character
+    local char = localPlayer.Character
     local hrp = char and char:FindFirstChild("HumanoidRootPart")
     local hum = char and char:FindFirstChildOfClass("Humanoid")
     
     if active and hrp and hum then
-        -- Force state to Running to bypass air-time kicks
+        -- Anti-Kick: Prevents air-time detection codes like 1358
         hum:ChangeState(Enum.HumanoidStateType.Running)
         
-        -- MOMENTUM LOCK: Keeps your original walk speed constant while jumping
+        -- Momentum Lock: Prevents being slowed down by anti-cheat friction
         if hum.MoveDirection.Magnitude > 0 then
             local speed = hum.WalkSpeed
             local dir = hum.MoveDirection
@@ -85,10 +111,9 @@ RunService.Heartbeat:Connect(function()
     end
 end)
 
--- Actual Jump execution
 UIS.JumpRequest:Connect(function()
     if active then
-        local char = p.Character
+        local char = localPlayer.Character
         local hrp = char and char:FindFirstChild("HumanoidRootPart")
         if hrp then
             hrp.Velocity = Vector3.new(hrp.Velocity.X, JUMP_POWER, hrp.Velocity.Z)
@@ -96,7 +121,9 @@ UIS.JumpRequest:Connect(function()
     end
 end)
 
--- [[ 🚀 SECTION 4: UI TOGGLES 🚀 ]] --
+-- [[ 🚀 SECTION 6: HUB CONTENT 🚀 ]] --
+MainTab:CreateSection("Bypass Controls")
+
 MainTab:CreateToggle({
    Name = "BRAINROT INFINITE JUMP",
    CurrentValue = false,
@@ -108,9 +135,16 @@ MainTab:CreateToggle({
 
 MainTab:CreateLabel("🛡️ OMEGA SHIELD: ACTIVE (BAC-3209)", 4483362458, Color3.fromRGB(0, 0, 139))
 
+-- FULL USER WARNING
+InfoTab:CreateSection("USER NOTICE")
+InfoTab:CreateParagraph({
+    Title = "WARNING ⚠️", 
+    Content = "THIS INFINITE JUMP SCRIPT IS NOT CONFIRMED YET BUT IT WORKS SO YEA BE CAREFUL WITH IT GOOD LUCK"
+})
+
 Rayfield:Notify({
-   Title = "Hub Initialized!",
-   Content = "Your working Infinite Jump script is ready!",
+   Title = "⚡ GHALOULIX9 HUB Loaded ⚡",
+   Content = "Welcome back, " .. localPlayer.Name .. "!",
    Duration = 5,
    Image = 4483362458,
 })
