@@ -75,46 +75,93 @@ Window:ModifyTheme({
 })
 
 local MainTab = Window:CreateTab("Main", 4483362458)
-local active = false
-local JUMP_POWER = 38
 
--- [[ 🚀 SECTION 5: 💃 EXCELLENT PERFORMANCE PHYSICS 🚀 ]] --
--- Stable momentum code that prevents slowing down
-RunService.Heartbeat:Connect(function()
-    local char = localPlayer.Character
-    local hrp = char and char:FindFirstChild("HumanoidRootPart")
-    local hum = char and char:FindFirstChildOfClass("Humanoid")
-    if active and hrp and hum then
-        hum:ChangeState(Enum.HumanoidStateType.Running)
-        if hum.MoveDirection.Magnitude > 0 then
-            local speed = hum.WalkSpeed
-            local dir = hum.MoveDirection
-            hrp.Velocity = Vector3.new(dir.X * speed, hrp.Velocity.Y, dir.Z * speed)
+-- [[ 🚀 SECTION 5: INFINITE JUMP PHYSICS WITH BAC-3209 BYPASS 🚀 ]] --
+local InfiniteJumpEnabled = false
+local JUMP_POWER = 120 -- Increased for mobile
+
+-- BAC-3209 Bypass & Velocity-based Infinite Jump
+UIS.JumpRequest:Connect(function()
+    if InfiniteJumpEnabled then
+        local char = localPlayer.Character
+        local hrp = char and char:FindFirstChild("HumanoidRootPart")
+        if hrp then
+            -- Create temporary BodyVelocity for bypass
+            local JumpVelocity = Instance.new("BodyVelocity")
+            JumpVelocity.Name = "BrainrotJump"
+            JumpVelocity.Velocity = Vector3.new(hrp.Velocity.X, JUMP_POWER, hrp.Velocity.Z)
+            JumpVelocity.MaxForce = Vector3.new(0, math.huge, 0)
+            JumpVelocity.Parent = hrp
+            
+            task.wait(0.05) -- Reduced for better performance
+            
+            -- Clean up to prevent detection
+            if JumpVelocity and JumpVelocity.Parent then
+                JumpVelocity:Destroy()
+            end
         end
     end
 end)
 
-UIS.JumpRequest:Connect(function()
-    if active then
+-- Mobile touch support for Delta Mobile
+UIS.TouchTap:Connect(function(touchPositions, processed)
+    if not processed and InfiniteJumpEnabled then
         local char = localPlayer.Character
         local hrp = char and char:FindFirstChild("HumanoidRootPart")
-        if hrp then hrp.Velocity = Vector3.new(hrp.Velocity.X, JUMP_POWER, hrp.Velocity.Z) end
+        if hrp then
+            local JumpVelocity = Instance.new("BodyVelocity")
+            JumpVelocity.Name = "BrainrotJumpMobile"
+            JumpVelocity.Velocity = Vector3.new(hrp.Velocity.X, JUMP_POWER, hrp.Velocity.Z)
+            JumpVelocity.MaxForce = Vector3.new(0, math.huge, 0)
+            JumpVelocity.Parent = hrp
+            
+            task.wait(0.05)
+            
+            if JumpVelocity and JumpVelocity.Parent then
+                JumpVelocity:Destroy()
+            end
+        end
     end
 end)
 
--- [[ 🚀 SECTION 6: ⚙️ ADVANCED GUI BUTTON 🚀 ]] --
--- Forces the Infinite Jump GUI to render correctly
-local MainSection = MainTab:CreateSection("Movement Controls")
+-- Cleanup on character respawn
+localPlayer.CharacterAdded:Connect(function()
+    if not InfiniteJumpEnabled then
+        wait(1)
+        local char = localPlayer.Character
+        if char then
+            local JumpVelocity = char:FindFirstChild("BrainrotJump") or char:FindFirstChild("BrainrotJumpMobile")
+            if JumpVelocity then
+                JumpVelocity:Destroy()
+            end
+        end
+    end
+end)
 
-MainSection:CreateToggle({
+-- [[ 🚀 SECTION 6: MAIN TAB TOGGLE (NOW RENDERING CORRECTLY) 🚀 ]] --
+-- Removed the Section for better performance and direct toggle placement
+
+local InfiniteJumpToggle = MainTab:CreateToggle({
    Name = "BRAINROT INFINITE JUMP",
    CurrentValue = false,
    Flag = "GhaloulixJump", 
    Callback = function(Value)
-      active = Value
-      -- 🔔 Notifications
+      InfiniteJumpEnabled = Value
+      
+      -- Cleanup when disabling
+      if not Value then
+          local char = localPlayer.Character
+          if char then
+              local JumpVelocity = char:FindFirstChild("BrainrotJump") or char:FindFirstChild("BrainrotJumpMobile")
+              if JumpVelocity then
+                  JumpVelocity:Destroy()
+              end
+          end
+      end
+      
+      -- Notification
       Rayfield:Notify({
-         Title = "⚡ Hub Update ⚡",
+         Title = "⚡ Infinite Jump Status ⚡",
          Content = "Infinite Jump is now " .. (Value and "ACTIVE" or "DISABLED"),
          Duration = 3,
          Image = 4483362458,
@@ -125,7 +172,7 @@ MainSection:CreateToggle({
 -- INITIAL NOTIFICATION
 Rayfield:Notify({
    Title = "⚡ GHALOULIX9 HUB LOADED ⚡",
-   Content = "Welcome back! Performance is Optimized.",
+   Content = "BRAINROT INFINITE JUMP ready in Main tab",
    Duration = 5,
    Image = 4483362458,
 })
