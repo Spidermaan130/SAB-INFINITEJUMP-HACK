@@ -1,561 +1,266 @@
--- [[ 🎀 GHALOULIX9'S DELTA HUB - COMPLETE 🎀 ]] --
--- 🔑 KEY SYSTEM WITH 20-SECOND LOADING
--- 📱 DELTA MOBILE SUPPORT
--- 🎨 WORKING CUSTOM GUI
--- 🔞 AGE VERIFICATION
--- 🎯 INFINITE JUMP LOADED
+-- [[ 🎀 GHALOULIX9'S ULTIMATE HUB - DELTA EDITION 🎀 ]] --
+-- 🌍 15+ LANGUAGES | 👤 USER DETECTION | 🎯 INFINITE JUMP
 
--- Wait for game to load
 repeat task.wait() until game:IsLoaded()
 
 local Players = game:GetService("Players")
 local localPlayer = Players.LocalPlayer
 local UIS = game:GetService("UserInputService")
-local RunService = game:GetService("RunService")
+local LocService = game:GetService("LocalizationService")
 local TweenService = game:GetService("TweenService")
 
--- [[ 🔑 KEY SYSTEM VARIABLES ]] --
+-- [[ 🌍 COMPREHENSIVE TRANSLATION DATABASE ]] --
+local Translations = {
+    ["en-us"] = {title = "GHALOULIX9 HUB", loading = "LOADING...", key = "ENTER KEY", jump = "INFINITE JUMP", lang = "LANGUAGE", welcome = "Welcome, ", submit = "SUBMIT"},
+    ["ar-001"] = {title = "مركز غلو ليكس 9", loading = "جاري التحميل...", key = "أدخل المفتاح", jump = "قفزة لانهائية", lang = "اللغة", welcome = "مرحباً، ", submit = "إرسال"},
+    ["fr-fr"] = {title = "GHALOULIX9 HUB", loading = "CHARGEMENT...", key = "ENTRER LA CLÉ", jump = "SAUT INFINI", lang = "LANGUE", welcome = "Bienvenue, ", submit = "VALIDER"},
+    ["es-es"] = {title = "GHALOULIX9 HUB", loading = "CARGANDO...", key = "INGRESAR CLAVE", jump = "SALTO INFINITO", lang = "IDIOMA", welcome = "Bienvenido, ", submit = "ENVIAR"},
+    ["pt-br"] = {title = "GHALOULIX9 HUB", loading = "CARREGANDO...", key = "INSERIR CHAVE", jump = "PULO INFINITO", lang = "IDIOMA", welcome = "Bem-vindo, ", submit = "ENVIAR"},
+    ["de-de"] = {title = "GHALOULIX9 HUB", loading = "LADEN...", key = "SCHLÜSSEL EINGEBEN", jump = "UNENDLICHER SPRUNG", lang = "SPRACHE", welcome = "Willkommen, ", submit = "BESTÄTIGEN"},
+    ["it-it"] = {title = "GHALOULIX9 HUB", loading = "CARICAMENTO...", key = "INSERISCI CHIAVE", jump = "SALTO INFINITO", lang = "LINGUA", welcome = "Benvenuto, ", submit = "INVIA"},
+    ["ru-ru"] = {title = "GHALOULIX9 HUB", loading = "ЗАГРУЗКА...", key = "ВВЕДИТЕ КЛЮЧ", jump = "БЕСКОНЕЧНЫЙ ПРЫЖОК", lang = "ЯЗЫК", welcome = "Добро пожаловать, ", submit = "ОТПРАВИТЬ"},
+    ["zh-cn"] = {title = "GHALOULIX9 中心", loading = "加载中...", key = "输入密钥", jump = "无限跳跃", lang = "语言", welcome = "欢迎, ", submit = "提交"},
+    ["ja-jp"] = {title = "GHALOULIX9 ハブ", loading = "読み込み中...", key = "キーを入力", jump = "無限ジャンプ", lang = "言語", welcome = "ようこそ、 ", submit = "送信"},
+    ["ko-kr"] = {title = "GHALOULIX9 허브", loading = "로딩 중...", key = "키 입력", jump = "무한 점프", lang = "언어", welcome = "환영합니다, ", submit = "제출"},
+    ["tr-tr"] = {title = "GHALOULIX9 HUB", loading = "YÜKLENİYOR...", key = "ANAHTARI GİR", jump = "SONSUZ ZIPLAMA", lang = "DİL", welcome = "Hoş geldin, ", submit = "GÖNDER"},
+    ["pl-pl"] = {title = "GHALOULIX9 HUB", loading = "ŁADOWANIE...", key = "WPISZ KLUCZ", jump = "NIESKOŃCZONY SKOK", lang = "JĘZYK", welcome = "Witaj, ", submit = "WYŚLIJ"},
+    ["th-th"] = {title = "GHALOULIX9 HUB", loading = "กำลังโหลด...", key = "ใส่รหัส", jump = "กระโดดไม่จำกัด", lang = "ภาษา", welcome = "ยินดีต้อนรับ, ", submit = "ตกลง"},
+    ["vi-vn"] = {title = "GHALOULIX9 HUB", loading = "ĐANG TẢI...", key = "NHẬP KHÓA", jump = "NHẢY VÔ HẠN", lang = "NGÔN NGỮ", welcome = "Chào mừng, ", submit = "XÁC NHẬN"}
+}
+
+-- Detect System Language
+local CurrentLocale = LocService.RobloxLocaleId:lower()
+local T = Translations[CurrentLocale] or Translations["en-us"]
+
+-- [[ ⚙️ SETTINGS ]] --
 local CorrectKey = "GHALOULIX9"
-local KeyVerified = false
-local LoadingTime = 20 -- 20 seconds loading
+local InfiniteJumpEnabled = false
+local JUMP_POWER = 90
 
--- [[ ⏳ SHOW LOADING SCREEN ]] --
-local LoadingScreen = Instance.new("ScreenGui")
-LoadingScreen.Name = "LoadingScreen"
-LoadingScreen.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
-LoadingScreen.Parent = game.CoreGui
-
-local LoadingFrame = Instance.new("Frame")
-LoadingFrame.Name = "LoadingFrame"
-LoadingFrame.Size = UDim2.new(1, 0, 1, 0)
-LoadingFrame.BackgroundColor3 = Color3.fromRGB(15, 15, 30)
-LoadingFrame.BorderSizePixel = 0
-LoadingFrame.Parent = LoadingScreen
-
-local LoadingTitle = Instance.new("TextLabel")
-LoadingTitle.Name = "LoadingTitle"
-LoadingTitle.Size = UDim2.new(0, 400, 0, 50)
-LoadingTitle.Position = UDim2.new(0.5, -200, 0.3, -25)
-LoadingTitle.BackgroundTransparency = 1
-LoadingTitle.Text = "⚡ GHALOULIX9 HUB ⚡"
-LoadingTitle.TextColor3 = Color3.fromRGB(200, 200, 255)
-LoadingTitle.TextSize = 28
-LoadingTitle.Font = Enum.Font.GothamBold
-LoadingTitle.Parent = LoadingFrame
-
-local LoadingSubtitle = Instance.new("TextLabel")
-LoadingSubtitle.Name = "LoadingSubtitle"
-LoadingSubtitle.Size = UDim2.new(0, 400, 0, 30)
-LoadingSubtitle.Position = UDim2.new(0.5, -200, 0.4, -15)
-LoadingSubtitle.BackgroundTransparency = 1
-LoadingSubtitle.Text = "DELTA MOBILE EDITION"
-LoadingSubtitle.TextColor3 = Color3.fromRGB(150, 150, 200)
-LoadingSubtitle.TextSize = 18
-LoadingSubtitle.Font = Enum.Font.Gotham
-LoadingSubtitle.Parent = LoadingFrame
-
-local LoadingBarBack = Instance.new("Frame")
-LoadingBarBack.Name = "LoadingBarBack"
-LoadingBarBack.Size = UDim2.new(0, 300, 0, 20)
-LoadingBarBack.Position = UDim2.new(0.5, -150, 0.5, -10)
-LoadingBarBack.BackgroundColor3 = Color3.fromRGB(40, 40, 60)
-LoadingBarBack.BorderSizePixel = 0
-LoadingBarBack.Parent = LoadingFrame
-
-local LoadingBarCorner = Instance.new("UICorner")
-LoadingBarCorner.CornerRadius = UDim.new(0, 10)
-LoadingBarCorner.Parent = LoadingBarBack
-
-local LoadingBar = Instance.new("Frame")
-LoadingBar.Name = "LoadingBar"
-LoadingBar.Size = UDim2.new(0, 0, 1, 0)
-LoadingBar.BackgroundColor3 = Color3.fromRGB(0, 150, 255)
-LoadingBar.BorderSizePixel = 0
-LoadingBar.Parent = LoadingBarBack
-
-local LoadingBarFillCorner = Instance.new("UICorner")
-LoadingBarFillCorner.CornerRadius = UDim.new(0, 10)
-LoadingBarFillCorner.Parent = LoadingBar
-
-local LoadingTimer = Instance.new("TextLabel")
-LoadingTimer.Name = "LoadingTimer"
-LoadingTimer.Size = UDim2.new(0, 200, 0, 30)
-LoadingTimer.Position = UDim2.new(0.5, -100, 0.6, -15)
-LoadingTimer.BackgroundTransparency = 1
-LoadingTimer.Text = "Loading... 0%"
-LoadingTimer.TextColor3 = Color3.fromRGB(200, 200, 255)
-LoadingTimer.TextSize = 16
-LoadingTimer.Font = Enum.Font.Gotham
-LoadingTimer.Parent = LoadingFrame
-
--- [[ ⏳ START LOADING PROGRESS ]] --
-task.spawn(function()
-    for i = 1, LoadingTime do
-        local progress = (i / LoadingTime)
-        LoadingBar.Size = UDim2.new(progress, 0, 1, 0)
-        LoadingTimer.Text = "Loading... " .. math.floor(progress * 100) .. "%"
-        task.wait(1)
-    end
-    
-    -- Hide loading screen
-    task.wait(1)
-    LoadingScreen:Destroy()
-    
-    -- Show key input
-    ShowKeySystem()
-end)
-
--- [[ 🔑 KEY SYSTEM FUNCTION ]] --
+-- [[ 🎨 GUI ROOT ]] --
 local ScreenGui = Instance.new("ScreenGui")
-ScreenGui.Name = "DeltaHubGUI"
-ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+ScreenGui.Name = "Ghaloulix9Final"
+ScreenGui.Parent = game.CoreGui
 ScreenGui.ResetOnSpawn = false
 
-local function ShowKeySystem()
-    ScreenGui.Parent = game.CoreGui
+-- [[ 🛠️ UTILITY FUNCTIONS ]] --
+function CreateRoundedFrame(parent, size, pos, color)
+    local f = Instance.new("Frame")
+    f.Size = size
+    f.Position = pos
+    f.BackgroundColor3 = color
+    f.BorderSizePixel = 0
+    f.Parent = parent
+    local c = Instance.new("UICorner")
+    c.CornerRadius = UDim.new(0, 10)
+    c.Parent = f
+    return f
+end
+
+function ShowWelcome()
+    local welcomeFrame = CreateRoundedFrame(ScreenGui, UDim2.new(0, 280, 0, 70), UDim2.new(1, 10, 0.1, 0), Color3.fromRGB(30, 30, 55))
     
-    -- Create key window
-    local KeyWindow = Instance.new("Frame")
-    KeyWindow.Name = "KeyWindow"
-    KeyWindow.Size = UDim2.new(0, 400, 0, 300)
-    KeyWindow.Position = UDim2.new(0.5, -200, 0.5, -150)
-    KeyWindow.BackgroundColor3 = Color3.fromRGB(20, 20, 40)
-    KeyWindow.BorderSizePixel = 0
-    KeyWindow.Parent = ScreenGui
-    
-    local KeyCorner = Instance.new("UICorner")
-    KeyCorner.CornerRadius = UDim.new(0, 12)
-    KeyCorner.Parent = KeyWindow
-    
-    -- Title
-    local KeyTitle = Instance.new("TextLabel")
-    KeyTitle.Size = UDim2.new(1, 0, 0, 60)
-    KeyTitle.Position = UDim2.new(0, 0, 0, 10)
-    KeyTitle.BackgroundTransparency = 1
-    KeyTitle.Text = "🔑 ENTER KEY"
-    KeyTitle.TextColor3 = Color3.fromRGB(200, 200, 255)
-    KeyTitle.TextSize = 24
-    KeyTitle.Font = Enum.Font.GothamBold
-    KeyTitle.Parent = KeyWindow
-    
-    local KeySubtitle = Instance.new("TextLabel")
-    KeySubtitle.Size = UDim2.new(1, 0, 0, 30)
-    KeySubtitle.Position = UDim2.new(0, 0, 0, 70)
-    KeySubtitle.BackgroundTransparency = 1
-    KeySubtitle.Text = "Key: GHALOULIX9"
-    KeySubtitle.TextColor3 = Color3.fromRGB(150, 150, 200)
-    KeySubtitle.TextSize = 16
-    KeySubtitle.Font = Enum.Font.Gotham
-    KeySubtitle.Parent = KeyWindow
-    
-    -- Key input box
-    local KeyInput = Instance.new("TextBox")
-    KeyInput.Name = "KeyInput"
-    KeyInput.Size = UDim2.new(0, 300, 0, 40)
-    KeyInput.Position = UDim2.new(0.5, -150, 0.5, -20)
-    KeyInput.BackgroundColor3 = Color3.fromRGB(40, 40, 60)
-    KeyInput.BorderSizePixel = 0
-    KeyInput.Text = ""
-    KeyInput.PlaceholderText = "Enter key here..."
-    KeyInput.TextColor3 = Color3.fromRGB(255, 255, 255)
-    KeyInput.TextSize = 18
-    KeyInput.Font = Enum.Font.Gotham
-    KeyInput.Parent = KeyWindow
-    
-    local InputCorner = Instance.new("UICorner")
-    InputCorner.CornerRadius = UDim.new(0, 8)
-    InputCorner.Parent = KeyInput
-    
-    -- Submit button
-    local SubmitButton = Instance.new("TextButton")
-    SubmitButton.Name = "SubmitButton"
-    SubmitButton.Size = UDim2.new(0, 150, 0, 40)
-    SubmitButton.Position = UDim2.new(0.5, -75, 0.7, 0)
-    SubmitButton.BackgroundColor3 = Color3.fromRGB(0, 120, 255)
-    SubmitButton.BorderSizePixel = 0
-    SubmitButton.Text = "SUBMIT"
-    SubmitButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-    SubmitButton.TextSize = 18
-    SubmitButton.Font = Enum.Font.GothamBold
-    SubmitButton.Parent = KeyWindow
-    
-    local SubmitCorner = Instance.new("UICorner")
-    SubmitCorner.CornerRadius = UDim.new(0, 8)
-    SubmitCorner.Parent = SubmitButton
-    
-    -- Error message
-    local ErrorLabel = Instance.new("TextLabel")
-    ErrorLabel.Name = "ErrorLabel"
-    ErrorLabel.Size = UDim2.new(1, -40, 0, 30)
-    ErrorLabel.Position = UDim2.new(0, 20, 0.85, 0)
-    ErrorLabel.BackgroundTransparency = 1
-    ErrorLabel.Text = ""
-    ErrorLabel.TextColor3 = Color3.fromRGB(255, 50, 50)
-    ErrorLabel.TextSize = 14
-    ErrorLabel.Font = Enum.Font.Gotham
-    ErrorLabel.Visible = false
-    ErrorLabel.Parent = KeyWindow
-    
-    -- Submit function
-    SubmitButton.MouseButton1Click:Connect(function()
-        local enteredKey = KeyInput.Text:upper()
-        
-        if enteredKey == CorrectKey then
-            KeyVerified = true
-            KeyWindow:Destroy()
-            ShowAgeVerification()
-        else
-            ErrorLabel.Text = "❌ WRONG KEY! Try: GHALOULIX9"
-            ErrorLabel.Visible = true
-            KeyInput.Text = ""
-            
-            -- Shake animation
-            for i = 1, 3 do
-                KeyInput.Position = UDim2.new(0.5, -155, 0.5, -20)
-                task.wait(0.05)
-                KeyInput.Position = UDim2.new(0.5, -145, 0.5, -20)
-                task.wait(0.05)
-                KeyInput.Position = UDim2.new(0.5, -150, 0.5, -20)
-            end
-        end
-    end)
-    
-    -- Hover effects
-    SubmitButton.MouseEnter:Connect(function()
-        TweenService:Create(SubmitButton, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(0, 150, 255)}):Play()
-    end)
-    
-    SubmitButton.MouseLeave:Connect(function()
-        TweenService:Create(SubmitButton, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(0, 120, 255)}):Play()
+    local img = Instance.new("ImageLabel")
+    img.Size = UDim2.new(0, 50, 0, 50)
+    img.Position = UDim2.new(0, 10, 0.5, -25)
+    img.Image = "rbxthumb://type=AvatarHeadShot&id=" .. localPlayer.UserId .. "&w=150&h=150"
+    img.BackgroundTransparency = 1
+    img.Parent = welcomeFrame
+    Instance.new("UICorner", img).CornerRadius = UDim.new(1, 0)
+
+    local txt = Instance.new("TextLabel")
+    txt.Size = UDim2.new(1, -70, 1, 0)
+    txt.Position = UDim2.new(0, 65, 0, 0)
+    txt.BackgroundTransparency = 1
+    txt.Text = T.welcome .. localPlayer.Name .. "!"
+    txt.TextColor3 = Color3.fromRGB(255, 255, 255)
+    txt.Font = Enum.Font.GothamBold
+    txt.TextSize = 14
+    txt.TextWrapped = true
+    txt.TextXAlignment = (CurrentLocale:find("ar") and Enum.TextXAlignment.Right or Enum.TextXAlignment.Left)
+    txt.Parent = welcomeFrame
+
+    welcomeFrame:TweenPosition(UDim2.new(1, -290, 0.1, 0), "Out", "Back", 0.6, true)
+    task.delay(4, function()
+        welcomeFrame:TweenPosition(UDim2.new(1, 10, 0.1, 0), "In", "Linear", 0.5, true)
+        task.wait(0.5)
+        welcomeFrame:Destroy()
     end)
 end
 
--- [[ 🔞 AGE VERIFICATION FUNCTION ]] --
-local function ShowAgeVerification()
-    correctAnswers = 0
+-- [[ ⏳ 20-SECOND LOADING SYSTEM ]] --
+function StartLoading()
+    local loadFrame = Instance.new("Frame")
+    loadFrame.Size = UDim2.new(1, 0, 1, 0)
+    loadFrame.BackgroundColor3 = Color3.fromRGB(10, 10, 20)
+    loadFrame.Parent = ScreenGui
     
-    local AgeWindow = Instance.new("Frame")
-    AgeWindow.Name = "AgeWindow"
-    AgeWindow.Size = UDim2.new(0, 400, 0, 500)
-    AgeWindow.Position = UDim2.new(0.5, -200, 0.5, -250)
-    AgeWindow.BackgroundColor3 = Color3.fromRGB(20, 20, 40)
-    AgeWindow.BorderSizePixel = 0
-    AgeWindow.Parent = ScreenGui
+    local barContainer = CreateRoundedFrame(loadFrame, UDim2.new(0, 300, 0, 15), UDim2.new(0.5, -150, 0.5, 0), Color3.fromRGB(40, 40, 50))
+    local bar = CreateRoundedFrame(barContainer, UDim2.new(0, 0, 1, 0), UDim2.new(0, 0, 0, 0), Color3.fromRGB(0, 150, 255))
     
-    local AgeCorner = Instance.new("UICorner")
-    AgeCorner.CornerRadius = UDim.new(0, 12)
-    AgeCorner.Parent = AgeWindow
+    local status = Instance.new("TextLabel")
+    status.Size = UDim2.new(1, 0, 0, 40)
+    status.Position = UDim2.new(0, 0, 0.4, 0)
+    status.Text = T.loading
+    status.TextColor3 = Color3.fromRGB(200, 200, 255)
+    status.Font = Enum.Font.GothamBold
+    status.BackgroundTransparency = 1
+    status.Parent = loadFrame
+
+    for i = 1, 100 do
+        task.wait(0.2) -- Total 20 Seconds
+        bar.Size = UDim2.new(i/100, 0, 1, 0)
+        status.Text = T.loading .. " " .. i .. "%"
+    end
+    loadFrame:Destroy()
+    ShowKeySystem()
+end
+
+-- [[ 🔑 KEY SYSTEM ]] --
+function ShowKeySystem()
+    local keyWindow = CreateRoundedFrame(ScreenGui, UDim2.new(0, 350, 0, 220), UDim2.new(0.5, -175, 0.5, -110), Color3.fromRGB(20, 20, 35))
     
-    -- Title
-    local AgeTitle = Instance.new("TextLabel")
-    AgeTitle.Size = UDim2.new(1, 0, 0, 60)
-    AgeTitle.Position = UDim2.new(0, 0, 0, 10)
-    AgeTitle.BackgroundTransparency = 1
-    AgeTitle.Text = "🔞 AGE VERIFICATION"
-    AgeTitle.TextColor3 = Color3.fromRGB(255, 100, 100)
-    AgeTitle.TextSize = 22
-    AgeTitle.Font = Enum.Font.GothamBold
-    AgeTitle.Parent = AgeWindow
-    
-    local AgeSubtitle = Instance.new("TextLabel")
-    AgeSubtitle.Size = UDim2.new(1, 0, 0, 40)
-    AgeSubtitle.Position = UDim2.new(0, 0, 0, 70)
-    AgeSubtitle.BackgroundTransparency = 1
-    AgeSubtitle.Text = "Answer 3 questions to prove you are 5+"
-    AgeSubtitle.TextColor3 = Color3.fromRGB(200, 200, 200)
-    AgeSubtitle.TextSize = 14
-    AgeSubtitle.Font = Enum.Font.Gotham
-    AgeSubtitle.Parent = AgeWindow
-    
-    local ContentFrame = Instance.new("Frame")
-    ContentFrame.Name = "ContentFrame"
-    ContentFrame.Size = UDim2.new(1, -20, 1, -140)
-    ContentFrame.Position = UDim2.new(0, 10, 0, 120)
-    ContentFrame.BackgroundTransparency = 1
-    ContentFrame.Parent = AgeWindow
-    
-    -- Question 1
-    local Q1Label = Instance.new("TextLabel")
-    Q1Label.Size = UDim2.new(1, 0, 0, 40)
-    Q1Label.Position = UDim2.new(0, 0, 0, 0)
-    Q1Label.BackgroundTransparency = 1
-    Q1Label.Text = "1. What is 3 + 2?"
-    Q1Label.TextColor3 = Color3.fromRGB(255, 255, 255)
-    Q1Label.TextSize = 16
-    Q1Label.Font = Enum.Font.Gotham
-    Q1Label.TextXAlignment = Enum.TextXAlignment.Left
-    Q1Label.Parent = ContentFrame
-    
-    local Q1Button1 = CreateButton(ContentFrame, "A) 4", UDim2.new(0, 0, 0, 40), function()
-        ShowNotification("❌ Wrong! Try again")
-    end)
-    
-    local Q1Button2 = CreateButton(ContentFrame, "B) 5", UDim2.new(0, 0, 0, 85), function()
-        correctAnswers = correctAnswers + 1
-        ShowNotification("✅ Correct! 3 + 2 = 5")
-        DisableButtons({Q1Button1, Q1Button2, Q1Button3})
-    end)
-    
-    local Q1Button3 = CreateButton(ContentFrame, "C) 6", UDim2.new(0, 0, 0, 130), function()
-        ShowNotification("❌ Wrong! Try again")
-    end)
-    
-    -- Question 2
-    local Q2Label = Instance.new("TextLabel")
-    Q2Label.Size = UDim2.new(1, 0, 0, 40)
-    Q2Label.Position = UDim2.new(0, 0, 0, 175)
-    Q2Label.BackgroundTransparency = 1
-    Q2Label.Text = "2. Which animal says 'meow'?"
-    Q2Label.TextColor3 = Color3.fromRGB(255, 255, 255)
-    Q2Label.TextSize = 16
-    Q2Label.Font = Enum.Font.Gotham
-    Q2Label.TextXAlignment = Enum.TextXAlignment.Left
-    Q2Label.Parent = ContentFrame
-    
-    local Q2Button1 = CreateButton(ContentFrame, "A) Dog", UDim2.new(0, 0, 0, 215), function()
-        ShowNotification("❌ Dogs say 'woof'!")
-    end)
-    
-    local Q2Button2 = CreateButton(ContentFrame, "B) Cat", UDim2.new(0, 0, 0, 260), function()
-        correctAnswers = correctAnswers + 1
-        ShowNotification("✅ Correct! Cats say 'meow'")
-        DisableButtons({Q2Button1, Q2Button2, Q2Button3})
-    end)
-    
-    local Q2Button3 = CreateButton(ContentFrame, "C) Cow", UDim2.new(0, 0, 0, 305), function()
-        ShowNotification("❌ Cows say 'moo'!")
-    end)
-    
-    -- Question 3
-    local Q3Label = Instance.new("TextLabel")
-    Q3Label.Size = UDim2.new(1, 0, 0, 40)
-    Q3Label.Position = UDim2.new(0, 0, 0, 350)
-    Q3Label.BackgroundTransparency = 1
-    Q3Label.Text = "3. What color is a banana?"
-    Q3Label.TextColor3 = Color3.fromRGB(255, 255, 255)
-    Q3Label.TextSize = 16
-    Q3Label.Font = Enum.Font.Gotham
-    Q3Label.TextXAlignment = Enum.TextXAlignment.Left
-    Q3Label.Parent = ContentFrame
-    
-    local Q3Button1 = CreateButton(ContentFrame, "A) Red", UDim2.new(0, 0, 0, 390), function()
-        ShowNotification("❌ Bananas aren't red!")
-    end)
-    
-    local Q3Button2 = CreateButton(ContentFrame, "B) Blue", UDim2.new(0, 0, 0, 435), function()
-        ShowNotification("❌ Bananas aren't blue!")
-    end)
-    
-    local Q3Button3 = CreateButton(ContentFrame, "C) Yellow", UDim2.new(0, 0, 0, 480), function()
-        correctAnswers = correctAnswers + 1
-        ShowNotification("✅ Correct! Bananas are yellow")
-        DisableButtons({Q3Button1, Q3Button2, Q3Button3})
-    end)
-    
-    -- Verify button
-    local VerifyButton = CreateButton(AgeWindow, "✅ VERIFY MY AGE", UDim2.new(0.5, -100, 0.9, -25), function()
-        if correctAnswers >= 2 then
-            ShowNotification("✅ Age Verified! You are 5+")
-            AgeWindow:Destroy()
-            task.wait(1)
+    local title = Instance.new("TextLabel")
+    title.Size = UDim2.new(1, 0, 0, 50)
+    title.Text = T.key
+    title.TextColor3 = Color3.fromRGB(255, 255, 255)
+    title.Font = Enum.Font.GothamBold
+    title.BackgroundTransparency = 1
+    title.Parent = keyWindow
+
+    local input = Instance.new("TextBox")
+    input.Size = UDim2.new(0, 250, 0, 45)
+    input.Position = UDim2.new(0.5, -125, 0.4, 0)
+    input.BackgroundColor3 = Color3.fromRGB(40, 40, 60)
+    input.PlaceholderText = "..."
+    input.Text = ""
+    input.TextColor3 = Color3.fromRGB(255, 255, 255)
+    input.Parent = keyWindow
+    Instance.new("UICorner", input).CornerRadius = UDim.new(0, 8)
+
+    local submit = Instance.new("TextButton")
+    submit.Size = UDim2.new(0, 150, 0, 40)
+    submit.Position = UDim2.new(0.5, -75, 0.75, 0)
+    submit.BackgroundColor3 = Color3.fromRGB(0, 120, 255)
+    submit.Text = T.submit
+    submit.TextColor3 = Color3.fromRGB(255, 255, 255)
+    submit.Font = Enum.Font.GothamBold
+    submit.Parent = keyWindow
+    Instance.new("UICorner", submit).CornerRadius = UDim.new(0, 8)
+
+    submit.MouseButton1Click:Connect(function()
+        if input.Text:upper() == CorrectKey then
+            keyWindow:Destroy()
+            ShowWelcome()
             ShowMainHub()
         else
-            ShowNotification("❌ Failed! You seem under 5 years old")
-            task.wait(3)
-            ScreenGui:Destroy()
+            input.Text = ""
+            input.PlaceholderText = "❌ INVALID"
         end
     end)
 end
 
--- [[ 🛠️ HELPER FUNCTIONS ]] --
-function CreateButton(parent, text, position, callback)
-    local Button = Instance.new("TextButton")
-    Button.Name = "Button_" .. text
-    Button.Size = UDim2.new(1, 0, 0, 35)
-    Button.Position = position
-    Button.BackgroundColor3 = Color3.fromRGB(60, 60, 100)
-    Button.BorderSizePixel = 0
-    Button.Text = text
-    Button.TextColor3 = Color3.fromRGB(255, 255, 255)
-    Button.TextSize = 14
-    Button.Font = Enum.Font.Gotham
-    Button.Parent = parent
-    
-    local ButtonCorner = Instance.new("UICorner")
-    ButtonCorner.CornerRadius = UDim.new(0, 8)
-    ButtonCorner.Parent = Button
-    
-    Button.MouseEnter:Connect(function()
-        TweenService:Create(Button, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(80, 80, 140)}):Play()
-    end)
-    
-    Button.MouseLeave:Connect(function()
-        TweenService:Create(Button, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(60, 60, 100)}):Play()
-    end)
-    
-    Button.MouseButton1Click:Connect(callback)
-    
-    return Button
-end
+-- [[ 🎮 MAIN HUB ]] --
+function ShowMainHub()
+    local main = CreateRoundedFrame(ScreenGui, UDim2.new(0, 350, 0, 280), UDim2.new(0.5, -175, 0.5, -140), Color3.fromRGB(25, 25, 45))
+    main.Active = true
+    main.Draggable = true
 
-function ShowNotification(message)
-    local Notification = Instance.new("Frame")
-    Notification.Name = "Notification"
-    Notification.Size = UDim2.new(0, 300, 0, 60)
-    Notification.Position = UDim2.new(0.5, -150, 0.1, 0)
-    Notification.BackgroundColor3 = Color3.fromRGB(30, 30, 60)
-    Notification.BorderSizePixel = 0
-    Notification.ZIndex = 100
-    Notification.Parent = ScreenGui
-    
-    local UICorner = Instance.new("UICorner")
-    UICorner.CornerRadius = UDim.new(0, 8)
-    UICorner.Parent = Notification
-    
-    local NotifText = Instance.new("TextLabel")
-    NotifText.Size = UDim2.new(1, -20, 1, -20)
-    NotifText.Position = UDim2.new(0, 10, 0, 10)
-    NotifText.BackgroundTransparency = 1
-    NotifText.Text = message
-    NotifText.TextColor3 = Color3.fromRGB(255, 255, 255)
-    NotifText.TextSize = 14
-    NotifText.Font = Enum.Font.Gotham
-    NotifText.TextWrapped = true
-    NotifText.ZIndex = 101
-    NotifText.Parent = Notification
-    
-    task.spawn(function()
-        task.wait(2)
-        Notification:Destroy()
+    local title = Instance.new("TextLabel")
+    title.Size = UDim2.new(1, 0, 0, 50)
+    title.Text = T.title
+    title.TextColor3 = Color3.fromRGB(0, 150, 255)
+    title.Font = Enum.Font.GothamBold
+    title.BackgroundTransparency = 1
+    title.Parent = main
+
+    -- Toggle Button
+    local jumpBtn = Instance.new("TextButton")
+    jumpBtn.Size = UDim2.new(1, -40, 0, 50)
+    jumpBtn.Position = UDim2.new(0, 20, 0, 70)
+    jumpBtn.BackgroundColor3 = Color3.fromRGB(45, 45, 75)
+    jumpBtn.Text = T.jump .. ": OFF"
+    jumpBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+    jumpBtn.Font = Enum.Font.GothamBold
+    jumpBtn.Parent = main
+    Instance.new("UICorner", jumpBtn).CornerRadius = UDim.new(0, 10)
+
+    jumpBtn.MouseButton1Click:Connect(function()
+        InfiniteJumpEnabled = not InfiniteJumpEnabled
+        jumpBtn.Text = T.jump .. ": " .. (InfiniteJumpEnabled and "ON" or "OFF")
+        jumpBtn.BackgroundColor3 = InfiniteJumpEnabled and Color3.fromRGB(0, 180, 100) or Color3.fromRGB(45, 45, 75)
+    end)
+
+    -- Language Selector Button
+    local langBtn = Instance.new("TextButton")
+    langBtn.Size = UDim2.new(1, -40, 0, 50)
+    langBtn.Position = UDim2.new(0, 20, 0, 130)
+    langBtn.BackgroundColor3 = Color3.fromRGB(60, 60, 90)
+    langBtn.Text = "🌐 " .. T.lang
+    langBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+    langBtn.Font = Enum.Font.GothamBold
+    langBtn.Parent = main
+    Instance.new("UICorner", langBtn).CornerRadius = UDim.new(0, 10)
+
+    langBtn.MouseButton1Click:Connect(function()
+        ShowLanguageMenu(main)
     end)
 end
 
-function DisableButtons(buttons)
-    for _, button in pairs(buttons) do
-        button.BackgroundColor3 = Color3.fromRGB(40, 40, 70)
-        button.TextColor3 = Color3.fromRGB(150, 150, 150)
-        button.AutoButtonColor = false
+-- [[ 🌐 MANUAL LANGUAGE MENU ]] --
+function ShowLanguageMenu(parentHub)
+    local menu = CreateRoundedFrame(parentHub, UDim2.new(1, 0, 1, 0), UDim2.new(0, 0, 0, 0), Color3.fromRGB(15, 15, 30))
+    
+    local scroll = Instance.new("ScrollingFrame")
+    scroll.Size = UDim2.new(1, -20, 0.8, 0)
+    scroll.Position = UDim2.new(0, 10, 0.1, 0)
+    scroll.BackgroundTransparency = 1
+    scroll.CanvasSize = UDim2.new(0, 0, 3, 0)
+    scroll.ScrollBarThickness = 4
+    scroll.Parent = menu
+
+    local list = Instance.new("UIListLayout")
+    list.Padding = UDim.new(0, 5)
+    list.Parent = scroll
+
+    for code, data in pairs(Translations) do
+        local b = Instance.new("TextButton")
+        b.Size = UDim2.new(1, 0, 0, 35)
+        b.BackgroundColor3 = Color3.fromRGB(40, 40, 70)
+        b.Text = code:upper()
+        b.TextColor3 = Color3.fromRGB(255, 255, 255)
+        b.Font = Enum.Font.Gotham
+        b.Parent = scroll
+        Instance.new("UICorner", b)
+        
+        b.MouseButton1Click:Connect(function()
+            T = Translations[code]
+            CurrentLocale = code
+            menu:Destroy()
+            parentHub:Destroy()
+            ShowMainHub() -- Refresh UI
+        end)
     end
+
+    local close = Instance.new("TextButton")
+    close.Size = UDim2.new(0, 100, 0, 30)
+    close.Position = UDim2.new(0.5, -50, 0.9, 0)
+    close.Text = "CLOSE"
+    close.Parent = menu
+    close.MouseButton1Click:Connect(function() menu:Destroy() end)
 end
 
--- [[ 🛡️ INFINITE JUMP SYSTEM ]] --
-local InfiniteJumpEnabled = false
-local JUMP_POWER = 100
-
+-- [[ 🎯 PHYSICS LOGIC ]] --
 UIS.JumpRequest:Connect(function()
     if InfiniteJumpEnabled then
         local char = localPlayer.Character
-        if char then
-            local hrp = char:FindFirstChild("HumanoidRootPart")
-            if hrp then
-                hrp.Velocity = Vector3.new(hrp.Velocity.X, JUMP_POWER, hrp.Velocity.Z)
-            end
+        local hrp = char and char:FindFirstChild("HumanoidRootPart")
+        if hrp then
+            hrp.Velocity = Vector3.new(hrp.Velocity.X, JUMP_POWER, hrp.Velocity.Z)
         end
     end
 end)
 
--- Mobile touch support
-UIS.TouchTap:Connect(function(_, processed)
-    if not processed and InfiniteJumpEnabled then
-        local char = localPlayer.Character
-        if char then
-            local hrp = char:FindFirstChild("HumanoidRootPart")
-            if hrp then
-                hrp.Velocity = Vector3.new(hrp.Velocity.X, JUMP_POWER, hrp.Velocity.Z)
-            end
-        end
-    end
-end)
+-- START
+StartLoading()
 
--- Auto-jump for Delta
-RunService.Heartbeat:Connect(function()
-    if InfiniteJumpEnabled then
-        local char = localPlayer.Character
-        if char then
-            local humanoid = char:FindFirstChildOfClass("Humanoid")
-            if humanoid and humanoid.FloorMaterial ~= Enum.Material.Air then
-                local hrp = char:FindFirstChild("HumanoidRootPart")
-                if hrp then
-                    hrp.Velocity = Vector3.new(hrp.Velocity.X, JUMP_POWER, hrp.Velocity.Z)
-                    task.wait(0.15)
-                end
-            end
-        end
-    end
-end)
-
--- [[ 🎮 MAIN HUB FUNCTION ]] --
-function ShowMainHub()
-    local MainWindow = Instance.new("Frame")
-    MainWindow.Name = "MainHub"
-    MainWindow.Size = UDim2.new(0, 400, 0, 450)
-    MainWindow.Position = UDim2.new(0.5, -200, 0.5, -225)
-    MainWindow.BackgroundColor3 = Color3.fromRGB(20, 20, 40)
-    MainWindow.BorderSizePixel = 0
-    MainWindow.Parent = ScreenGui
-    
-    local MainCorner = Instance.new("UICorner")
-    MainCorner.CornerRadius = UDim.new(0, 12)
-    MainCorner.Parent = MainWindow
-    
-    -- Title
-    local MainTitle = Instance.new("TextLabel")
-    MainTitle.Size = UDim2.new(1, 0, 0, 60)
-    MainTitle.Position = UDim2.new(0, 0, 0, 10)
-    MainTitle.BackgroundTransparency = 1
-    MainTitle.Text = "🎮 DELTA HUB"
-    MainTitle.TextColor3 = Color3.fromRGB(200, 200, 255)
-    MainTitle.TextSize = 24
-    MainTitle.Font = Enum.Font.GothamBold
-    MainTitle.Parent = MainWindow
-    
-    local StatusLabel = Instance.new("TextLabel")
-    StatusLabel.Size = UDim2.new(1, 0, 0, 30)
-    StatusLabel.Position = UDim2.new(0, 0, 0, 70)
-    StatusLabel.BackgroundTransparency = 1
-    StatusLabel.Text = "✅ Age Verified | ✅ Key Verified"
-    StatusLabel.TextColor3 = Color3.fromRGB(0, 255, 100)
-    StatusLabel.TextSize = 14
-    StatusLabel.Font = Enum.Font.Gotham
-    StatusLabel.Parent = MainWindow
-    
-    local ContentFrame = Instance.new("Frame")
-    ContentFrame.Name = "MainContent"
-    ContentFrame.Size = UDim2.new(1, -20, 1, -120)
-    ContentFrame.Position = UDim2.new(0, 10, 0, 110)
-    ContentFrame.BackgroundTransparency = 1
-    ContentFrame.Parent = MainWindow
-    
-    -- INFINITE JUMP TOGGLE
-    local ToggleFrame = Instance.new("Frame")
-    ToggleFrame.Size = UDim2.new(1, 0, 0, 50)
-    ToggleFrame.BackgroundTransparency = 1
-    ToggleFrame.Parent = ContentFrame
-    
-    local ToggleLabel = Instance.new("TextLabel")
-    ToggleLabel.Size = UDim2.new(0.7, 0, 1, 0)
-    ToggleLabel.BackgroundTransparency = 1
-    ToggleLabel.Text = "🔥 BRAINROT INFINITE JUMP"
-    ToggleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
-    ToggleLabel.TextSize = 16
-    ToggleLabel.Font = Enum.Font.Gotham
-    ToggleLabel.TextXAlignment = Enum.TextXAlignment.Left
-    ToggleLabel.Parent = ToggleFrame
-    
-    local ToggleButton = Instance.new("TextButton")
-    ToggleButton.Name = "ToggleJump"
-    ToggleButton.Size = UDim2.new(0, 60, 0, 30)
-    ToggleButton.Position = UDim2.new(1, -65, 0.5, -15)
-    ToggleButton.BackgroundColor3 = Color3.fromRGB(100, 100, 100)
-    ToggleButton.BorderSizePixel = 0
-    ToggleButton.Text = "OFF"
-    ToggleButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-    ToggleButton.TextSize = 12
-    ToggleButton.Font = Enum.Font.GothamBold
-    ToggleButton.Parent = ToggleFrame
-    
-    local ToggleCorner = Instance.new("UICorner")
-    ToggleCorner.CornerRadius = UDim.new(0, 8)
-    ToggleCorner.Parent = ToggleButton
-    
-    ToggleButton.Mou
