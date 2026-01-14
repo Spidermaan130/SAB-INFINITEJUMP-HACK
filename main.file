@@ -1,5 +1,5 @@
--- [[ 🎀 GHALOULIX9'S ULTIMATE HUB - DELTA EDITION 🎀 ]] --
--- 🌍 15+ LANGUAGES | 👤 USER DETECTION | 🎯 INFINITE JUMP
+-- [[ 🎀 GHALOULIX9'S GLOBAL HUB - DRAGGABLE & STYLIZED 🎀 ]] --
+-- ✨ SPLASH SCREEN | 🌍 ALL LANGUAGES | 👤 AVATAR | 🎯 JUMP: 65
 
 repeat task.wait() until game:IsLoaded()
 
@@ -9,7 +9,7 @@ local UIS = game:GetService("UserInputService")
 local LocService = game:GetService("LocalizationService")
 local TweenService = game:GetService("TweenService")
 
--- [[ 🌍 COMPREHENSIVE TRANSLATION DATABASE ]] --
+-- [[ 🌍 TRANSLATION DATABASE ]] --
 local Translations = {
     ["en-us"] = {title = "GHALOULIX9 HUB", loading = "LOADING...", key = "ENTER KEY", jump = "INFINITE JUMP", lang = "LANGUAGE", welcome = "Welcome, ", submit = "SUBMIT"},
     ["ar-001"] = {title = "مركز غلو ليكس 9", loading = "جاري التحميل...", key = "أدخل المفتاح", jump = "قفزة لانهائية", lang = "اللغة", welcome = "مرحباً، ", submit = "إرسال"},
@@ -22,93 +22,109 @@ local Translations = {
     ["zh-cn"] = {title = "GHALOULIX9 中心", loading = "加载中...", key = "输入密钥", jump = "无限跳跃", lang = "语言", welcome = "欢迎, ", submit = "提交"},
     ["ja-jp"] = {title = "GHALOULIX9 ハブ", loading = "読み込み中...", key = "キーを入力", jump = "無限ジャンプ", lang = "言語", welcome = "ようこそ、 ", submit = "送信"},
     ["ko-kr"] = {title = "GHALOULIX9 허브", loading = "로딩 중...", key = "키 입력", jump = "무한 점프", lang = "언어", welcome = "환영합니다, ", submit = "제출"},
-    ["tr-tr"] = {title = "GHALOULIX9 HUB", loading = "YÜKLENİYOR...", key = "ANAHTARI GİR", jump = "SONSUZ ZIPLAMA", lang = "DİL", welcome = "Hoş geldin, ", submit = "GÖNDER"},
-    ["pl-pl"] = {title = "GHALOULIX9 HUB", loading = "ŁADOWANIE...", key = "WPISZ KLUCZ", jump = "NIESKOŃCZONY SKOK", lang = "JĘZYK", welcome = "Witaj, ", submit = "WYŚLIJ"},
-    ["th-th"] = {title = "GHALOULIX9 HUB", loading = "กำลังโหลด...", key = "ใส่รหัส", jump = "กระโดดไม่จำกัด", lang = "ภาษา", welcome = "ยินดีต้อนรับ, ", submit = "ตกลง"},
-    ["vi-vn"] = {title = "GHALOULIX9 HUB", loading = "ĐANG TẢI...", key = "NHẬP KHÓA", jump = "NHẢY VÔ HẠN", lang = "NGÔN NGỮ", welcome = "Chào mừng, ", submit = "XÁC NHẬN"}
+    ["id-id"] = {title = "GHALOULIX9 HUB", loading = "MEMUAT...", key = "MASUKKAN KUNCI", jump = "LOMPATAN TANPA BATAS", lang = "BAHASA", welcome = "Selamat datang, ", submit = "KIRIM"}
 }
 
--- Detect System Language
 local CurrentLocale = LocService.RobloxLocaleId:lower()
 local T = Translations[CurrentLocale] or Translations["en-us"]
 
 -- [[ ⚙️ SETTINGS ]] --
 local CorrectKey = "GHALOULIX9"
 local InfiniteJumpEnabled = false
-local JUMP_POWER = 90
+local JUMP_POWER = 65 
 
 -- [[ 🎨 GUI ROOT ]] --
 local ScreenGui = Instance.new("ScreenGui")
-ScreenGui.Name = "Ghaloulix9Final"
+ScreenGui.Name = "Ghaloulix9_Final"
 ScreenGui.Parent = game.CoreGui
 ScreenGui.ResetOnSpawn = false
 
--- [[ 🛠️ UTILITY FUNCTIONS ]] --
-function CreateRoundedFrame(parent, size, pos, color)
-    local f = Instance.new("Frame")
-    f.Size = size
-    f.Position = pos
-    f.BackgroundColor3 = color
-    f.BorderSizePixel = 0
-    f.Parent = parent
-    local c = Instance.new("UICorner")
-    c.CornerRadius = UDim.new(0, 10)
-    c.Parent = f
-    return f
-end
-
-function ShowWelcome()
-    local welcomeFrame = CreateRoundedFrame(ScreenGui, UDim2.new(0, 280, 0, 70), UDim2.new(1, 10, 0.1, 0), Color3.fromRGB(30, 30, 55))
-    
-    local img = Instance.new("ImageLabel")
-    img.Size = UDim2.new(0, 50, 0, 50)
-    img.Position = UDim2.new(0, 10, 0.5, -25)
-    img.Image = "rbxthumb://type=AvatarHeadShot&id=" .. localPlayer.UserId .. "&w=150&h=150"
-    img.BackgroundTransparency = 1
-    img.Parent = welcomeFrame
-    Instance.new("UICorner", img).CornerRadius = UDim.new(1, 0)
-
-    local txt = Instance.new("TextLabel")
-    txt.Size = UDim2.new(1, -70, 1, 0)
-    txt.Position = UDim2.new(0, 65, 0, 0)
-    txt.BackgroundTransparency = 1
-    txt.Text = T.welcome .. localPlayer.Name .. "!"
-    txt.TextColor3 = Color3.fromRGB(255, 255, 255)
-    txt.Font = Enum.Font.GothamBold
-    txt.TextSize = 14
-    txt.TextWrapped = true
-    txt.TextXAlignment = (CurrentLocale:find("ar") and Enum.TextXAlignment.Right or Enum.TextXAlignment.Left)
-    txt.Parent = welcomeFrame
-
-    welcomeFrame:TweenPosition(UDim2.new(1, -290, 0.1, 0), "Out", "Back", 0.6, true)
-    task.delay(4, function()
-        welcomeFrame:TweenPosition(UDim2.new(1, 10, 0.1, 0), "In", "Linear", 0.5, true)
-        task.wait(0.5)
-        welcomeFrame:Destroy()
+-- [[ 🛠️ UTILS ]] --
+local function MakeDraggable(topbar, obj)
+    local dragging, inputStart, startPos
+    topbar.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+            dragging = true inputStart = input.Position startPos = obj.Position
+            input.Changed:Connect(function() if input.UserInputState == Enum.UserInputState.End then dragging = false end end)
+        end
+    end)
+    UIS.InputChanged:Connect(function(input)
+        if dragging and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
+            local delta = input.Position - inputStart
+            obj.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+        end
     end)
 end
 
--- [[ ⏳ 20-SECOND LOADING SYSTEM ]] --
+local function ApplyStyle(obj, color, radius)
+    obj.BackgroundColor3 = color
+    obj.BorderSizePixel = 0
+    local c = Instance.new("UICorner")
+    c.CornerRadius = UDim.new(0, radius or 12)
+    c.Parent = obj
+end
+
+-- [[ ✨ 1. SPLASH SCREEN (FADE IN/OUT) ]] --
+function ShowSplashScreen()
+    local splashFrame = Instance.new("Frame")
+    splashFrame.Size = UDim2.new(1, 0, 1, 0)
+    splashFrame.BackgroundColor3 = Color3.fromRGB(10, 10, 15)
+    splashFrame.Parent = ScreenGui
+    
+    local text = Instance.new("TextLabel")
+    text.Size = UDim2.new(1, 0, 0, 100)
+    text.Position = UDim2.new(0, 0, 0.5, -50)
+    text.Text = "GHALOULIX9 BEST HACK"
+    text.TextColor3 = Color3.fromRGB(0, 150, 255)
+    text.Font = Enum.Font.GothamBold
+    text.TextSize = 35
+    text.TextTransparency = 1 -- Start invisible
+    text.BackgroundTransparency = 1
+    text.Parent = splashFrame
+
+    -- Fade In
+    TweenService:Create(text, TweenInfo.new(1.5), {TextTransparency = 0}):Play()
+    task.wait(2.5)
+    -- Fade Out
+    TweenService:Create(text, TweenInfo.new(1.5), {TextTransparency = 1}):Play()
+    TweenService:Create(splashFrame, TweenInfo.new(1.5), {BackgroundTransparency = 1}):Play()
+    task.wait(1.5)
+    
+    splashFrame:Destroy()
+    StartLoading() -- Move to next step
+end
+
+-- [[ ⏳ 2. LOADING SCREEN (20 SECONDS) ]] --
 function StartLoading()
     local loadFrame = Instance.new("Frame")
-    loadFrame.Size = UDim2.new(1, 0, 1, 0)
-    loadFrame.BackgroundColor3 = Color3.fromRGB(10, 10, 20)
+    loadFrame.Size = UDim2.new(0, 320, 0, 150)
+    loadFrame.Position = UDim2.new(0.5, -160, 0.5, -75)
+    ApplyStyle(loadFrame, Color3.fromRGB(15, 15, 25), 15)
     loadFrame.Parent = ScreenGui
-    
-    local barContainer = CreateRoundedFrame(loadFrame, UDim2.new(0, 300, 0, 15), UDim2.new(0.5, -150, 0.5, 0), Color3.fromRGB(40, 40, 50))
-    local bar = CreateRoundedFrame(barContainer, UDim2.new(0, 0, 1, 0), UDim2.new(0, 0, 0, 0), Color3.fromRGB(0, 150, 255))
-    
+    MakeDraggable(loadFrame, loadFrame)
+
+    local barBack = Instance.new("Frame")
+    barBack.Size = UDim2.new(0, 260, 0, 10)
+    barBack.Position = UDim2.new(0.5, -130, 0.6, 0)
+    ApplyStyle(barBack, Color3.fromRGB(40, 40, 55), 5)
+    barBack.Parent = loadFrame
+
+    local bar = Instance.new("Frame")
+    bar.Size = UDim2.new(0, 0, 1, 0)
+    ApplyStyle(bar, Color3.fromRGB(0, 150, 255), 5)
+    bar.Parent = barBack
+
     local status = Instance.new("TextLabel")
-    status.Size = UDim2.new(1, 0, 0, 40)
-    status.Position = UDim2.new(0, 0, 0.4, 0)
+    status.Size = UDim2.new(1, 0, 0, 30)
+    status.Position = UDim2.new(0, 0, 0.4, -20)
     status.Text = T.loading
-    status.TextColor3 = Color3.fromRGB(200, 200, 255)
+    status.TextColor3 = Color3.fromRGB(255, 255, 255)
     status.Font = Enum.Font.GothamBold
     status.BackgroundTransparency = 1
     status.Parent = loadFrame
 
     for i = 1, 100 do
-        task.wait(0.2) -- Total 20 Seconds
+        task.wait(0.2)
         bar.Size = UDim2.new(i/100, 0, 1, 0)
         status.Text = T.loading .. " " .. i .. "%"
     end
@@ -116,55 +132,80 @@ function StartLoading()
     ShowKeySystem()
 end
 
--- [[ 🔑 KEY SYSTEM ]] --
+-- [[ 🔑 3. KEY SYSTEM ]] --
 function ShowKeySystem()
-    local keyWindow = CreateRoundedFrame(ScreenGui, UDim2.new(0, 350, 0, 220), UDim2.new(0.5, -175, 0.5, -110), Color3.fromRGB(20, 20, 35))
-    
-    local title = Instance.new("TextLabel")
-    title.Size = UDim2.new(1, 0, 0, 50)
-    title.Text = T.key
-    title.TextColor3 = Color3.fromRGB(255, 255, 255)
-    title.Font = Enum.Font.GothamBold
-    title.BackgroundTransparency = 1
-    title.Parent = keyWindow
+    local keyWin = Instance.new("Frame")
+    keyWin.Size = UDim2.new(0, 350, 0, 220)
+    keyWin.Position = UDim2.new(0.5, -175, 0.5, -110)
+    ApplyStyle(keyWin, Color3.fromRGB(20, 20, 35), 15)
+    keyWin.Parent = ScreenGui
+    MakeDraggable(keyWin, keyWin)
 
     local input = Instance.new("TextBox")
-    input.Size = UDim2.new(0, 250, 0, 45)
-    input.Position = UDim2.new(0.5, -125, 0.4, 0)
-    input.BackgroundColor3 = Color3.fromRGB(40, 40, 60)
-    input.PlaceholderText = "..."
-    input.Text = ""
+    input.Size = UDim2.new(0, 260, 0, 45)
+    input.Position = UDim2.new(0.5, -130, 0.35, 0)
+    input.PlaceholderText = T.key
+    ApplyStyle(input, Color3.fromRGB(40, 40, 60), 10)
     input.TextColor3 = Color3.fromRGB(255, 255, 255)
-    input.Parent = keyWindow
-    Instance.new("UICorner", input).CornerRadius = UDim.new(0, 8)
+    input.Parent = keyWin
 
-    local submit = Instance.new("TextButton")
-    submit.Size = UDim2.new(0, 150, 0, 40)
-    submit.Position = UDim2.new(0.5, -75, 0.75, 0)
-    submit.BackgroundColor3 = Color3.fromRGB(0, 120, 255)
-    submit.Text = T.submit
-    submit.TextColor3 = Color3.fromRGB(255, 255, 255)
-    submit.Font = Enum.Font.GothamBold
-    submit.Parent = keyWindow
-    Instance.new("UICorner", submit).CornerRadius = UDim.new(0, 8)
+    local sub = Instance.new("TextButton")
+    sub.Size = UDim2.new(0, 150, 0, 45)
+    sub.Position = UDim2.new(0.5, -75, 0.7, 5)
+    sub.Text = T.submit
+    sub.TextColor3 = Color3.fromRGB(255, 255, 255)
+    sub.Font = Enum.Font.GothamBold
+    ApplyStyle(sub, Color3.fromRGB(0, 120, 255), 10)
+    sub.Parent = keyWin
 
-    submit.MouseButton1Click:Connect(function()
+    sub.MouseButton1Click:Connect(function()
         if input.Text:upper() == CorrectKey then
-            keyWindow:Destroy()
+            keyWin:Destroy()
             ShowWelcome()
             ShowMainHub()
-        else
-            input.Text = ""
-            input.PlaceholderText = "❌ INVALID"
         end
     end)
 end
 
--- [[ 🎮 MAIN HUB ]] --
+-- [[ 👤 4. WELCOME NOTIF ]] --
+function ShowWelcome()
+    local welcome = Instance.new("Frame")
+    welcome.Size = UDim2.new(0, 280, 0, 70)
+    welcome.Position = UDim2.new(1, 10, 0.15, 0)
+    ApplyStyle(welcome, Color3.fromRGB(30, 30, 50), 12)
+    welcome.Parent = ScreenGui
+
+    local img = Instance.new("ImageLabel")
+    img.Size = UDim2.new(0, 50, 0, 50)
+    img.Position = UDim2.new(0, 10, 0.5, -25)
+    img.Image = "rbxthumb://type=AvatarHeadShot&id=" .. localPlayer.UserId .. "&w=150&h=150"
+    img.BackgroundTransparency = 1
+    ApplyStyle(img, Color3.fromRGB(0,0,0), 25)
+    img.Parent = welcome
+
+    local txt = Instance.new("TextLabel")
+    txt.Size = UDim2.new(1, -70, 1, 0)
+    txt.Position = UDim2.new(0, 65, 0, 0)
+    txt.Text = T.welcome .. localPlayer.Name .. "!"
+    txt.TextColor3 = Color3.fromRGB(255, 255, 255)
+    txt.Font = Enum.Font.GothamBold
+    txt.BackgroundTransparency = 1
+    txt.Parent = welcome
+
+    welcome:TweenPosition(UDim2.new(1, -290, 0.15, 0), "Out", "Back", 0.5, true)
+    task.delay(4, function()
+        welcome:TweenPosition(UDim2.new(1, 10, 0.15, 0), "In", "Linear", 0.5, true)
+    end)
+end
+
+-- [[ 🎮 5. MAIN HUB ]] --
 function ShowMainHub()
-    local main = CreateRoundedFrame(ScreenGui, UDim2.new(0, 350, 0, 280), UDim2.new(0.5, -175, 0.5, -140), Color3.fromRGB(25, 25, 45))
-    main.Active = true
-    main.Draggable = true
+    local main = Instance.new("Frame")
+    main.Size = UDim2.new(0, 350, 0, 280)
+    main.Position = UDim2.new(0.5, -175, 0.5, -140)
+    ApplyStyle(main, Color3.fromRGB(20, 20, 30), 15)
+    main.Parent = ScreenGui
+    MakeDraggable(main, main)
 
     local title = Instance.new("TextLabel")
     title.Size = UDim2.new(1, 0, 0, 50)
@@ -174,83 +215,74 @@ function ShowMainHub()
     title.BackgroundTransparency = 1
     title.Parent = main
 
-    -- Toggle Button
     local jumpBtn = Instance.new("TextButton")
     jumpBtn.Size = UDim2.new(1, -40, 0, 50)
     jumpBtn.Position = UDim2.new(0, 20, 0, 70)
-    jumpBtn.BackgroundColor3 = Color3.fromRGB(45, 45, 75)
     jumpBtn.Text = T.jump .. ": OFF"
     jumpBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
     jumpBtn.Font = Enum.Font.GothamBold
+    ApplyStyle(jumpBtn, Color3.fromRGB(45, 45, 70), 10)
     jumpBtn.Parent = main
-    Instance.new("UICorner", jumpBtn).CornerRadius = UDim.new(0, 10)
 
     jumpBtn.MouseButton1Click:Connect(function()
         InfiniteJumpEnabled = not InfiniteJumpEnabled
         jumpBtn.Text = T.jump .. ": " .. (InfiniteJumpEnabled and "ON" or "OFF")
-        jumpBtn.BackgroundColor3 = InfiniteJumpEnabled and Color3.fromRGB(0, 180, 100) or Color3.fromRGB(45, 45, 75)
+        jumpBtn.BackgroundColor3 = InfiniteJumpEnabled and Color3.fromRGB(0, 180, 100) or Color3.fromRGB(45, 45, 70)
     end)
 
-    -- Language Selector Button
-    local langBtn = Instance.new("TextButton")
-    langBtn.Size = UDim2.new(1, -40, 0, 50)
-    langBtn.Position = UDim2.new(0, 20, 0, 130)
-    langBtn.BackgroundColor3 = Color3.fromRGB(60, 60, 90)
-    langBtn.Text = "🌐 " .. T.lang
-    langBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
-    langBtn.Font = Enum.Font.GothamBold
-    langBtn.Parent = main
-    Instance.new("UICorner", langBtn).CornerRadius = UDim.new(0, 10)
-
-    langBtn.MouseButton1Click:Connect(function()
-        ShowLanguageMenu(main)
+    local lBtn = Instance.new("TextButton")
+    lBtn.Size = UDim2.new(1, -40, 0, 50)
+    lBtn.Position = UDim2.new(0, 20, 0, 130)
+    lBtn.Text = "🌐 " .. T.lang
+    lBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+    ApplyStyle(lBtn, Color3.fromRGB(60, 60, 90), 10)
+    lBtn.Parent = main
+    
+    lBtn.MouseButton1Click:Connect(function()
+        ShowLangMenu(main)
     end)
 end
 
--- [[ 🌐 MANUAL LANGUAGE MENU ]] --
-function ShowLanguageMenu(parentHub)
-    local menu = CreateRoundedFrame(parentHub, UDim2.new(1, 0, 1, 0), UDim2.new(0, 0, 0, 0), Color3.fromRGB(15, 15, 30))
-    
+function ShowLangMenu(parent)
+    local menu = Instance.new("Frame")
+    menu.Size = UDim2.new(1, 0, 1, 0)
+    ApplyStyle(menu, Color3.fromRGB(15, 15, 25), 15)
+    menu.Parent = parent
+
     local scroll = Instance.new("ScrollingFrame")
     scroll.Size = UDim2.new(1, -20, 0.8, 0)
-    scroll.Position = UDim2.new(0, 10, 0.1, 0)
+    scroll.Position = UDim2.new(0, 10, 0.05, 0)
     scroll.BackgroundTransparency = 1
-    scroll.CanvasSize = UDim2.new(0, 0, 3, 0)
-    scroll.ScrollBarThickness = 4
+    scroll.CanvasSize = UDim2.new(0, 0, 4, 0)
     scroll.Parent = menu
 
     local list = Instance.new("UIListLayout")
     list.Padding = UDim.new(0, 5)
     list.Parent = scroll
 
-    for code, data in pairs(Translations) do
+    for code, _ in pairs(Translations) do
         local b = Instance.new("TextButton")
         b.Size = UDim2.new(1, 0, 0, 35)
-        b.BackgroundColor3 = Color3.fromRGB(40, 40, 70)
         b.Text = code:upper()
         b.TextColor3 = Color3.fromRGB(255, 255, 255)
-        b.Font = Enum.Font.Gotham
+        ApplyStyle(b, Color3.fromRGB(40, 40, 70), 8)
         b.Parent = scroll
-        Instance.new("UICorner", b)
-        
         b.MouseButton1Click:Connect(function()
             T = Translations[code]
-            CurrentLocale = code
-            menu:Destroy()
-            parentHub:Destroy()
-            ShowMainHub() -- Refresh UI
+            menu:Destroy() parent:Destroy() ShowMainHub()
         end)
     end
-
+    
     local close = Instance.new("TextButton")
     close.Size = UDim2.new(0, 100, 0, 30)
     close.Position = UDim2.new(0.5, -50, 0.9, 0)
     close.Text = "CLOSE"
+    ApplyStyle(close, Color3.fromRGB(200, 50, 50), 5)
     close.Parent = menu
     close.MouseButton1Click:Connect(function() menu:Destroy() end)
 end
 
--- [[ 🎯 PHYSICS LOGIC ]] --
+-- [[ 🎯 JUMP PHYSICS ]] --
 UIS.JumpRequest:Connect(function()
     if InfiniteJumpEnabled then
         local char = localPlayer.Character
@@ -261,6 +293,5 @@ UIS.JumpRequest:Connect(function()
     end
 end)
 
--- START
-StartLoading()
-
+-- Launch
+ShowSplashScreen()
