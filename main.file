@@ -1,5 +1,5 @@
--- [[ 🎀 GHALOULIX9'S GLOBAL HUB - PRO EDITION 🎀 ]] --
--- 🔴 DARK RED SPLASH | 💨 NO BACKGROUND | 🎯 JUMP POWER: 32
+-- [[ 🎀 GHALOULIX9'S BEST HACKS - FINAL VERSION 🎀 ]] --
+-- 🎨 RAINBOW LOADING | 🔇 GAME MUTE | 🔴 DARK RED SPLASH | 🎯 JUMP: 55
 
 repeat task.wait() until game:IsLoaded()
 
@@ -9,21 +9,18 @@ local UIS = game:GetService("UserInputService")
 local LocService = game:GetService("LocalizationService")
 local TweenService = game:GetService("TweenService")
 
--- [[ 🌍 FULL LANGUAGE DATABASE ]] --
+-- [[ 🌍 TRANSLATIONS ]] --
 local Translations = {
-    ["en-us"] = {title = "GHALOULIX9 HUB", loading = "LOADING...", key = "ENTER KEY", jump = "INFINITE JUMP", lang = "LANGUAGE", welcome = "Welcome, ", submit = "SUBMIT"},
-    ["ar-001"] = {title = "مركز غلو ليكس 9", loading = "جاري التحميل...", key = "أدخل المفتاح", jump = "قفزة لانهائية", lang = "اللغة", welcome = "مرحباً، ", submit = "إرسال"},
-    ["fr-fr"] = {title = "GHALOULIX9 HUB", loading = "CHARGEMENT...", key = "ENTRER LA CLÉ", jump = "SAUT INFINI", lang = "LANGUE", welcome = "Bienvenue, ", submit = "VALIDER"},
-    ["es-es"] = {title = "GHALOULIX9 HUB", loading = "CARGANDO...", key = "INGRESAR CLAVE", jump = "SALTO INFINITO", lang = "IDIOMA", welcome = "Bienvenido, ", submit = "ENVIAR"},
-    ["pt-br"] = {title = "GHALOULIX9 HUB", loading = "CARREGANDO...", key = "INSERIR CHAVE", jump = "PULO INFINITO", lang = "IDIOMA", welcome = "Bem-vindo, ", submit = "ENVIAR"},
-    ["de-de"] = {title = "GHALOULIX9 HUB", loading = "LADEN...", key = "SCHLÜSSEL EINGEBEN", jump = "UNENDLICHER SPRUNG", lang = "SPRACHE", welcome = "Willkommen, ", submit = "BESTÄTIGEN"},
-    ["it-it"] = {title = "GHALOULIX9 HUB", loading = "CARICAMENTO...", key = "INSERISCI CHIAVE", jump = "SALTO INFINITO", lang = "LINGUA", welcome = "Benvenuto, ", submit = "INVIA"},
-    ["ru-ru"] = {title = "GHALOULIX9 HUB", loading = "ЗАГРУЗКА...", key = "ВВЕДИТЕ КЛЮЧ", jump = "БЕСКОНЕЧНЫЙ ПРЫЖОК", lang = "ЯЗЫК", welcome = "Добро пожаловать, ", submit = "ОТПРАВИТЬ"},
-    ["zh-cn"] = {title = "GHALOULIX9 中心", loading = "加载中...", key = "输入密钥", jump = "无限跳跃", lang = "语言", welcome = "欢迎, ", submit = "提交"},
-    ["ja-jp"] = {title = "GHALOULIX9 ハブ", loading = "読み込み中...", key = "キーを入力", jump = "無限ジャンプ", lang = "言語", welcome = "ようこそ、 ", submit = "送信"},
-    ["ko-kr"] = {title = "GHALOULIX9 허브", loading = "로딩 중...", key = "키 입력", jump = "무한 점프", lang = "언어", welcome = "환영합니다, ", submit = "제출"},
-    ["id-id"] = {title = "GHALOULIX9 HUB", loading = "MEMUAT...", key = "MASUKKAN KUNCI", jump = "LOMPATAN TANPA BATAS", lang = "BAHASA", welcome = "Selamat datang, ", submit = "KIRIM"},
-    ["tr-tr"] = {title = "GHALOULIX9 HUB", loading = "YÜKLENİYOR...", key = "ANAHTARI GİR", jump = "SONSUZ ZIPLAMA", lang = "DİL", welcome = "Hoş geldin, ", submit = "GÖNDER"}
+    ["en-us"] = {
+        warn = "WARNING ⚠️: THIS INFINITE JUMP SCRIPT IS NOT CONFIRMED YET BUT IT IS SAFE BUT DON'T USE IT TOO MUCH, GOOD LUCK",
+        title = "GHALOULIX9 BEST HACKS", loading = "LOADING", key = "ENTER KEY", jump = "INFINITE JUMP", lang = "LANGUAGE", welcome = "Welcome, ", submit = "SUBMIT",
+        steps = {"Initializing System", "Muting Game Audio", "Loading Dark Red UI", "Verifying Script Key", "Injecting Infinite Jump", "Starting GHALOULIX9 Hub"}
+    },
+    ["ar-001"] = {
+        warn = "تحذير ⚠️: سكربت القفز اللانهائي هذا لم يتم تأكيده بعد ولكنه آمن، لكن لا تستخدمه كثيراً، حظاً موفقاً",
+        title = "أفضل هاكات غلو ليكس 9", loading = "جاري التحميل", key = "أدخل المفتاح", jump = "قفزة لانهائية", lang = "اللغة", welcome = "مرحباً، ", submit = "إرسال",
+        steps = {"تهيئة النظام", "كتم صوت اللعبة", "تحميل واجهة المستخدم", "التحقق من المفتاح", "حقن القفز اللانهائي", "تشغيل مركز غلو ليكس"}
+    }
 }
 
 local CurrentLocale = LocService.RobloxLocaleId:lower()
@@ -32,15 +29,25 @@ local T = Translations[CurrentLocale] or Translations["en-us"]
 -- [[ ⚙️ SETTINGS ]] --
 local CorrectKey = "GHALOULIX9"
 local InfiniteJumpEnabled = false
-local JUMP_POWER = 32 -- UPDATED: Set to 32 as requested
+local JUMP_POWER = 55 
+local ALERT_SOUND_ID = "rbxassetid://550209561" 
+local StoredVolumes = {}
 
 -- [[ 🎨 GUI ROOT ]] --
 local ScreenGui = Instance.new("ScreenGui")
-ScreenGui.Name = "Ghaloulix9_Final_Pro"
+ScreenGui.Name = "Ghaloulix9_Ultimate_Edition"
 ScreenGui.Parent = game.CoreGui
 ScreenGui.ResetOnSpawn = false
 
 -- [[ 🛠️ UTILS ]] --
+local function ApplyStyle(obj, color, radius)
+    obj.BackgroundColor3 = color
+    obj.BorderSizePixel = 0
+    local c = Instance.new("UICorner")
+    c.CornerRadius = UDim.new(0, radius or 12)
+    c.Parent = obj
+end
+
 local function MakeDraggable(topbar, obj)
     local dragging, inputStart, startPos
     topbar.InputBegan:Connect(function(input)
@@ -57,82 +64,164 @@ local function MakeDraggable(topbar, obj)
     end)
 end
 
-local function ApplyStyle(obj, color, radius)
-    obj.BackgroundColor3 = color
-    obj.BorderSizePixel = 0
-    local c = Instance.new("UICorner")
-    c.CornerRadius = UDim.new(0, radius or 12)
-    c.Parent = obj
+-- [[ 🔇 SOUND CONTROLLER ]] --
+local function MuteGame()
+    for _, sound in pairs(game:GetDescendants()) do
+        if sound:IsA("Sound") and sound.Playing then
+            StoredVolumes[sound] = sound.Volume
+            sound.Volume = 0
+        end
+    end
 end
 
--- [[ ✨ 1. TRANSPARENT DARK RED SPLASH SCREEN ]] --
+local function UnmuteGame()
+    for sound, originalVolume in pairs(StoredVolumes) do
+        if sound and sound.Parent then
+            sound.Volume = originalVolume
+        end
+    end
+    StoredVolumes = {}
+end
+
+-- [[ ⚠️ 1. WARNING GUI (Mutes Game) ]] --
+function ShowWarning()
+    MuteGame()
+    local sound = Instance.new("Sound")
+    sound.SoundId = ALERT_SOUND_ID
+    sound.Volume = 1
+    sound.Parent = game.Workspace
+    sound:Play()
+    game:GetService("Debris"):AddItem(sound, 5)
+
+    local warnFrame = Instance.new("Frame")
+    warnFrame.Size = UDim2.new(0, 400, 0, 180)
+    warnFrame.Position = UDim2.new(0.5, -200, 0.5, -90)
+    ApplyStyle(warnFrame, Color3.fromRGB(45, 30, 5), 15)
+    warnFrame.Parent = ScreenGui
+    
+    local stroke = Instance.new("UIStroke")
+    stroke.Color = Color3.fromRGB(255, 170, 0)
+    stroke.Thickness = 3
+    stroke.Parent = warnFrame
+
+    local msg = Instance.new("TextLabel")
+    msg.Size = UDim2.new(1, -40, 1, -40)
+    msg.Position = UDim2.new(0, 20, 0, 20)
+    msg.BackgroundTransparency = 1
+    msg.Text = T.warn
+    msg.TextColor3 = Color3.fromRGB(255, 255, 255)
+    msg.Font = Enum.Font.GothamBold
+    msg.TextSize = 17
+    msg.TextWrapped = true
+    msg.Parent = warnFrame
+
+    task.wait(5.5) 
+    UnmuteGame()
+    
+    warnFrame:Destroy()
+    ShowSplashScreen()
+end
+
+-- [[ ✨ 2. DARK RED SPLASH (NEW NAME) ]] --
 function ShowSplashScreen()
     local splashFrame = Instance.new("Frame")
     splashFrame.Size = UDim2.new(1, 0, 1, 0)
-    splashFrame.BackgroundTransparency = 1 -- NO BACKGROUND
+    splashFrame.BackgroundTransparency = 1 
     splashFrame.Parent = ScreenGui
     
     local text = Instance.new("TextLabel")
     text.Size = UDim2.new(1, 0, 0, 100)
     text.Position = UDim2.new(0, 0, 0.5, -50)
-    text.Text = "GHALOULIX9 BEST HACK"
-    text.TextColor3 = Color3.fromRGB(150, 0, 0) -- DARK RED
+    text.Text = "GHALOULIX9 BEST HACKS" -- Updated Name
+    text.TextColor3 = Color3.fromRGB(150, 0, 0)
     text.Font = Enum.Font.GothamBold
-    text.TextSize = 40
+    text.TextSize = 42
     text.TextTransparency = 1
     text.BackgroundTransparency = 1
     text.Parent = splashFrame
 
-    -- Fade In
     TweenService:Create(text, TweenInfo.new(1.2), {TextTransparency = 0}):Play()
-    task.wait(2.2)
-    -- Fade Out
-    TweenService:Create(text, TweenInfo.new(1.2), {TextTransparency = 1}):Play()
-    task.wait(1.2)
+    task.wait(2)
+    TweenService:Create(text, TweenInfo.new(1), {TextTransparency = 1}):Play()
+    task.wait(1)
     
     splashFrame:Destroy()
     StartLoading()
 end
 
--- [[ ⏳ 2. LOADING SCREEN (20 SECONDS) ]] --
+-- [[ ⏳ 3. RAINBOW ACTIVE LOADING ]] --
 function StartLoading()
     local loadFrame = Instance.new("Frame")
-    loadFrame.Size = UDim2.new(0, 320, 0, 150)
-    loadFrame.Position = UDim2.new(0.5, -160, 0.5, -75)
+    loadFrame.Size = UDim2.new(0, 350, 0, 160)
+    loadFrame.Position = UDim2.new(0.5, -175, 0.5, -80)
     ApplyStyle(loadFrame, Color3.fromRGB(15, 15, 25), 15)
     loadFrame.Parent = ScreenGui
     MakeDraggable(loadFrame, loadFrame)
 
     local barBack = Instance.new("Frame")
-    barBack.Size = UDim2.new(0, 260, 0, 10)
-    barBack.Position = UDim2.new(0.5, -130, 0.6, 0)
+    barBack.Size = UDim2.new(0, 280, 0, 10)
+    barBack.Position = UDim2.new(0.5, -140, 0.7, 0)
     ApplyStyle(barBack, Color3.fromRGB(40, 40, 55), 5)
     barBack.Parent = loadFrame
 
     local bar = Instance.new("Frame")
     bar.Size = UDim2.new(0, 0, 1, 0)
-    ApplyStyle(bar, Color3.fromRGB(0, 150, 255), 5)
+    ApplyStyle(bar, Color3.fromRGB(255, 0, 0), 5)
     bar.Parent = barBack
 
-    local status = Instance.new("TextLabel")
-    status.Size = UDim2.new(1, 0, 0, 30)
-    status.Position = UDim2.new(0, 0, 0.4, -20)
-    status.Text = T.loading
-    status.TextColor3 = Color3.fromRGB(255, 255, 255)
-    status.Font = Enum.Font.GothamBold
-    status.BackgroundTransparency = 1
-    status.Parent = loadFrame
+    local statusMain = Instance.new("TextLabel")
+    statusMain.Size = UDim2.new(1, 0, 0, 30)
+    statusMain.Position = UDim2.new(0, 0, 0.35, -20)
+    statusMain.Text = T.loading
+    statusMain.TextColor3 = Color3.fromRGB(255, 255, 255)
+    statusMain.Font = Enum.Font.GothamBold
+    statusMain.TextSize = 22
+    statusMain.BackgroundTransparency = 1
+    statusMain.Parent = loadFrame
+
+    local statusSub = Instance.new("TextLabel")
+    statusSub.Size = UDim2.new(1, 0, 0, 20)
+    statusSub.Position = UDim2.new(0, 0, 0.5, 0)
+    statusSub.Text = "..."
+    statusSub.TextColor3 = Color3.fromRGB(180, 180, 180)
+    statusSub.Font = Enum.Font.Gotham
+    statusSub.TextSize = 14
+    statusSub.BackgroundTransparency = 1
+    statusSub.Parent = loadFrame
+
+    local dots = ""
+    task.spawn(function()
+        while loadFrame.Parent do
+            dots = dots .. "."
+            if #dots > 3 then dots = "" end
+            statusMain.Text = T.loading .. dots
+            task.wait(0.5)
+        end
+    end)
 
     for i = 1, 100 do
         task.wait(0.2)
         bar.Size = UDim2.new(i/100, 0, 1, 0)
-        status.Text = T.loading .. " " .. i .. "%"
+        
+        -- Color Transition
+        local colorR = 255 - (i * 2.55)
+        local colorB = i * 2.55
+        bar.BackgroundColor3 = Color3.fromRGB(colorR, 0, colorB)
+        
+        if i == 5 then statusSub.Text = T.steps[1]
+        elseif i == 20 then statusSub.Text = T.steps[2]
+        elseif i == 45 then statusSub.Text = T.steps[3]
+        elseif i == 65 then statusSub.Text = T.steps[4]
+        elseif i == 85 then statusSub.Text = T.steps[5]
+        elseif i == 95 then statusSub.Text = T.steps[6]
+        end
     end
+    
     loadFrame:Destroy()
     ShowKeySystem()
 end
 
--- [[ 🔑 3. KEY SYSTEM ]] --
+-- [[ 🔑 4. KEY SYSTEM ]] --
 function ShowKeySystem()
     local keyWin = Instance.new("Frame")
     keyWin.Size = UDim2.new(0, 350, 0, 220)
@@ -167,7 +256,7 @@ function ShowKeySystem()
     end)
 end
 
--- [[ 👤 4. WELCOME NOTIF ]] --
+-- [[ 👤 5. WELCOME ]] --
 function ShowWelcome()
     local welcome = Instance.new("Frame")
     welcome.Size = UDim2.new(0, 280, 0, 70)
@@ -198,7 +287,7 @@ function ShowWelcome()
     end)
 end
 
--- [[ 🎮 5. MAIN HUB ]] --
+-- [[ 🎮 6. MAIN HUB ]] --
 function ShowMainHub()
     local main = Instance.new("Frame")
     main.Size = UDim2.new(0, 350, 0, 280)
@@ -209,7 +298,7 @@ function ShowMainHub()
 
     local title = Instance.new("TextLabel")
     title.Size = UDim2.new(1, 0, 0, 50)
-    title.Text = T.title
+    title.Text = T.title -- Updated Text
     title.TextColor3 = Color3.fromRGB(0, 150, 255)
     title.Font = Enum.Font.GothamBold
     title.BackgroundTransparency = 1
@@ -272,14 +361,6 @@ function ShowLangMenu(parent)
             menu:Destroy() parent:Destroy() ShowMainHub()
         end)
     end
-    
-    local close = Instance.new("TextButton")
-    close.Size = UDim2.new(0, 100, 0, 30)
-    close.Position = UDim2.new(0.5, -50, 0.9, 0)
-    close.Text = "CLOSE"
-    ApplyStyle(close, Color3.fromRGB(200, 50, 50), 5)
-    close.Parent = menu
-    close.MouseButton1Click:Connect(function() menu:Destroy() end)
 end
 
 -- [[ 🎯 JUMP PHYSICS ]] --
@@ -294,4 +375,4 @@ UIS.JumpRequest:Connect(function()
 end)
 
 -- Execute
-ShowSplashScreen()
+ShowWarning()
