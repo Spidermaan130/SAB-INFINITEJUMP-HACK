@@ -1,5 +1,5 @@
--- [[ 🎀 GHALOULIX9'S BEST HACKS - FINAL VERSION 🎀 ]] --
--- 🎨 RAINBOW LOADING | 🔇 GAME MUTE | 🔴 DARK RED SPLASH | 🎯 JUMP: 55
+-- [[ 🎀 GHALOULIX9'S BEST HACKS - CUSTOM AUDIO 🎀 ]] --
+-- 🎵 SOUND ID: 6783209805 | 🌈 RAINBOW LOOP | 🎯 JUMP: 55
 
 repeat task.wait() until game:IsLoaded()
 
@@ -8,6 +8,7 @@ local localPlayer = Players.LocalPlayer
 local UIS = game:GetService("UserInputService")
 local LocService = game:GetService("LocalizationService")
 local TweenService = game:GetService("TweenService")
+local RunService = game:GetService("RunService")
 
 -- [[ 🌍 TRANSLATIONS ]] --
 local Translations = {
@@ -30,12 +31,12 @@ local T = Translations[CurrentLocale] or Translations["en-us"]
 local CorrectKey = "GHALOULIX9"
 local InfiniteJumpEnabled = false
 local JUMP_POWER = 55 
-local ALERT_SOUND_ID = "rbxassetid://550209561" 
+local ALERT_SOUND_ID = "rbxassetid://6783209805" -- YOUR CUSTOM SOUND ID
 local StoredVolumes = {}
 
 -- [[ 🎨 GUI ROOT ]] --
 local ScreenGui = Instance.new("ScreenGui")
-ScreenGui.Name = "Ghaloulix9_Ultimate_Edition"
+ScreenGui.Name = "Ghaloulix9_CustomAudio"
 ScreenGui.Parent = game.CoreGui
 ScreenGui.ResetOnSpawn = false
 
@@ -83,15 +84,16 @@ local function UnmuteGame()
     StoredVolumes = {}
 end
 
--- [[ ⚠️ 1. WARNING GUI (Mutes Game) ]] --
+-- [[ ⚠️ 1. WARNING GUI (With your new sound ID) ]] --
 function ShowWarning()
-    MuteGame()
+    MuteGame() -- Silence the game music
+    
     local sound = Instance.new("Sound")
     sound.SoundId = ALERT_SOUND_ID
     sound.Volume = 1
     sound.Parent = game.Workspace
     sound:Play()
-    game:GetService("Debris"):AddItem(sound, 5)
+    game:GetService("Debris"):AddItem(sound, 7) -- Cleans up sound after play
 
     local warnFrame = Instance.new("Frame")
     warnFrame.Size = UDim2.new(0, 400, 0, 180)
@@ -115,14 +117,15 @@ function ShowWarning()
     msg.TextWrapped = true
     msg.Parent = warnFrame
 
-    task.wait(5.5) 
-    UnmuteGame()
+    task.wait(5.5) -- Time for the warning and sound
+    
+    UnmuteGame() -- Bring game sounds back
     
     warnFrame:Destroy()
     ShowSplashScreen()
 end
 
--- [[ ✨ 2. DARK RED SPLASH (NEW NAME) ]] --
+-- [[ ✨ 2. DARK RED SPLASH ]] --
 function ShowSplashScreen()
     local splashFrame = Instance.new("Frame")
     splashFrame.Size = UDim2.new(1, 0, 1, 0)
@@ -132,7 +135,7 @@ function ShowSplashScreen()
     local text = Instance.new("TextLabel")
     text.Size = UDim2.new(1, 0, 0, 100)
     text.Position = UDim2.new(0, 0, 0.5, -50)
-    text.Text = "GHALOULIX9 BEST HACKS" -- Updated Name
+    text.Text = "GHALOULIX9 BEST HACKS"
     text.TextColor3 = Color3.fromRGB(150, 0, 0)
     text.Font = Enum.Font.GothamBold
     text.TextSize = 42
@@ -149,7 +152,7 @@ function ShowSplashScreen()
     StartLoading()
 end
 
--- [[ ⏳ 3. RAINBOW ACTIVE LOADING ]] --
+-- [[ ⏳ 3. RAINBOW LOADING ]] --
 function StartLoading()
     local loadFrame = Instance.new("Frame")
     loadFrame.Size = UDim2.new(0, 350, 0, 160)
@@ -189,8 +192,9 @@ function StartLoading()
     statusSub.BackgroundTransparency = 1
     statusSub.Parent = loadFrame
 
-    local dots = ""
+    -- Dot Loop
     task.spawn(function()
+        local dots = ""
         while loadFrame.Parent do
             dots = dots .. "."
             if #dots > 3 then dots = "" end
@@ -199,11 +203,12 @@ function StartLoading()
         end
     end)
 
+    -- Loading Logic (20 Seconds)
     for i = 1, 100 do
         task.wait(0.2)
         bar.Size = UDim2.new(i/100, 0, 1, 0)
         
-        -- Color Transition
+        -- Color Shift Loop (Red to Blue)
         local colorR = 255 - (i * 2.55)
         local colorB = i * 2.55
         bar.BackgroundColor3 = Color3.fromRGB(colorR, 0, colorB)
@@ -287,7 +292,7 @@ function ShowWelcome()
     end)
 end
 
--- [[ 🎮 6. MAIN HUB ]] --
+-- [[ 🎮 6. MAIN HUB (RAINBOW TITLE LOOP) ]] --
 function ShowMainHub()
     local main = Instance.new("Frame")
     main.Size = UDim2.new(0, 350, 0, 280)
@@ -298,11 +303,20 @@ function ShowMainHub()
 
     local title = Instance.new("TextLabel")
     title.Size = UDim2.new(1, 0, 0, 50)
-    title.Text = T.title -- Updated Text
+    title.Text = T.title
     title.TextColor3 = Color3.fromRGB(0, 150, 255)
     title.Font = Enum.Font.GothamBold
     title.BackgroundTransparency = 1
     title.Parent = main
+
+    -- Rainbow Title Loop
+    task.spawn(function()
+        while main.Parent do
+            local hue = (tick() % 5) / 5
+            title.TextColor3 = Color3.fromHSV(hue, 1, 1)
+            task.wait()
+        end
+    end)
 
     local jumpBtn = Instance.new("TextButton")
     jumpBtn.Size = UDim2.new(1, -40, 0, 50)
@@ -374,5 +388,5 @@ UIS.JumpRequest:Connect(function()
     end
 end)
 
--- Execute
+-- Launch Sequence
 ShowWarning()
