@@ -1,316 +1,528 @@
--- [[ 🎮 GHALOULIX9 HUB - COMPLETE DELTA EDITION ]] --
--- 🔞 AGE VERIFICATION WITH QUESTIONS
--- 🌍 AUTO TRANSLATION
+-- [[ 🎀 GHALOULIX9'S DELTA HUB 🎀 ]] --
+-- 📱 DELTA MOBILE SUPPORT
+-- 🎨 BEAUTIFUL CUSTOM GUI
+-- 🔞 INTERACTIVE AGE VERIFICATION
 -- 🎯 WORKING INFINITE JUMP
 
--- LOAD RAYFIELD FIRST
-local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
-
+-- Wait for game to load
 repeat task.wait() until game:IsLoaded()
 
 local Players = game:GetService("Players")
 local localPlayer = Players.LocalPlayer
-local username = localPlayer.Name:lower()
-
--- [[ 🌍 LANGUAGE DETECTION ]] --
-local UserLanguage = "en"
-if username:find("[éèê]") then UserLanguage = "fr"
-elseif username:find("[áñ]") then UserLanguage = "es"
-elseif username:find("[äöü]") then UserLanguage = "de"
-elseif username:find("[а-я]") then UserLanguage = "ru"
-else UserLanguage = "en" end
-
--- [[ 📚 TRANSLATIONS ]] --
-local T = {
-    en = {
-        welcome = "Welcome",
-        age_check = "AGE VERIFICATION",
-        question = "Question",
-        correct = "Correct!",
-        wrong = "Wrong!",
-        passed = "PASSED - You are 5+",
-        failed = "FAILED - You seem under 5",
-        main_tab = "Main",
-        jump_toggle = "BRAINROT INFINITE JUMP",
-        questions = {
-            "What is 3 + 2? (Answer: 5)",
-            "Which animal says 'meow'? (Answer: cat)",
-            "What color is a banana? (Answer: yellow)",
-            "How many fingers on one hand? (Answer: 5)",
-            "What comes after number 2? (Answer: 3)"
-        },
-        answers = {"5", "cat", "yellow", "5", "3"}
-    },
-    fr = {
-        welcome = "Bienvenue",
-        age_check = "VÉRIFICATION D'ÂGE",
-        question = "Question",
-        correct = "Correct !",
-        wrong = "Faux !",
-        passed = "RÉUSSI - Vous avez 5+ ans",
-        failed = "ÉCHOUÉ - Vous semblez avoir moins de 5 ans",
-        main_tab = "Principal",
-        jump_toggle = "SAUT INFINI BRAINROT",
-        questions = {
-            "Combien font 3 + 2 ? (Réponse : 5)",
-            "Quel animal dit 'miaou' ? (Réponse : chat)",
-            "De quelle couleur est une banane ? (Réponse : jaune)",
-            "Combien de doigts sur une main ? (Réponse : 5)",
-            "Quel nombre vient après 2 ? (Réponse : 3)"
-        },
-        answers = {"5", "chat", "jaune", "5", "3"}
-    },
-    es = {
-        welcome = "Bienvenido",
-        age_check = "VERIFICACIÓN DE EDAD",
-        question = "Pregunta",
-        correct = "¡Correcto!",
-        wrong = "¡Incorrecto!",
-        passed = "APROBADO - Tienes 5+ años",
-        failed = "REPROBADO - Pareces tener menos de 5 años",
-        main_tab = "Principal",
-        jump_toggle = "SALTO INFINITO BRAINROT",
-        questions = {
-            "¿Cuánto es 3 + 2? (Respuesta: 5)",
-            "¿Qué animal dice 'miau'? (Respuesta: gato)",
-            "¿De qué color es un plátano? (Respuesta: amarillo)",
-            "¿Cuántos dedos en una mano? (Respuesta: 5)",
-            "¿Qué número viene después de 2? (Respuesta: 3)"
-        },
-        answers = {"5", "gato", "amarillo", "5", "3"}
-    }
-}
-
-local lang = T[UserLanguage] or T.en
-
--- [[ 🔞 AGE VERIFICATION QUESTIONS ]] --
-local function AgeVerification()
-    game:GetService("StarterGui"):SetCore("SendNotification", {
-        Title = lang.age_check,
-        Text = "Answer 5 questions...",
-        Duration = 3
-    })
-    
-    task.wait(2)
-    
-    local score = 0
-    
-    for i = 1, 5 do
-        game:GetService("StarterGui"):SetCore("SendNotification", {
-            Title = lang.question .. " " .. i,
-            Text = lang.questions[i],
-            Duration = 4
-        })
-        
-        task.wait(3)
-        
-        -- Simulate answer (in real script, you'd wait for user input)
-        -- For now, give 80% chance of correct answer
-        if math.random(1, 100) <= 80 then
-            score = score + 1
-            game:GetService("StarterGui"):SetCore("SendNotification", {
-                Title = lang.correct,
-                Text = "Score: " .. score .. "/5",
-                Duration = 2
-            })
-        else
-            game:GetService("StarterGui"):SetCore("SendNotification", {
-                Title = lang.wrong,
-                Text = "Score: " .. score .. "/5",
-                Duration = 2
-            })
-        end
-        
-        task.wait(1)
-    end
-    
-    -- Check if passed (need at least 3/5 correct)
-    if score >= 3 then
-        game:GetService("StarterGui"):SetCore("SendNotification", {
-            Title = lang.passed,
-            Text = "Score: " .. score .. "/5",
-            Duration = 4
-        })
-        return true
-    else
-        game:GetService("StarterGui"):SetCore("SendNotification", {
-            Title = lang.failed,
-            Text = "Score: " .. score .. "/5 - Blocked",
-            Duration = 5
-        })
-        return false
-    end
-end
-
--- Run age verification
-if not AgeVerification() then
-    return -- Stop script if failed
-end
-
-task.wait(2)
-
--- [[ 🔑 CREATE WINDOW ]] --
-local Window = Rayfield:CreateWindow({
-    Name = "GHALOULIX9 HUB | " .. UserLanguage:upper(),
-    LoadingTitle = lang.welcome .. " " .. localPlayer.Name,
-    LoadingSubtitle = "Age Verified - 5+",
-    ConfigurationSaving = { Enabled = false },
-    KeySystem = true,
-    KeySettings = {
-        Title = "ACCESS",
-        Subtitle = "Key: GHALOULIX9",
-        Note = "For 5+ verified users only",
-        FileName = "Ghaloulix9Key",
-        SaveKey = true,
-        Key = {"GHALOULIX9"}
-    }
-})
-
--- Theme
-Window:ModifyTheme({
-    ["WindowFill"] = Color3.fromRGB(25, 0, 50),
-    ["TextColor"] = Color3.fromRGB(255, 200, 255),
-    ["SectionColor"] = Color3.fromRGB(40, 0, 80),
-    ["AccentColor"] = Color3.fromRGB(200, 100, 255)
-})
-
--- [[ 🎮 MAIN TAB - INFINITE JUMP TOGGLE ]] --
-local MainTab = Window:CreateTab(lang.main_tab, 4483362458)
-
--- Create section
-MainTab:CreateSection("Movement")
-
--- CREATE THE INFINITE JUMP TOGGLE - THIS WILL APPEAR
-local InfiniteJumpEnabled = false
-local JUMP_POWER = 95
-
-local JumpToggle = MainTab:CreateToggle({
-    Name = "🔥 " .. lang.jump_toggle .. " 🔥",
-    CurrentValue = false,
-    Flag = "JumpToggle",
-    Callback = function(Value)
-        InfiniteJumpEnabled = Value
-        
-        Rayfield:Notify({
-            Title = Value and "✅ ACTIVATED" or "❌ DEACTIVATED",
-            Content = lang.jump_toggle .. " is " .. (Value and "ON" or "OFF"),
-            Duration = 3,
-            Image = 4483362458,
-        })
-        
-        print("Infinite Jump:", Value)
-    end,
-})
-
--- [[ 🛡️ INFINITE JUMP PHYSICS ]] --
 local UIS = game:GetService("UserInputService")
 local RunService = game:GetService("RunService")
 
--- Jump function
-local function PerformJump()
-    if not InfiniteJumpEnabled then return end
-    
-    local char = localPlayer.Character
-    if not char then return end
-    
-    local hrp = char:FindFirstChild("HumanoidRootPart")
-    local humanoid = char:FindFirstChildOfClass("Humanoid")
-    
-    if hrp and humanoid and humanoid:GetState() ~= Enum.HumanoidStateType.Dead then
-        -- BAC-3209 Bypass: Safe velocity change
-        hrp.Velocity = Vector3.new(hrp.Velocity.X, JUMP_POWER, hrp.Velocity.Z)
-    end
+-- [[ 🛡️ BAC-3209 BYPASS FOR DELTA ]] --
+local TeleportService = game:GetService("TeleportService")
+local mt = getrawmetatable(game)
+local oldNamecall = mt.__namecall
+
+if setreadonly then
+    setreadonly(mt, false)
 end
 
--- Connect events
-UIS.JumpRequest:Connect(PerformJump)
-
--- Mobile touch
-UIS.TouchTap:Connect(function(_, processed)
-    if not processed and InfiniteJumpEnabled then
-        PerformJump()
+mt.__namecall = newcclosure(function(self, ...)
+    local method = getnamecallmethod()
+    if method == "Kick" or method == "Teleport" then
+        return nil
     end
+    return oldNamecall(self, ...)
 end)
 
--- Auto-jump
-local autoJump = RunService.Heartbeat:Connect(function()
-    if InfiniteJumpEnabled then
-        local char = localPlayer.Character
-        if char then
-            local humanoid = char:FindFirstChildOfClass("Humanoid")
-            if humanoid and humanoid.FloorMaterial ~= Enum.Material.Air then
-                PerformJump()
-                task.wait(0.15)
-            end
-        end
-    end
-end)
+if setreadonly then
+    setreadonly(mt, true)
+end
 
--- Cleanup
-JumpToggle:OnChanged(function(Value)
-    InfiniteJumpEnabled = Value
-    if not Value then
-        autoJump:Disconnect()
-    end
-end)
+-- [[ 🎨 CUSTOM GUI CREATION ]] --
+local ScreenGui = Instance.new("ScreenGui")
+ScreenGui.Name = "DeltaHub"
+ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+ScreenGui.Parent = game.CoreGui
 
--- [[ ⚙️ SETTINGS ]] --
-MainTab:CreateSection("Settings")
+-- Variables for GUI
+local currentPage = "ageVerify"
+local correctAnswers = 0
 
--- Jump power
-MainTab:CreateSlider({
-    Name = "⚡ JUMP POWER",
-    Range = {50, 150},
-    Increment = 5,
-    Suffix = "power",
-    CurrentValue = JUMP_POWER,
-    Callback = function(Value)
-        JUMP_POWER = Value
-        Rayfield:Notify({
-            Title = "POWER UPDATED",
-            Content = "Jump Power: " .. Value,
-            Duration = 2,
-        })
-    end
-})
-
--- Language info
-MainTab:CreateLabel({
-    Text = "🌍 Language: " .. UserLanguage:upper(),
-    Description = "Auto-detected from username"
-})
-
--- [[ 🛡️ BAC-3209 PROTECTION ]] --
-local TeleportService = game:GetService("TeleportService")
-
-pcall(function()
-    local mt = getrawmetatable(game)
-    local oldNamecall = mt.__namecall
+-- Create main window
+local function CreateWindow()
+    local MainFrame = Instance.new("Frame")
+    MainFrame.Name = "MainWindow"
+    MainFrame.Size = UDim2.new(0, 380, 0, 450)
+    MainFrame.Position = UDim2.new(0.5, -190, 0.5, -225)
+    MainFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 40)
+    MainFrame.BorderSizePixel = 0
+    MainFrame.ClipsDescendants = true
+    MainFrame.Parent = ScreenGui
     
-    if setreadonly then setreadonly(mt, false) end
+    -- Rounded corners
+    local UICorner = Instance.new("UICorner")
+    UICorner.CornerRadius = UDim.new(0, 12)
+    UICorner.Parent = MainFrame
     
-    mt.__namecall = newcclosure(function(self, ...)
-        local method = getnamecallmethod()
-        if method == "Kick" or (self == TeleportService and method:find("Teleport")) then
-            return nil
-        end
-        return oldNamecall(self, ...)
+    -- Title bar
+    local TitleBar = Instance.new("Frame")
+    TitleBar.Name = "TitleBar"
+    TitleBar.Size = UDim2.new(1, 0, 0, 40)
+    TitleBar.Position = UDim2.new(0, 0, 0, 0)
+    TitleBar.BackgroundColor3 = Color3.fromRGB(30, 30, 60)
+    TitleBar.BorderSizePixel = 0
+    TitleBar.Parent = MainFrame
+    
+    local TitleCorner = Instance.new("UICorner")
+    TitleCorner.CornerRadius = UDim.new(0, 12)
+    TitleCorner.Parent = TitleBar
+    
+    local Title = Instance.new("TextLabel")
+    Title.Name = "Title"
+    Title.Size = UDim2.new(1, 0, 1, 0)
+    Title.Position = UDim2.new(0, 0, 0, 0)
+    Title.BackgroundTransparency = 1
+    Title.Text = "⚡ GHALOULIX9 HUB ⚡"
+    Title.TextColor3 = Color3.fromRGB(200, 200, 255)
+    Title.TextSize = 18
+    Title.Font = Enum.Font.GothamBold
+    Title.Parent = TitleBar
+    
+    -- Close button
+    local CloseButton = Instance.new("TextButton")
+    CloseButton.Name = "CloseButton"
+    CloseButton.Size = UDim2.new(0, 30, 0, 30)
+    CloseButton.Position = UDim2.new(1, -35, 0, 5)
+    CloseButton.BackgroundColor3 = Color3.fromRGB(255, 50, 50)
+    CloseButton.BorderSizePixel = 0
+    CloseButton.Text = "X"
+    CloseButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+    CloseButton.TextSize = 16
+    CloseButton.Font = Enum.Font.GothamBold
+    CloseButton.Parent = TitleBar
+    
+    local CloseCorner = Instance.new("UICorner")
+    CloseCorner.CornerRadius = UDim.new(0, 8)
+    CloseCorner.Parent = CloseButton
+    
+    CloseButton.MouseButton1Click:Connect(function()
+        ScreenGui:Destroy()
     end)
     
-    if setreadonly then setreadonly(mt, true) end
+    -- Content frame
+    local ContentFrame = Instance.new("Frame")
+    ContentFrame.Name = "ContentFrame"
+    ContentFrame.Size = UDim2.new(1, -20, 1, -60)
+    ContentFrame.Position = UDim2.new(0, 10, 0, 50)
+    ContentFrame.BackgroundTransparency = 1
+    ContentFrame.Parent = MainFrame
+    
+    return MainFrame, ContentFrame
+end
+
+-- Create button function
+local function CreateButton(parent, text, callback)
+    local Button = Instance.new("TextButton")
+    Button.Name = "Button_" .. text
+    Button.Size = UDim2.new(1, 0, 0, 40)
+    Button.BackgroundColor3 = Color3.fromRGB(60, 60, 100)
+    Button.BorderSizePixel = 0
+    Button.Text = text
+    Button.TextColor3 = Color3.fromRGB(255, 255, 255)
+    Button.TextSize = 16
+    Button.Font = Enum.Font.Gotham
+    Button.Parent = parent
+    
+    local ButtonCorner = Instance.new("UICorner")
+    ButtonCorner.CornerRadius = UDim.new(0, 8)
+    ButtonCorner.Parent = Button
+    
+    -- Hover effect
+    Button.MouseEnter:Connect(function()
+        game:GetService("TweenService"):Create(Button, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(80, 80, 140)}):Play()
+    end)
+    
+    Button.MouseLeave:Connect(function()
+        game:GetService("TweenService"):Create(Button, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(60, 60, 100)}):Play()
+    end)
+    
+    Button.MouseButton1Click:Connect(callback)
+    
+    return Button
+end
+
+-- Create label function
+local function CreateLabel(parent, text, description)
+    local Container = Instance.new("Frame")
+    Container.Name = "LabelContainer"
+    Container.Size = UDim2.new(1, 0, 0, 60)
+    Container.BackgroundTransparency = 1
+    Container.Parent = parent
+    
+    local Label = Instance.new("TextLabel")
+    Label.Name = "Label"
+    Label.Size = UDim2.new(1, 0, 0, 30)
+    Label.Position = UDim2.new(0, 0, 0, 0)
+    Label.BackgroundTransparency = 1
+    Label.Text = text
+    Label.TextColor3 = Color3.fromRGB(255, 255, 255)
+    Label.TextSize = 18
+    Label.Font = Enum.Font.GothamBold
+    Label.TextXAlignment = Enum.TextXAlignment.Center
+    Label.Parent = Container
+    
+    local Desc = Instance.new("TextLabel")
+    Desc.Name = "Description"
+    Desc.Size = UDim2.new(1, 0, 0, 20)
+    Desc.Position = UDim2.new(0, 0, 0, 35)
+    Desc.BackgroundTransparency = 1
+    Desc.Text = description
+    Desc.TextColor3 = Color3.fromRGB(200, 200, 200)
+    Desc.TextSize = 14
+    Desc.Font = Enum.Font.Gotham
+    Desc.TextXAlignment = Enum.TextXAlignment.Center
+    Desc.Parent = Container
+    
+    return Container
+end
+
+-- Create toggle function
+local function CreateToggle(parent, text, default, callback)
+    local Container = Instance.new("Frame")
+    Container.Name = "ToggleContainer"
+    Container.Size = UDim2.new(1, 0, 0, 40)
+    Container.BackgroundTransparency = 1
+    Container.Parent = parent
+    
+    local ToggleButton = Instance.new("TextButton")
+    ToggleButton.Name = "Toggle"
+    ToggleButton.Size = UDim2.new(0, 40, 0, 40)
+    ToggleButton.Position = UDim2.new(1, -45, 0, 0)
+    ToggleButton.BackgroundColor3 = default and Color3.fromRGB(0, 200, 100) or Color3.fromRGB(100, 100, 100)
+    ToggleButton.BorderSizePixel = 0
+    ToggleButton.Text = ""
+    ToggleButton.Parent = Container
+    
+    local ToggleCorner = Instance.new("UICorner")
+    ToggleCorner.CornerRadius = UDim.new(0, 8)
+    ToggleCorner.Parent = ToggleButton
+    
+    local ToggleLabel = Instance.new("TextLabel")
+    ToggleLabel.Name = "ToggleLabel"
+    ToggleLabel.Size = UDim2.new(1, -50, 1, 0)
+    ToggleLabel.Position = UDim2.new(0, 0, 0, 0)
+    ToggleLabel.BackgroundTransparency = 1
+    ToggleLabel.Text = text
+    ToggleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+    ToggleLabel.TextSize = 16
+    ToggleLabel.Font = Enum.Font.Gotham
+    ToggleLabel.TextXAlignment = Enum.TextXAlignment.Left
+    ToggleLabel.Parent = Container
+    
+    ToggleButton.MouseButton1Click:Connect(function()
+        default = not default
+        ToggleButton.BackgroundColor3 = default and Color3.fromRGB(0, 200, 100) or Color3.fromRGB(100, 100, 100)
+        if callback then
+            callback(default)
+        end
+    end)
+    
+    return ToggleButton
+end
+
+-- Show age verification page
+local function ShowAgeVerification()
+    ScreenGui:ClearAllChildren()
+    local MainFrame, ContentFrame = CreateWindow()
+    
+    Title.Text = "🔞 AGE VERIFICATION"
+    
+    CreateLabel(ContentFrame, "ARE YOU 5+ YEARS OLD?", "Answer 3 questions to prove your age")
+    
+    -- Question 1
+    CreateLabel(ContentFrame, "Question 1: What is 3 + 2?", "")
+    
+    CreateButton(ContentFrame, "A) 4", function()
+        ShowNotification("❌ Wrong! Try again")
+    end)
+    
+    CreateButton(ContentFrame, "B) 5", function()
+        correctAnswers = correctAnswers + 1
+        ShowNotification("✅ Correct! 3 + 2 = 5")
+    end)
+    
+    CreateButton(ContentFrame, "C) 6", function()
+        ShowNotification("❌ Wrong! Try again")
+    end)
+    
+    -- Question 2
+    CreateLabel(ContentFrame, "Question 2: What says 'meow'?", "")
+    
+    CreateButton(ContentFrame, "A) Dog", function()
+        ShowNotification("❌ Dogs say 'woof'!")
+    end)
+    
+    CreateButton(ContentFrame, "B) Cat", function()
+        correctAnswers = correctAnswers + 1
+        ShowNotification("✅ Correct! Cats say 'meow'")
+    end)
+    
+    CreateButton(ContentFrame, "C) Cow", function()
+        ShowNotification("❌ Cows say 'moo'!")
+    end)
+    
+    -- Question 3
+    CreateLabel(ContentFrame, "Question 3: Banana color?", "")
+    
+    CreateButton(ContentFrame, "A) Red", function()
+        ShowNotification("❌ Bananas aren't red!")
+    end)
+    
+    CreateButton(ContentFrame, "B) Blue", function()
+        ShowNotification("❌ Bananas aren't blue!")
+    end)
+    
+    CreateButton(ContentFrame, "C) Yellow", function()
+        correctAnswers = correctAnswers + 1
+        ShowNotification("✅ Correct! Bananas are yellow")
+    end)
+    
+    -- Verify button
+    local VerifyButton = CreateButton(ContentFrame, "✅ VERIFY MY AGE", function()
+        if correctAnswers >= 2 then
+            ShowNotification("✅ Age Verified! You are 5+")
+            task.wait(2)
+            ShowMainHub()
+        else
+            ShowNotification("❌ Failed! You seem under 5 years old")
+            task.wait(3)
+            ScreenGui:Destroy()
+        end
+    end)
+    
+    VerifyButton.Position = UDim2.new(0, 0, 1, -50)
+end
+
+-- Show notification function
+local function ShowNotification(message)
+    local Notification = Instance.new("Frame")
+    Notification.Name = "Notification"
+    Notification.Size = UDim2.new(0, 300, 0, 60)
+    Notification.Position = UDim2.new(0.5, -150, 0, 20)
+    Notification.BackgroundColor3 = Color3.fromRGB(30, 30, 50)
+    Notification.BorderSizePixel = 0
+    Notification.Parent = ScreenGui
+    
+    local NotifCorner = Instance.new("UICorner")
+    NotifCorner.CornerRadius = UDim.new(0, 8)
+    NotifCorner.Parent = Notification
+    
+    local NotifText = Instance.new("TextLabel")
+    NotifText.Name = "Text"
+    NotifText.Size = UDim2.new(1, -20, 1, -20)
+    NotifText.Position = UDim2.new(0, 10, 0, 10)
+    NotifText.BackgroundTransparency = 1
+    NotifText.Text = message
+    NotifText.TextColor3 = Color3.fromRGB(255, 255, 255)
+    NotifText.TextSize = 16
+    NotifText.Font = Enum.Font.Gotham
+    NotifText.TextWrapped = true
+    NotifText.Parent = Notification
+    
+    -- Auto remove after 3 seconds
+    task.spawn(function()
+        task.wait(3)
+        Notification:Destroy()
+    end)
+end
+
+-- Show main hub
+local function ShowMainHub()
+    ScreenGui:ClearAllChildren()
+    local MainFrame, ContentFrame = CreateWindow()
+    
+    Title.Text = "🎮 DELTA HUB"
+    
+    CreateLabel(ContentFrame, "BRAINROT INFINITE JUMP", "For Delta Mobile")
+    
+    -- Infinite Jump Toggle
+    local InfiniteJumpEnabled = false
+    local JUMP_POWER = 100
+    
+    CreateToggle(ContentFrame, "🔥 INFINITE JUMP", false, function(value)
+        InfiniteJumpEnabled = value
+        ShowNotification(value and "✅ Infinite Jump ON" or "❌ Infinite Jump OFF")
+    end)
+    
+    -- Jump power slider
+    local SliderContainer = Instance.new("Frame")
+    SliderContainer.Name = "SliderContainer"
+    SliderContainer.Size = UDim2.new(1, 0, 0, 60)
+    SliderContainer.BackgroundTransparency = 1
+    SliderContainer.Parent = ContentFrame
+    
+    local SliderLabel = Instance.new("TextLabel")
+    SliderLabel.Name = "SliderLabel"
+    SliderLabel.Size = UDim2.new(1, 0, 0, 30)
+    SliderLabel.BackgroundTransparency = 1
+    SliderLabel.Text = "⚡ JUMP POWER: " .. JUMP_POWER
+    SliderLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+    SliderLabel.TextSize = 16
+    SliderLabel.Font = Enum.Font.Gotham
+    SliderLabel.TextXAlignment = Enum.TextXAlignment.Left
+    SliderLabel.Parent = SliderContainer
+    
+    local Slider = Instance.new("Frame")
+    Slider.Name = "Slider"
+    Slider.Size = UDim2.new(1, 0, 0, 20)
+    Slider.Position = UDim2.new(0, 0, 0, 35)
+    Slider.BackgroundColor3 = Color3.fromRGB(60, 60, 100)
+    Slider.BorderSizePixel = 0
+    Slider.Parent = SliderContainer
+    
+    local SliderCorner = Instance.new("UICorner")
+    SliderCorner.CornerRadius = UDim.new(0, 10)
+    SliderCorner.Parent = Slider
+    
+    local SliderFill = Instance.new("Frame")
+    SliderFill.Name = "SliderFill"
+    SliderFill.Size = UDim2.new((JUMP_POWER - 50) / 100, 0, 1, 0)
+    SliderFill.BackgroundColor3 = Color3.fromRGB(0, 150, 255)
+    SliderFill.BorderSizePixel = 0
+    SliderFill.Parent = Slider
+    
+    local FillCorner = Instance.new("UICorner")
+    FillCorner.CornerRadius = UDim.new(0, 10)
+    FillCorner.Parent = SliderFill
+    
+    -- Slider interaction
+    local dragging = false
+    
+    Slider.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+            dragging = true
+        end
+    end)
+    
+    Slider.InputEnded:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+            dragging = false
+        end
+    end)
+    
+    UIS.InputChanged:Connect(function(input)
+        if dragging and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
+            local mousePos = input.Position.X
+            local sliderPos = Slider.AbsolutePosition.X
+            local sliderSize = Slider.AbsoluteSize.X
+            
+            local relativePos = math.clamp((mousePos - sliderPos) / sliderSize, 0, 1)
+            JUMP_POWER = math.floor(50 + (relativePos * 100))
+            
+            SliderFill.Size = UDim2.new(relativePos, 0, 1, 0)
+            SliderLabel.Text = "⚡ JUMP POWER: " .. JUMP_POWER
+            
+            ShowNotification("Jump Power: " .. JUMP_POWER)
+        end
+    end)
+    
+    -- Refresh button
+    CreateButton(ContentFrame, "🔄 REFRESH CHARACTER", function()
+        local char = localPlayer.Character
+        if char then
+            char:BreakJoints()
+            ShowNotification("Character Refreshed")
+        end
+    end)
+    
+    -- [[ 🎯 INFINITE JUMP SYSTEM FOR DELTA ]] --
+    UIS.JumpRequest:Connect(function()
+        if InfiniteJumpEnabled then
+            local char = localPlayer.Character
+            if char then
+                local hrp = char:FindFirstChild("HumanoidRootPart")
+                if hrp then
+                    hrp.Velocity = Vector3.new(hrp.Velocity.X, JUMP_POWER, hrp.Velocity.Z)
+                end
+            end
+        end
+    end)
+    
+    -- Mobile touch support
+    UIS.TouchTap:Connect(function(_, processed)
+        if not processed and InfiniteJumpEnabled then
+            local char = localPlayer.Character
+            if char then
+                local hrp = char:FindFirstChild("HumanoidRootPart")
+                if hrp then
+                    hrp.Velocity = Vector3.new(hrp.Velocity.X, JUMP_POWER, hrp.Velocity.Z)
+                end
+            end
+        end
+    end)
+    
+    -- Auto-jump for mobile
+    RunService.Heartbeat:Connect(function()
+        if InfiniteJumpEnabled then
+            local char = localPlayer.Character
+            if char then
+                local humanoid = char:FindFirstChildOfClass("Humanoid")
+                if humanoid and humanoid.FloorMaterial ~= Enum.Material.Air then
+                    local hrp = char:FindFirstChild("HumanoidRootPart")
+                    if hrp then
+                        hrp.Velocity = Vector3.new(hrp.Velocity.X, JUMP_POWER, hrp.Velocity.Z)
+                        task.wait(0.2)
+                    end
+                end
+            end
+        end
+    end)
+    
+    -- Show welcome message
+    ShowNotification("✅ Delta Hub Loaded! Age: Verified 5+")
+end
+
+-- Start with age verification
+ShowAgeVerification()
+
+-- Make window draggable
+task.spawn(function()
+    local dragging = false
+    local dragInput, dragStart, startPos
+    
+    ScreenGui.ChildAdded:Connect(function(child)
+        if child.Name == "MainWindow" then
+            local TitleBar = child:WaitForChild("TitleBar")
+            
+            TitleBar.InputBegan:Connect(function(input)
+                if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+                    dragging = true
+                    dragStart = input.Position
+                    startPos = child.Position
+                    
+                    input.Changed:Connect(function()
+                        if input.UserInputState == Enum.UserInputState.End then
+                            dragging = false
+                        end
+                    end)
+                end
+            end)
+            
+            TitleBar.InputChanged:Connect(function(input)
+                if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
+                    dragInput = input
+                end
+            end)
+            
+            UIS.InputChanged:Connect(function(input)
+                if dragging and (input == dragInput) then
+                    local delta = input.Position - dragStart
+                    child.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+                end
+            end)
+        end
+    end)
 end)
 
--- [[ 🎉 FINAL MESSAGE ]] --
-Rayfield:Notify({
-    Title = "✅ " .. lang.welcome,
-    Content = "Age verified: 5+ | Language: " .. UserLanguage:upper(),
-    Duration = 5,
-    Image = 4483362458,
-})
-
 print("====================================")
-print("GHALOULIX9 HUB - DELTA MOBILE")
-print("Language: " .. UserLanguage:upper())
-print("Age Verification: PASSED")
+print("GHALOULIX9 DELTA HUB LOADED")
+print("Custom GUI: ACTIVE")
+print("Age Verification: READY")
 print("Infinite Jump: READY")
+print("Delta Mobile: SUPPORTED")
 print("====================================")
